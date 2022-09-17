@@ -1,0 +1,18 @@
+services:
+  api-keys:
+    image:
+      redis:7.0.4-alpine
+    ports: 
+      - 6380:6379
+
+  media-nodes:
+    image:
+      redis:7.0.4-alpine
+    ports: 
+      - 6379:6379
+
+  rmq:
+    image: rabbitmq:3.9.22-alpine
+    ports:
+      - 15672:15672
+      - 5672:5672
