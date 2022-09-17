@@ -1,0 +1,9 @@
+{
+  "private": true,
+  "workspaces": [
+    "soupware-pub",
+    "soupware-sub",
+    "soupware-orch",
+    "soupware-shared"
+  ]
+}
