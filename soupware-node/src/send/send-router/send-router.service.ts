@@ -18,7 +18,7 @@ export class SendRouterService implements OnModuleInit {
     });
   }
 
-  async getRouter() {
+  getRouter() {
     return this.router;
   }
 }
