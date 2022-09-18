@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { nanoid } from 'nanoid';
-import { NodeKind } from '../types';
+import { NodeKind } from '@app/types';
 
 @Injectable()
 export class NodeInfoService {
   private id: string;
-  private kind: string;
+  private kind: NodeKind;
 
   constructor(private config: ConfigService) {
     const kind = this.config.get('NODE_KIND') as NodeKind;
