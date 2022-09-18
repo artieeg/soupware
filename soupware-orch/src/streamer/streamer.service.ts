@@ -11,12 +11,9 @@ export class StreamerService implements OnApplicationBootstrap {
   }
 
   async create(streamer: string) {
-    console.log('creating');
     const response = await firstValueFrom(
       this.client.send('soupware.transport.create', { user: streamer }),
     );
-
-    console.log(response);
 
     return response;
   }
