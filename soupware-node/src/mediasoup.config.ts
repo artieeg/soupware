@@ -44,7 +44,7 @@ export const mediaSoupConfig = {
     listenIps: [
       {
         ip: process.env.MEDIASOUP_IP,
-        announcedIp: process.env.MEDIASOUP_IP,
+        announcedIp: process.env.MEDIASOUP_ANNOUNCED_IP,
       },
     ] as TransportListenIp[],
     initialAvailableOutgoingBitrate: 800000,

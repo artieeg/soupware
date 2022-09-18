@@ -1,6 +1,6 @@
 import { NODE_ID } from '@app/shared';
 import { Controller } from '@nestjs/common';
-import { MessagePattern } from '@nestjs/microservices';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { SendTransportService } from './transport.service';
 
@@ -8,7 +8,8 @@ import { SendTransportService } from './transport.service';
 export class SendTransportController {
   constructor(private sendTransportService: SendTransportService) {}
 
-  @MessagePattern(`soupware.transport.connect.${NODE_ID}`)
+  //@MessagePattern(`soupware.transport.connect.${NODE_ID}`)
+  @MessagePattern(`soupware.transport.connect`)
   async onConnectTransport({
     dtls,
     user,
@@ -19,8 +20,8 @@ export class SendTransportController {
     await this.sendTransportService.connectSendTransport({ user, dtls });
   }
 
-  @MessagePattern(`soupware.transport.create.${NODE_ID}`)
-  async onCreateTransport({ user }: { user: string }) {
+  @MessagePattern(`soupware.transport.create`)
+  async onCreateTransport(@Payload() { user }: { user: string }) {
     const transportConnectParams =
       await this.sendTransportService.createSendTransport(user);
 
