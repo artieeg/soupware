@@ -3,7 +3,6 @@
   "workspaces": [
     "soupware-pub",
     "soupware-sub",
-    "soupware-orch",
-    "soupware-shared"
+    "soupware-orch"
   ]
 }
