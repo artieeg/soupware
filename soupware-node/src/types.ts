@@ -1,3 +1,3 @@
-import { PUB_NODE, SUB_NODE } from "./constants";
+import { SEND_NODE, RECV_NODE } from './constants';
 
-export type NodeKind = typeof PUB_NODE | typeof SUB_NODE;
+export type NodeKind = typeof SEND_NODE | typeof RECV_NODE;

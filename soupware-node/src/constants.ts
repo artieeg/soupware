@@ -1,2 +1,2 @@
-export const PUB_NODE = "PUB";
-export const SUB_NODE = "SUB";
+export const SEND_NODE = 'SEND';
+export const RECV_NODE = 'RECV';
