@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { NodeManagerModule } from 'src/node-manager';
 import { StreamerController } from './streamer.controller';
 import { StreamerService } from './streamer.service';
 
@@ -14,6 +15,7 @@ import { StreamerService } from './streamer.service';
         },
       },
     ]),
+    NodeManagerModule,
   ],
   providers: [StreamerService],
   controllers: [StreamerController],

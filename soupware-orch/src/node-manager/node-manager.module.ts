@@ -6,6 +6,6 @@ import { NodeManagerService } from './node-manager.service';
   imports: [],
   providers: [NodeManagerService],
   controllers: [NodeManagerController],
-  exports: [],
+  exports: [NodeManagerService],
 })
 export class NodeManagerModule {}

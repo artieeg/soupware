@@ -8,7 +8,7 @@ import Redis from 'ioredis';
 
 @Injectable()
 export class NodeManagerService implements OnModuleInit, OnApplicationShutdown {
-  redis: Redis;
+  private redis: Redis;
 
   constructor(private configService: ConfigService) {}
 
