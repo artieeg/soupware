@@ -11,8 +11,9 @@ services:
     ports: 
       - 6379:6379
 
-  rmq:
-    image: rabbitmq:3.9.22-alpine
+  nats:
+    image: nats:latest
     ports:
-      - 15672:15672
-      - 5672:5672
+      - 4222:4222
+      - 6222:6222
+      - 8222:8222

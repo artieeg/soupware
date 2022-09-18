@@ -13,18 +13,18 @@ export class SendTransportService {
   ) {}
 
   async connectSendTransport({
-    sender: sender_id,
+    user: user_id,
     dtls,
   }: {
-    sender: string;
+    user: string;
     dtls: DtlsParameters;
   }) {
-    const sender = this.producerService.get(sender_id);
+    const sender = this.producerService.get(user_id);
 
     await sender.transport.connect({ dtlsParameters: dtls });
   }
 
-  async createSendTransport(sender: string): Promise<ConnectTransportOptions> {
+  async createSendTransport(user: string): Promise<ConnectTransportOptions> {
     const router = this.sendRouterService.getRouter();
 
     const { listenIps, initialAvailableOutgoingBitrate } =
@@ -36,10 +36,10 @@ export class SendTransportService {
       enableTcp: true,
       preferUdp: true,
       initialAvailableOutgoingBitrate: initialAvailableOutgoingBitrate,
-      appData: { user: sender, direction: 'send' },
+      appData: { user, direction: 'send' },
     });
 
-    this.producerService.create(sender, transport);
+    this.producerService.create(user, transport);
 
     return {
       transportOptions: {
