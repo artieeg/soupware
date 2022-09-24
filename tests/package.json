@@ -10,6 +10,8 @@
     "typescript": "^4.8.3"
   },
   "dependencies": {
-    "axios": "^0.27.2"
+    "axios": "^0.27.2",
+    "mediasoup-client": "^3.6.57",
+    "mediasoup-client-aiortc": "^3.7.1"
   }
 }
