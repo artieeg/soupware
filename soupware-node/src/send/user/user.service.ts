@@ -3,7 +3,7 @@ import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransport';
 import { Producer } from './types';
 
 @Injectable()
-export class ProducerService {
+export class UserService {
   private senders: Map<string, Producer>;
 
   constructor() {

@@ -3,13 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { SendRouterService } from '../send-router';
 import { ConnectTransportOptions } from './types';
-import { ProducerService } from '../producer';
+import { UserService } from '../user';
 
 @Injectable()
 export class SendTransportService {
   constructor(
     private sendRouterService: SendRouterService,
-    private producerService: ProducerService,
+    private producerService: UserService,
   ) {}
 
   async connectSendTransport({

@@ -52,8 +52,6 @@ export async function main() {
   });
 
   transport.on("connect", async ({ dtlsParameters }, cb, errb) => {
-    console.log("sending DTLS params");
-
     try {
       await axios.put("/streamer", {
         user,
@@ -67,13 +65,7 @@ export async function main() {
     }
   });
 
-  transport.on("connectionstatechange", (state) => {
-    console.log("transport connect state", state);
-  });
-
-  transport.on("produce", (produceParams) => {
-    console.log(produceParams);
-  });
+  transport.on("produce", (produceParams) => {});
 
   transport.produce({ track: stream.getVideoTracks()[0] });
 }
