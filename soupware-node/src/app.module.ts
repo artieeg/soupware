@@ -2,7 +2,12 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SEND_NODE } from './constants';
 import { RecvTransportModule } from './recv';
-import { SendRouterModule, SendTransportModule, RoomModule } from './send';
+import {
+  SendRouterModule,
+  SendTransportModule,
+  RoomModule,
+  SendPipeModule,
+} from './send';
 import { ProducerModule } from './send/producer';
 import { NodeInfoModule } from './shared';
 import { NodeKind } from './types';
@@ -18,6 +23,7 @@ const shared = [
 
 const sendNodeModules = [
   RoomModule,
+  SendPipeModule,
   SendRouterModule,
   SendTransportModule,
   ProducerModule,

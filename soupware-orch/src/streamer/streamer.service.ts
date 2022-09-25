@@ -24,6 +24,8 @@ export class StreamerService implements OnApplicationBootstrap {
       }),
     );
 
+    await this.nodeManagerService.addNodeForRoom(room, sendNodeId);
+
     return { ...response, sendNodeId };
   }
 

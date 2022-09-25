@@ -21,7 +21,7 @@ async function main() {
 
   const {
     transportConnectParams: { transportOptions, routerRtpParameters },
-    sendNodeId,
+    recvNodeId,
   } = createViewerResponse.data;
 
   await recvDevice.load({ routerRtpCapabilities: routerRtpParameters });
@@ -30,6 +30,8 @@ async function main() {
   transport.on("connect", async ({ dtlsParameters }, cb, erb) => {
     console.log({ dtlsParameters });
   });
+
+  await axios.post("/viewer/consumer", { room, recvNodeId });
 }
 
 main();

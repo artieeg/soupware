@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NodeManagerModule } from 'src/node-manager';
-import { PiperModule } from '../piper';
-import { ViewerController } from './viewer.controller';
-import { ViewerService } from './viewer.service';
+import { PiperService } from './piper.service';
 
 @Module({
   imports: [
@@ -17,10 +15,9 @@ import { ViewerService } from './viewer.service';
       },
     ]),
     NodeManagerModule,
-    PiperModule,
   ],
-  providers: [ViewerService],
-  controllers: [ViewerController],
-  exports: [],
+  providers: [PiperService],
+  controllers: [],
+  exports: [PiperService],
 })
-export class ViewerModule {}
+export class PiperModule {}
