@@ -29,12 +29,15 @@ export async function main() {
     handlerFactory: worker.createHandlerFactory(),
   });
 
+  const user = "user0";
+
   const createStreamerResponse = await axios.post("/streamer", {
-    user: "user0",
+    user,
   });
 
   const {
     transportConnectParams: { transportOptions, routerRtpParameters },
+    sendNodeId,
   } = createStreamerResponse.data;
 
   await sendDevice.load({ routerRtpCapabilities: routerRtpParameters });
@@ -48,8 +51,24 @@ export async function main() {
     },
   });
 
-  transport.on("connect", ({ dtlsParameters }, cb, errb) => {
-    console.log("trying to connect transport", dtlsParameters);
+  transport.on("connect", async ({ dtlsParameters }, cb, errb) => {
+    console.log("sending DTLS params");
+
+    try {
+      await axios.put("/streamer", {
+        user,
+        dtlsParameters,
+        sendNodeId,
+      });
+
+      cb();
+    } catch {
+      errb(new Error());
+    }
+  });
+
+  transport.on("connectionstatechange", (state) => {
+    console.log("transport connect state", state);
   });
 
   transport.on("produce", (produceParams) => {

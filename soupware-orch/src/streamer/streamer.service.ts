@@ -15,14 +15,23 @@ export class StreamerService implements OnApplicationBootstrap {
   }
 
   async create(streamer: string) {
-    const nodeId = await this.nodeManagerService.getNode('SEND');
+    const sendNodeId = await this.nodeManagerService.getNode('SEND');
 
     const response = await firstValueFrom(
-      this.client.send(`soupware.transport.create.${nodeId}`, {
+      this.client.send(`soupware.transport.create.${sendNodeId}`, {
         user: streamer,
       }),
     );
 
-    return response;
+    return { ...response, sendNodeId };
+  }
+
+  async connect(sendNodeId: string, user: string, dtlsParameters: any) {
+    await firstValueFrom(
+      this.client.send(`soupware.transport.connect.${sendNodeId}`, {
+        user,
+        dtls: dtlsParameters,
+      }),
+    );
   }
 }
