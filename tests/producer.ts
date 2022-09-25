@@ -30,9 +30,11 @@ export async function main() {
   });
 
   const user = "user0";
+  const room = "room0";
 
   const createStreamerResponse = await axios.post("/streamer", {
     user,
+    room,
   });
 
   const {
@@ -43,7 +45,7 @@ export async function main() {
   await sendDevice.load({ routerRtpCapabilities: routerRtpParameters });
   const transport = sendDevice.createSendTransport(transportOptions);
 
-  const stream = await worker.getUserMedia({
+  const userMedia = await worker.getUserMedia({
     audio: false,
     video: {
       source: "file",
@@ -52,11 +54,14 @@ export async function main() {
   });
 
   transport.on("connect", async ({ dtlsParameters }, cb, errb) => {
+    console.log("connect", dtlsParameters);
+
     try {
       await axios.put("/streamer", {
         user,
         dtlsParameters,
         sendNodeId,
+        room,
       });
 
       cb();
@@ -66,12 +71,15 @@ export async function main() {
   });
 
   transport.on("produce", async (producerOptions, cb, erb) => {
+    console.log("producer", producerOptions);
+
     try {
       const { id } = (
         await axios.post("/streamer/producer", {
           user,
           producerOptions,
           sendNodeId,
+          room,
         })
       ).data;
 
@@ -81,5 +89,7 @@ export async function main() {
     }
   });
 
-  const p = await transport.produce({ track: stream.getVideoTracks()[0] });
+  const p = await transport.produce({ track: userMedia.getVideoTracks()[0] });
 }
+
+main();

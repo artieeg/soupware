@@ -12,10 +12,12 @@ export class ProducerController {
   async onProducerCreate({
     user,
     producerOptions,
+    room,
   }: {
     producerOptions: ProducerOptions;
     user: string;
+    room: string;
   }) {
-    return this.producerService.create(user, producerOptions);
+    return this.producerService.create(room, user, producerOptions);
   }
 }

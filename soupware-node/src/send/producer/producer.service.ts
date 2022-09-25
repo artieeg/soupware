@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { ProducerOptions } from 'mediasoup/node/lib/Producer';
-import { UserService } from '../user';
+import { RoomService } from '../room';
 
 @Injectable()
 export class ProducerService {
-  constructor(private userService: UserService) {}
+  constructor(private roomService: RoomService) {}
 
-  async create(user_id: string, options: ProducerOptions) {
-    const user = this.userService.get(user_id);
-
+  async create(room: string, user_id: string, options: ProducerOptions) {
+    const user = this.roomService.getUser(room, user_id);
     const producer = await user.transport.produce(options);
 
     return { id: producer.id };

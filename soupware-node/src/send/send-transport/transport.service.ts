@@ -3,28 +3,35 @@ import { Injectable } from '@nestjs/common';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { SendRouterService } from '../send-router';
 import { ConnectTransportOptions } from './types';
-import { UserService } from '../user';
+import { RoomService } from '../room';
 
 @Injectable()
 export class SendTransportService {
   constructor(
     private sendRouterService: SendRouterService,
-    private userService: UserService,
+    private roomService: RoomService,
   ) {}
 
   async connectSendTransport({
+    room,
     user: user_id,
     dtls,
   }: {
+    room: string;
     user: string;
     dtls: DtlsParameters;
   }) {
-    const sender = this.userService.get(user_id);
+    const sender = this.roomService
+      .get(room)
+      .users.find((u) => u.id === user_id);
 
     await sender.transport.connect({ dtlsParameters: dtls });
   }
 
-  async createSendTransport(user: string): Promise<ConnectTransportOptions> {
+  async createSendTransport(
+    room: string,
+    user: string,
+  ): Promise<ConnectTransportOptions> {
     const router = this.sendRouterService.getRouter();
 
     const { listenIps, initialAvailableOutgoingBitrate } =
@@ -36,10 +43,10 @@ export class SendTransportService {
       enableTcp: true,
       preferUdp: true,
       initialAvailableOutgoingBitrate: initialAvailableOutgoingBitrate,
-      appData: { user, direction: 'send' },
+      appData: { user, room, direction: 'send' },
     });
 
-    this.userService.create(user, transport);
+    this.roomService.create(room, user, transport);
 
     return {
       transportOptions: {

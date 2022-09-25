@@ -12,19 +12,21 @@ export class SendTransportController {
   async onConnectTransport({
     dtls,
     user,
+    room,
   }: {
+    room: string;
     dtls: DtlsParameters;
     user: string;
   }) {
-    await this.sendTransportService.connectSendTransport({ user, dtls });
+    await this.sendTransportService.connectSendTransport({ room, user, dtls });
 
     return { status: 'ok' };
   }
 
   @MessagePattern(`soupware.transport.send.create.${NODE_ID}`)
-  async onCreateTransport({ user }: { user: string }) {
+  async onCreateTransport({ user, room }: { user: string; room: string }) {
     const transportConnectParams =
-      await this.sendTransportService.createSendTransport(user);
+      await this.sendTransportService.createSendTransport(room, user);
 
     return { transportConnectParams };
   }
