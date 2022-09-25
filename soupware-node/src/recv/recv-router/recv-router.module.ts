@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+import { RecvRouterService } from './recv-router.service';
 
 @Module({
   imports: [],
-  providers: [],
+  providers: [RecvRouterService],
   controllers: [],
-  exports: [],
+  exports: [RecvRouterService],
 })
 export class RecvRouterModule {}

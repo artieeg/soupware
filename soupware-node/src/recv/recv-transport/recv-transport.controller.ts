@@ -9,11 +9,14 @@ export class RecvTransportController {
 
   @MessagePattern(`soupware.transport.recv.connect.${NODE_ID}`)
   async onConnectTransport() {
-    this.recvTransportService.createRecvTransport();
+    //this.recvTransportService.createRecvTransport();
   }
 
   @MessagePattern(`soupware.transport.recv.create.${NODE_ID}`)
-  async onCreateTransport() {
-    this.recvTransportService.createRecvTransport();
+  async onCreateTransport({ user, room }: { user: string; room: string }) {
+    const transportConnectParams =
+      await this.recvTransportService.createRecvTransport(user, room);
+
+    return { transportConnectParams };
   }
 }

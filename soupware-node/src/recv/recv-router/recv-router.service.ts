@@ -2,7 +2,7 @@ import { mediaSoupConfig } from '@app/mediasoup.config';
 import { Injectable } from '@nestjs/common';
 import { createWorker } from 'mediasoup';
 import { Router, Worker } from 'mediasoup/node/lib/types';
-import os from 'os';
+import { cpus } from 'os';
 
 type RecvWorker = { worker: Worker; router: Router };
 
@@ -12,11 +12,13 @@ export class RecvRouterService {
   private workers: RecvWorker[];
   private bridgeRecvWorker: RecvWorker;
 
-  constructor() {}
+  constructor() {
+    this.workers = [];
+  }
 
   async onModuleInit() {
     //Spawn workers (# of workers = # of CPUs - 1)
-    const workersCount = os.cpus().length - 1;
+    const workersCount = cpus().length - 1;
 
     for (let i = 0; i < workersCount; i++) {
       const worker = await createWorker({});

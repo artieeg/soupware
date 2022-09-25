@@ -22,7 +22,8 @@ const sendNodeModules = [
   SendTransportModule,
   ProducerModule,
 ];
-const recvNodeModules = [];
+
+const recvNodeModules = [RecvTransportModule];
 
 const nodeKind = process.env.NODE_KIND as NodeKind;
 
