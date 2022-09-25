@@ -18,7 +18,7 @@ export class StreamerService implements OnApplicationBootstrap {
     const sendNodeId = await this.nodeManagerService.getNode('SEND');
 
     const response = await firstValueFrom(
-      this.client.send(`soupware.transport.create.${sendNodeId}`, {
+      this.client.send(`soupware.transport.send.create.${sendNodeId}`, {
         user: streamer,
       }),
     );
@@ -28,7 +28,7 @@ export class StreamerService implements OnApplicationBootstrap {
 
   async connect(sendNodeId: string, user: string, dtlsParameters: any) {
     await firstValueFrom(
-      this.client.send(`soupware.transport.connect.${sendNodeId}`, {
+      this.client.send(`soupware.transport.send.connect.${sendNodeId}`, {
         user,
         dtls: dtlsParameters,
       }),

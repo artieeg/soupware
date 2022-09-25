@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SEND_NODE } from './constants';
+import { RecvTransportModule } from './recv';
 import { SendRouterModule, SendTransportModule, UserModule } from './send';
 import { ProducerModule } from './send/producer';
 import { NodeInfoModule } from './shared';
@@ -12,6 +13,7 @@ const shared = [
     isGlobal: true,
   }),
   NodeInfoModule,
+  RecvTransportModule,
 ];
 
 const sendNodeModules = [

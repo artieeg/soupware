@@ -8,7 +8,7 @@ import { SendTransportService } from './transport.service';
 export class SendTransportController {
   constructor(private sendTransportService: SendTransportService) {}
 
-  @MessagePattern(`soupware.transport.connect.${NODE_ID}`)
+  @MessagePattern(`soupware.transport.send.connect.${NODE_ID}`)
   async onConnectTransport({
     dtls,
     user,
@@ -21,7 +21,7 @@ export class SendTransportController {
     return { status: 'ok' };
   }
 
-  @MessagePattern(`soupware.transport.create.${NODE_ID}`)
+  @MessagePattern(`soupware.transport.send.create.${NODE_ID}`)
   async onCreateTransport({ user }: { user: string }) {
     const transportConnectParams =
       await this.sendTransportService.createSendTransport(user);
