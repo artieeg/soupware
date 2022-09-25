@@ -9,7 +9,7 @@ import { UserService } from '../user';
 export class SendTransportService {
   constructor(
     private sendRouterService: SendRouterService,
-    private producerService: UserService,
+    private userService: UserService,
   ) {}
 
   async connectSendTransport({
@@ -19,7 +19,7 @@ export class SendTransportService {
     user: string;
     dtls: DtlsParameters;
   }) {
-    const sender = this.producerService.get(user_id);
+    const sender = this.userService.get(user_id);
 
     await sender.transport.connect({ dtlsParameters: dtls });
   }
@@ -39,7 +39,7 @@ export class SendTransportService {
       appData: { user, direction: 'send' },
     });
 
-    this.producerService.create(user, transport);
+    this.userService.create(user, transport);
 
     return {
       transportOptions: {

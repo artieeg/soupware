@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransport';
-import { Producer } from './types';
+import { User } from './types';
 
 @Injectable()
 export class UserService {
-  private senders: Map<string, Producer>;
+  private senders: Map<string, User>;
 
   constructor() {
     this.senders = new Map();
@@ -14,6 +14,7 @@ export class UserService {
     this.senders.set(id, {
       id,
       transport,
+      producers: {},
     });
   }
 

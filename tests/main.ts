@@ -65,7 +65,22 @@ export async function main() {
     }
   });
 
-  transport.on("produce", (produceParams) => {});
+  transport.on("produce", async (producerOptions, cb, erb) => {
+    try {
+      const { id } = (
+        await axios.post("/streamer/producer", {
+          user,
+          producerOptions,
+          sendNodeId,
+        })
+      ).data;
 
-  transport.produce({ track: stream.getVideoTracks()[0] });
+      cb({ id });
+    } catch {
+      erb(new Error());
+    }
+  });
+
+  const p = await transport.produce({ track: stream.getVideoTracks()[0] });
+  console.log("producing", p);
 }

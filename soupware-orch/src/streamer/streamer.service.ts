@@ -34,4 +34,13 @@ export class StreamerService implements OnApplicationBootstrap {
       }),
     );
   }
+
+  async produce(user: string, sendNodeId: string, producerOptions: any) {
+    return await firstValueFrom(
+      this.client.send(`soupware.producer.create.${sendNodeId}`, {
+        user,
+        producerOptions,
+      }),
+    );
+  }
 }

@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { SEND_NODE } from './constants';
-import { SendRouterModule, SendTransportModule } from './send';
+import { SendRouterModule, SendTransportModule, UserModule } from './send';
+import { ProducerModule } from './send/producer';
 import { NodeInfoModule } from './shared';
 import { NodeKind } from './types';
 
@@ -15,7 +16,12 @@ const shared = [
   NodeInfoModule,
 ];
 
-const sendNodeModules = [SendRouterModule, SendTransportModule];
+const sendNodeModules = [
+  UserModule,
+  SendRouterModule,
+  SendTransportModule,
+  ProducerModule,
+];
 const recvNodeModules = [];
 
 const nodeKind = process.env.NODE_KIND as NodeKind;
