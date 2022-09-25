@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { SEND_NODE } from './constants';
 import { SendRouterModule, SendTransportModule, UserModule } from './send';
 import { ProducerModule } from './send/producer';
@@ -31,7 +29,7 @@ const nodeKind = process.env.NODE_KIND as NodeKind;
     ...shared,
     ...(nodeKind === SEND_NODE ? sendNodeModules : recvNodeModules),
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

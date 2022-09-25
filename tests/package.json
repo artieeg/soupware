@@ -4,7 +4,9 @@
   "main": "index.ts",
   "license": "MIT",
   "scripts": {
-    "start": "npx ts-node-dev index.ts"
+    "start": "npx ts-node-dev index.ts",
+    "start:p": "npx ts-node-dev producer.ts",
+    "start:c": "npx ts-node-dev consumer.ts"
   },
   "devDependencies": {
     "typescript": "^4.8.3"

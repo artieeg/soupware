@@ -82,5 +82,4 @@ export async function main() {
   });
 
   const p = await transport.produce({ track: stream.getVideoTracks()[0] });
-  console.log("producing", p);
 }
