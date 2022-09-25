@@ -22,6 +22,12 @@ export class NodeManagerService implements OnModuleInit, OnApplicationShutdown {
     }
   }
 
+  async delNode(id: string, kind: string) {
+    await this.redis.srem(kind, id);
+
+    return 'ok';
+  }
+
   async addNode(id: string, kind: string) {
     await this.redis.sadd(kind, id);
   }

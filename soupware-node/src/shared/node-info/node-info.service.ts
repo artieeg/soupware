@@ -1,18 +1,30 @@
-import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  OnApplicationShutdown,
+  OnModuleInit,
+} from '@nestjs/common';
 import { nanoid } from 'nanoid';
 import { NodeKind } from '@app/types';
 import { ClientProxy } from '@nestjs/microservices';
+import { firstValueFrom } from 'rxjs';
 
 export const NODE_ID = `${process.env.NODE_KIND}_${nanoid()}`;
 
 @Injectable()
-export class NodeInfoService implements OnModuleInit {
+export class NodeInfoService implements OnModuleInit, OnApplicationShutdown {
   private id: string;
   private kind: NodeKind;
 
   constructor(@Inject('ORCHESTRATOR') private client: ClientProxy) {
     this.id = NODE_ID;
     this.kind = process.env.NODE_KIND as NodeKind;
+  }
+
+  async onApplicationShutdown() {
+    await firstValueFrom(
+      this.client.send('soupware.node.del', { id: this.id, kind: this.kind }),
+    );
   }
 
   onModuleInit() {
