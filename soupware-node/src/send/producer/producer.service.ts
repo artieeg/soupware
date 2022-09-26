@@ -10,6 +10,8 @@ export class ProducerService {
     const user = this.roomService.getUser(room, user_id);
     const producer = await user.transport.produce(options);
 
+    user.producers[producer.kind] = producer;
+
     return { id: producer.id };
   }
 }
