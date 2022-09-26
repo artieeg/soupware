@@ -28,8 +28,6 @@ export class SendPipeService {
 
     const pipeConsumers = await this.createPipeConsumers(pipe, producers);
 
-    console.log({ producers, pipeConsumers });
-
     return { status: 'ok' };
   }
 

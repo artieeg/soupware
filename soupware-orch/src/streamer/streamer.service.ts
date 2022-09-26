@@ -34,12 +34,14 @@ export class StreamerService implements OnApplicationBootstrap {
     user: string,
     room: string,
     dtlsParameters: any,
+    rtpCapabilities: any,
   ) {
     await firstValueFrom(
       this.client.send(`soupware.transport.send.connect.${sendNodeId}`, {
         user,
         dtls: dtlsParameters,
         room,
+        rtpCapabilities,
       }),
     );
   }

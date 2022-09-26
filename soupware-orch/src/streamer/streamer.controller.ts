@@ -11,6 +11,7 @@ type ConnectStreamerDto = {
   dtlsParameters: any;
   sendNodeId: string;
   room: string;
+  rtpCapabilities: any;
 };
 
 type CreateProducerDto = {
@@ -31,9 +32,22 @@ export class StreamerController {
 
   @Put('/streamer')
   async onConnectStreamer(
-    @Body() { dtlsParameters, sendNodeId, user, room }: ConnectStreamerDto,
+    @Body()
+    {
+      dtlsParameters,
+      rtpCapabilities,
+      sendNodeId,
+      user,
+      room,
+    }: ConnectStreamerDto,
   ) {
-    return this.streamerService.connect(sendNodeId, user, room, dtlsParameters);
+    return this.streamerService.connect(
+      sendNodeId,
+      user,
+      room,
+      dtlsParameters,
+      rtpCapabilities,
+    );
   }
 
   @Post('/streamer/producer')

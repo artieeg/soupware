@@ -4,6 +4,7 @@ import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { SendRouterService } from '../send-router';
 import { ConnectTransportOptions } from './types';
 import { RoomService } from '../room';
+import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 
 @Injectable()
 export class SendTransportService {
@@ -16,14 +17,18 @@ export class SendTransportService {
     room,
     user: user_id,
     dtls,
+    rtpCapabilities,
   }: {
     room: string;
     user: string;
     dtls: DtlsParameters;
+    rtpCapabilities: RtpCapabilities;
   }) {
     const sender = this.roomService
       .get(room)
       .users.find((u) => u.id === user_id);
+
+    sender.rtpCapabilities = rtpCapabilities;
 
     await sender.transport.connect({ dtlsParameters: dtls });
   }
@@ -46,7 +51,11 @@ export class SendTransportService {
       appData: { user, room, direction: 'send' },
     });
 
-    this.roomService.create(room, user, transport);
+    this.roomService.create(room, {
+      id: user,
+      transport,
+      producers: {},
+    });
 
     return {
       transportOptions: {

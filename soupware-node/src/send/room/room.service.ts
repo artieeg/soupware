@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransport';
-import { Room } from './types';
+import { Room, User } from './types';
 
 @Injectable()
 export class RoomService {
@@ -10,7 +10,7 @@ export class RoomService {
     this.rooms = new Map();
   }
 
-  create(room_id: string, user: string, transport: WebRtcTransport) {
+  create(room_id: string, user: User) {
     let room = this.rooms.get(room_id);
 
     if (!room) {
@@ -19,7 +19,7 @@ export class RoomService {
       this.rooms.set(room_id, room);
     }
 
-    room.users.push({ id: user, transport, producers: {} });
+    room.users.push(user);
   }
 
   get(room: string) {

@@ -1,6 +1,7 @@
 import { NODE_ID } from '@app/shared';
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { SendTransportService } from './transport.service';
 
@@ -13,12 +14,19 @@ export class SendTransportController {
     dtls,
     user,
     room,
+    rtpCapabilities,
   }: {
     room: string;
     dtls: DtlsParameters;
+    rtpCapabilities: RtpCapabilities;
     user: string;
   }) {
-    await this.sendTransportService.connectSendTransport({ room, user, dtls });
+    await this.sendTransportService.connectSendTransport({
+      room,
+      user,
+      dtls,
+      rtpCapabilities,
+    });
 
     return { status: 'ok' };
   }

@@ -62,6 +62,7 @@ export async function main() {
         dtlsParameters,
         sendNodeId,
         room,
+        rtpCapabilities: sendDevice.rtpCapabilities,
       });
 
       cb();
