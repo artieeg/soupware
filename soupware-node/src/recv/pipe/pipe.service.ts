@@ -2,6 +2,7 @@ import { mediaSoupConfig } from '@app/mediasoup.config';
 import { PipeConsumerParams } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
+import { Producer } from 'mediasoup/node/lib/Producer';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { RecvRouterService } from '../recv-router';
 
@@ -11,6 +12,24 @@ export class PipeService {
 
   constructor(private routerService: RecvRouterService) {
     this.pipes = new Map();
+  }
+
+  async pipeToEgressRouters(producer: Producer) {
+    const bridgeRouter = this.routerService.getBridgeRouter();
+    const egressRouters = this.routerService.getEgressRouters();
+
+    const result = await Promise.all(
+      egressRouters.map((router) =>
+        bridgeRouter.pipeToRouter({
+          producerId: producer.id,
+          router,
+        }),
+      ),
+    );
+
+    setInterval(async () => {
+      console.log(await result[0].pipeProducer?.getStats());
+    }, 1000);
   }
 
   async createPipeProducers(
@@ -32,9 +51,7 @@ export class PipeService {
       rtpParameters: params.rtpParameters,
     });
 
-    setInterval(async () => {
-      console.log(await producer.getStats());
-    }, 1000);
+    await this.pipeToEgressRouters(producer);
 
     return { producer: producer.id };
   }

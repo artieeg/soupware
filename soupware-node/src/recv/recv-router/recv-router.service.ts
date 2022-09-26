@@ -9,11 +9,11 @@ type RecvWorker = { worker: Worker; router: Router };
 @Injectable()
 export class RecvRouterService {
   private nextWorkerIdx: number = 0;
-  private workers: RecvWorker[];
+  private egressWorkers: RecvWorker[];
   private bridgeRecvWorker: RecvWorker;
 
   constructor() {
-    this.workers = [];
+    this.egressWorkers = [];
   }
 
   async onModuleInit() {
@@ -26,7 +26,7 @@ export class RecvRouterService {
         mediaCodecs: mediaSoupConfig.mediasoup.mediaCodecs,
       });
 
-      this.workers.push({
+      this.egressWorkers.push({
         worker,
         router,
       });
@@ -43,13 +43,17 @@ export class RecvRouterService {
     };
   }
 
+  getEgressRouters() {
+    return this.egressWorkers.map(({ router }) => router);
+  }
+
   getBridgeRouter() {
     return this.bridgeRecvWorker.router;
   }
 
   getNextRouter() {
     const router =
-      this.workers[this.nextWorkerIdx % this.workers.length].router;
+      this.egressWorkers[this.nextWorkerIdx % this.egressWorkers.length].router;
 
     this.nextWorkerIdx++;
 

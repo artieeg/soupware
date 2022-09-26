@@ -18,7 +18,7 @@ export class PipeController {
     sendNodeId: string;
     consumers: PipeConsumerParams[];
   }) {
-    return this.pipeService.createPipeConsumers(room, sendNodeId, consumers);
+    return this.pipeService.createPipeProducers(room, sendNodeId, consumers);
   }
 
   @MessagePattern(`soupware.pipe.recv.${NODE_ID}`)
