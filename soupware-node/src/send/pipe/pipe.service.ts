@@ -1,12 +1,12 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
-import { NODE_ID } from '@app/shared';
+import { NODE_ID, PipeConsumerParams } from '@app/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
 import { Producer } from 'mediasoup/node/lib/Producer';
 import { firstValueFrom } from 'rxjs';
 import { RoomService } from '../room';
-import { Room } from '../room/types';
+import { Room, User } from '../room/types';
 import { SendRouterService } from '../send-router';
 
 @Injectable()
@@ -28,6 +28,19 @@ export class SendPipeService {
 
     const pipeConsumers = await this.createPipeConsumers(pipe, producers);
 
+    await firstValueFrom(
+      this.client.send(`soupware.pipe.recv.producers.${targetRecvNodeId}`, {
+        room: room_id,
+        sendNodeId: NODE_ID,
+        consumers: pipeConsumers.map((consumer) => ({
+          id: consumer.id,
+          kind: consumer.kind,
+          rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
+          rtpParameters: consumer.rtpParameters,
+        })) as PipeConsumerParams[],
+      }),
+    );
+
     return { status: 'ok' };
   }
 
@@ -36,7 +49,9 @@ export class SendPipeService {
     producers: Producer[],
   ) {
     return Promise.all(
-      producers.map((producer) => pipe.consume({ producerId: producer.id })),
+      producers.map((producer) =>
+        pipe.consume({ producerId: producer.id, appData: producer.appData }),
+      ),
     );
   }
 

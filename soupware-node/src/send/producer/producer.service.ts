@@ -8,7 +8,12 @@ export class ProducerService {
 
   async create(room: string, user_id: string, options: ProducerOptions) {
     const user = this.roomService.getUser(room, user_id);
-    const producer = await user.transport.produce(options);
+    const producer = await user.transport.produce({
+      ...options,
+      appData: {
+        user,
+      },
+    });
 
     user.producers[producer.kind] = producer;
 
