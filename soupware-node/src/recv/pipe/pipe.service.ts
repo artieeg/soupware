@@ -13,17 +13,17 @@ export class PipeService {
     this.pipes = new Map();
   }
 
-  async createPipeConsumers(
+  async createPipeProducers(
     room: string,
     originNodeId: string,
     consumerData: PipeConsumerParams[],
   ) {
     return Promise.all(
-      consumerData.map((data) => this.createPipeConsumer(originNodeId, data)),
+      consumerData.map((data) => this.createPipeProducer(originNodeId, data)),
     );
   }
 
-  async createPipeConsumer(originNodeId: string, params: PipeConsumerParams) {
+  async createPipeProducer(originNodeId: string, params: PipeConsumerParams) {
     const pipeTransport = this.pipes.get(originNodeId);
 
     const producer = await pipeTransport.produce({
