@@ -10,6 +10,10 @@ export class RoomService {
     this.rooms = new Map();
   }
 
+  getRoom(room: string) {
+    return this.rooms.get(room);
+  }
+
   async create(room_id: string, user: string, transport: Transport) {
     let room = this.rooms.get(room_id);
 

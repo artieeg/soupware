@@ -5,16 +5,20 @@ import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
 import { Producer } from 'mediasoup/node/lib/Producer';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { RecvRouterService } from '../recv-router';
+import { RoomService } from '../room/room.service';
 
 @Injectable()
 export class PipeService {
   private pipes: Map<string, PipeTransport>;
 
-  constructor(private routerService: RecvRouterService) {
+  constructor(
+    private routerService: RecvRouterService,
+    private roomService: RoomService,
+  ) {
     this.pipes = new Map();
   }
 
-  async pipeToEgressRouters(producer: Producer) {
+  async pipeToEgressRouters(room_id: string, producer: Producer) {
     const bridgeRouter = this.routerService.getBridgeRouter();
     const egressRouters = this.routerService.getEgressRouters();
 
@@ -30,6 +34,11 @@ export class PipeService {
     setInterval(async () => {
       console.log(await result[0].pipeProducer?.getStats());
     }, 1000);
+
+    const egressProducers = result.map((pipe) => pipe.pipeProducer!);
+    const room = this.roomService.getRoom(room_id);
+
+    room.producers.push(...egressProducers);
   }
 
   async createPipeProducers(
@@ -38,11 +47,17 @@ export class PipeService {
     consumerData: PipeConsumerParams[],
   ) {
     return Promise.all(
-      consumerData.map((data) => this.createPipeProducer(originNodeId, data)),
+      consumerData.map((data) =>
+        this.createPipeProducer(originNodeId, room, data),
+      ),
     );
   }
 
-  async createPipeProducer(originNodeId: string, params: PipeConsumerParams) {
+  async createPipeProducer(
+    originNodeId: string,
+    room: string,
+    params: PipeConsumerParams,
+  ) {
     const pipeTransport = this.pipes.get(originNodeId);
 
     const producer = await pipeTransport.produce({
@@ -51,7 +66,7 @@ export class PipeService {
       rtpParameters: params.rtpParameters,
     });
 
-    await this.pipeToEgressRouters(producer);
+    await this.pipeToEgressRouters(room, producer);
 
     return { producer: producer.id };
   }
