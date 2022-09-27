@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Post, Put } from '@nestjs/common';
 import { ViewerService } from './viewer.service';
 
 type CreateConsumerDto = {
@@ -13,9 +13,23 @@ type CreateViewerDto = {
   room: string;
 };
 
+type ConnectViewerDto = {
+  user: string;
+  room: string;
+  dtls: any;
+  recvNodeId: string;
+};
+
 @Controller()
 export class ViewerController {
   constructor(private viewerService: ViewerService) {}
+
+  @Put('/viewer')
+  async onConnectViewer(
+    @Body() { user, room, dtls, recvNodeId }: ConnectViewerDto,
+  ) {
+    return this.viewerService.connect(user, room, dtls, recvNodeId);
+  }
 
   @Post('/viewer/consumer')
   async onCreateConsumer(

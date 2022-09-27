@@ -29,7 +29,14 @@ async function main() {
   const transport = recvDevice.createRecvTransport(transportOptions);
 
   transport.on("connect", async ({ dtlsParameters }, cb, erb) => {
-    console.log({ dtlsParameters });
+    const r = await axios.put("/viewer", {
+      room,
+      user,
+      recvNodeId,
+      dtls: dtlsParameters,
+    });
+
+    cb();
   });
 
   const consumerResponse = await axios.post("/viewer/consumer", {
@@ -40,7 +47,6 @@ async function main() {
   });
 
   const params = consumerResponse.data.consumerParameters;
-  console.log(params);
 
   const consumers: Consumer[] = await Promise.all(
     params.map(({ consumerParameters: consumer }: any) =>
@@ -54,8 +60,8 @@ async function main() {
     )
   );
 
-  setInterval(() => {
-    console.log(consumers[0].getStats());
+  setInterval(async () => {
+    console.log(await consumers[0].getStats());
   }, 1000);
 }
 

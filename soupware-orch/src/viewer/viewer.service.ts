@@ -47,4 +47,16 @@ export class ViewerService {
 
     return { consumerParameters: response };
   }
+
+  async connect(user: string, room: string, dtls: any, recvNodeId: string) {
+    const response = await firstValueFrom(
+      this.client.send(`soupware.transport.recv.connect.${recvNodeId}`, {
+        user,
+        room,
+        dtls,
+      }),
+    );
+
+    return { response };
+  }
 }

@@ -1,5 +1,6 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
 import { Injectable } from '@nestjs/common';
+import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { RecvRouterService } from '../recv-router';
 import { RoomService } from '../room/room.service';
 
@@ -9,6 +10,19 @@ export class RecvTransportService {
     private recvRouterService: RecvRouterService,
     private roomService: RoomService,
   ) {}
+
+  async connectRecvTransport(
+    user_id: string,
+    room_id: string,
+    dtlsParameters: DtlsParameters,
+  ) {
+    const room = this.roomService.getRoom(room_id);
+    const user = room.users.find((u) => u.id == user_id);
+
+    await user.transport.connect({ dtlsParameters });
+
+    return { status: 'ok' };
+  }
 
   async createRecvTransport(user: string, room_id: string) {
     const router = this.recvRouterService.getNextRouter();
