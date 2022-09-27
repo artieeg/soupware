@@ -25,8 +25,6 @@ export class RecvTransportService {
       appData: { user, room, direction: 'send' },
     });
 
-    this.roomService.create(room, user, transport);
-
     return {
       transportOptions: {
         id: transport.id,
