@@ -1,4 +1,9 @@
-import { Producer, Consumer, Transport } from 'mediasoup/node/lib/types';
+import {
+  Producer,
+  Consumer,
+  Transport,
+  Router,
+} from 'mediasoup/node/lib/types';
 
 export type Room = {
   id: string;
@@ -15,6 +20,7 @@ export type PipedProducer = Map<string, Producer>;
 
 export type User = {
   id: string;
+  router: Router;
   transport: Transport;
   consumers: Consumer[];
 };

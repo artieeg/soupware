@@ -34,7 +34,7 @@ export class PipeService {
       pipedProducer.set(router.id, r.pipeProducer!);
     }
 
-    const room = this.roomService.create(room_id);
+    const room = this.roomService.getOrCreate(room_id);
     room.producers.push(pipedProducer);
   }
 

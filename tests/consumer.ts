@@ -1,6 +1,7 @@
 import axios from "axios";
 import { createWorker } from "mediasoup-client-aiortc";
 import { Device } from "mediasoup-client";
+import { Consumer } from "mediasoup-client/lib/Consumer";
 
 const URL = process.env.URL || "http://192.168.1.20:3000";
 axios.defaults.baseURL = URL;
@@ -31,7 +32,31 @@ async function main() {
     console.log({ dtlsParameters });
   });
 
-  await axios.post("/viewer/consumer", { room, recvNodeId });
+  const consumerResponse = await axios.post("/viewer/consumer", {
+    room,
+    user,
+    recvNodeId,
+    rtpCapabilities: recvDevice.rtpCapabilities,
+  });
+
+  const params = consumerResponse.data.consumerParameters;
+  console.log(params);
+
+  const consumers: Consumer[] = await Promise.all(
+    params.map(({ consumerParameters: consumer }: any) =>
+      transport.consume({
+        id: consumer.id,
+        producerId: consumer.producerId,
+        kind: consumer.kind,
+        rtpParameters: consumer.rtpParameters,
+        appData: {},
+      })
+    )
+  );
+
+  setInterval(() => {
+    console.log(consumers[0].getStats());
+  }, 1000);
 }
 
 main();

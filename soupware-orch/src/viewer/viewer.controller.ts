@@ -5,6 +5,7 @@ type CreateConsumerDto = {
   user: string;
   room: string;
   recvNodeId: string;
+  rtpCapabilities: any;
 };
 
 type CreateViewerDto = {
@@ -18,9 +19,9 @@ export class ViewerController {
 
   @Post('/viewer/consumer')
   async onCreateConsumer(
-    @Body() { user, room, recvNodeId }: CreateConsumerDto,
+    @Body() { user, room, recvNodeId, rtpCapabilities }: CreateConsumerDto,
   ) {
-    return this.viewerService.consume(user, room, recvNodeId);
+    return this.viewerService.consume(user, room, recvNodeId, rtpCapabilities);
   }
 
   @Post('/viewer')

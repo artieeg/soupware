@@ -27,9 +27,24 @@ export class ViewerService {
     return { ...response, recvNodeId };
   }
 
-  async consume(viewer: string, room: string, recvNodeId: string) {
+  async consume(
+    viewer: string,
+    room: string,
+    recvNodeId: string,
+    rtpCapabilities: any,
+  ) {
     if (this.nodeManagerService.isRoomPipedTo(room, recvNodeId)) {
       await this.piperService.pipeRoomToNode(room, recvNodeId);
     }
+
+    const response = await firstValueFrom(
+      this.client.send(`soupware.consumer.create.${recvNodeId}`, {
+        room,
+        user: viewer,
+        rtpCapabilities,
+      }),
+    );
+
+    return { consumerParameters: response };
   }
 }

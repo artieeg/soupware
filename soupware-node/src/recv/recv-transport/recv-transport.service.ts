@@ -10,7 +10,7 @@ export class RecvTransportService {
     private roomService: RoomService,
   ) {}
 
-  async createRecvTransport(user: string, room: string) {
+  async createRecvTransport(user: string, room_id: string) {
     const router = this.recvRouterService.getNextRouter();
 
     const { listenIps, initialAvailableOutgoingBitrate } =
@@ -22,7 +22,15 @@ export class RecvTransportService {
       enableTcp: true,
       preferUdp: true,
       initialAvailableOutgoingBitrate: initialAvailableOutgoingBitrate,
-      appData: { user, room, direction: 'send' },
+      appData: { user, room: room_id, direction: 'send' },
+    });
+
+    const room = this.roomService.getOrCreate(room_id);
+    room.users.push({
+      id: user,
+      transport,
+      router,
+      consumers: [],
     });
 
     return {

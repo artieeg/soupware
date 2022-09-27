@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { SEND_NODE } from './constants';
-import { RecvPipeModule, RecvTransportModule } from './recv';
+import { ConsumerModule, RecvPipeModule, RecvTransportModule } from './recv';
 import {
   SendRouterModule,
   SendTransportModule,
@@ -29,7 +29,7 @@ const sendNodeModules = [
   ProducerModule,
 ];
 
-const recvNodeModules = [RecvTransportModule, RecvPipeModule];
+const recvNodeModules = [RecvTransportModule, RecvPipeModule, ConsumerModule];
 
 const nodeKind = process.env.NODE_KIND as NodeKind;
 
