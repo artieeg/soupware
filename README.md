@@ -4,11 +4,11 @@ Minimalistic, scalable, and extendable WebRTC infrastructure, running mediasoup 
 
 ## Project Scope
 
-- [ ]  WebRTC send/recv
-- [ ]  Scalability
-- [ ]  Load balancing
-- [ ]  Manage via HTTP API
+- [x]  WebRTC send/recv
+- [x]  Scalability
 - [ ]  Permissions
 - [ ]  Upgrading/Downgrading user roles
 - [ ]  Kicking users from rooms
+- [ ]  Manage via HTTP API
+- [ ]  Load balancing
 - [ ]  Region support (?)
