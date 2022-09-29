@@ -2,6 +2,7 @@
   "private": true,
   "workspaces": [
     "soupware-node",
+    "soupware-shared",
     "soupware-orch"
   ]
 }

@@ -1,5 +1,6 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { ProducerParams } from '@soupware/shared';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
 
@@ -52,12 +53,14 @@ export class StreamerService implements OnApplicationBootstrap {
     sendNodeId: string,
     producerOptions: any,
   ) {
-    return await firstValueFrom(
+    const createdProducer: ProducerParams = await firstValueFrom(
       this.client.send(`soupware.producer.create.${sendNodeId}`, {
         user,
         producerOptions,
         room,
       }),
     );
+
+    return createdProducer;
   }
 }
