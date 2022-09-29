@@ -1,6 +1,7 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { ProducerParams, MediaPermission } from '@soupware/shared';
+import { ProducerOptions } from 'mediasoup/node/lib/Producer';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
 import { PermissionTokenService } from 'src/permission-token';
@@ -82,9 +83,13 @@ export class StreamerService implements OnApplicationBootstrap {
     );
   }
 
-  async produce(token: string, producerOptions: any) {
-    const { sendNodeId, user, room } =
+  async produce(token: string, producerOptions: ProducerOptions) {
+    const { sendNodeId, user, room, produce } =
       this.permissionTokenService.decode(token);
+
+    if (!produce[producerOptions.kind]) {
+      throw new Error('Permission denied');
+    }
 
     const params: ProducerParams = await firstValueFrom(
       this.client.send(`soupware.producer.create.${sendNodeId}`, {

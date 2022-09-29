@@ -31,6 +31,7 @@
     "dotenv": "^16.0.2",
     "ioredis": "^5.2.3",
     "jsonwebtoken": "^8.5.1",
+    "mediasoup": "3.10.6",
     "nanoid": "^3.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
