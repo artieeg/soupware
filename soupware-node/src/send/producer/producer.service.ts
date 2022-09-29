@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProducerParams } from '@soupware/shared';
+import { ConsumerParams } from '@soupware/shared';
 import { ProducerOptions } from 'mediasoup/node/lib/Producer';
 import { RoomService } from '../room';
 
@@ -11,7 +11,7 @@ export class ProducerService {
     room: string,
     user_id: string,
     options: ProducerOptions,
-  ): Promise<ProducerParams> {
+  ): Promise<ConsumerParams> {
     const user = this.roomService.getUser(room, user_id);
     const producer = await user.transport.produce({
       ...options,

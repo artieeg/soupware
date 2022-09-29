@@ -6,7 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { StreamerModule } from './streamer/streamer.module';
 import { NodeManagerModule } from './node-manager';
 import { ViewerModule } from './viewer';
-import { WebhookModule } from './webhook/webhook.module';
+import { WebhookModule } from './webhook';
 
 @Module({
   imports: [

@@ -1,14 +1,16 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ProducerParams } from '@soupware/shared';
+import { ConsumerParams } from '@soupware/shared';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
+import { WebhookService } from 'src/webhook';
 
 @Injectable()
 export class StreamerService implements OnApplicationBootstrap {
   constructor(
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private nodeManagerService: NodeManagerService,
+    private webhookService: WebhookService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -53,7 +55,7 @@ export class StreamerService implements OnApplicationBootstrap {
     sendNodeId: string,
     producerOptions: any,
   ) {
-    const createdProducer: ProducerParams = await firstValueFrom(
+    const params: ConsumerParams = await firstValueFrom(
       this.client.send(`soupware.producer.create.${sendNodeId}`, {
         user,
         producerOptions,
@@ -61,6 +63,15 @@ export class StreamerService implements OnApplicationBootstrap {
       }),
     );
 
-    return createdProducer;
+    this.webhookService.post({
+      name: 'producer-created',
+      payload: {
+        user,
+        room,
+        params,
+      },
+    });
+
+    return params;
   }
 }
