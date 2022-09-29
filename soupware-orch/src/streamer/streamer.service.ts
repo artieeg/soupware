@@ -19,7 +19,12 @@ export class StreamerService implements OnApplicationBootstrap {
     await this.client.connect();
   }
 
-  async create(streamer: string, room: string, oldPermissionToken?: string) {
+  async create(
+    streamer: string,
+    room: string,
+    permissions: { audio: boolean; video: boolean },
+    oldPermissionToken?: string,
+  ) {
     const sendNodeId = await this.nodeManagerService.getNode('SEND');
 
     const response = await firstValueFrom(
@@ -38,14 +43,14 @@ export class StreamerService implements OnApplicationBootstrap {
         room,
         user: streamer,
         sendNodeId,
-        produce: { video: true, audio: true },
+        produce: permissions,
       });
 
     const updateOldToken = (oldTokenData: MediaPermission) =>
       this.permissionTokenService.update(oldPermissionToken, {
         ...oldTokenData,
         sendNodeId,
-        produce: { audio: true, video: true },
+        produce: permissions,
       });
 
     if (oldPermissionToken) {

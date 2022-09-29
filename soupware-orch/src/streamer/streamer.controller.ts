@@ -5,6 +5,10 @@ type CreateStreamerDto = {
   user: string;
   room: string;
   oldPermissionToken?: string;
+  permissions: {
+    audio: boolean;
+    video: boolean;
+  };
 };
 
 type ConnectStreamerDto = {
@@ -24,9 +28,14 @@ export class StreamerController {
 
   @Post('/streamer')
   async onCreateStreamer(
-    @Body() { user, room, oldPermissionToken }: CreateStreamerDto,
+    @Body() { user, room, oldPermissionToken, permissions }: CreateStreamerDto,
   ) {
-    return this.streamerService.create(user, room, oldPermissionToken);
+    return this.streamerService.create(
+      user,
+      room,
+      permissions,
+      oldPermissionToken,
+    );
   }
 
   @Put('/streamer')

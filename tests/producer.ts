@@ -35,6 +35,10 @@ export async function main() {
   const createStreamerResponse = await axios.post("/streamer", {
     user,
     room,
+    permissions: {
+      audio: true,
+      video: true,
+    },
   });
 
   const {
