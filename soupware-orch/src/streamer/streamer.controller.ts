@@ -4,21 +4,18 @@ import { StreamerService } from './streamer.service';
 type CreateStreamerDto = {
   user: string;
   room: string;
+  oldPermissionToken?: string;
 };
 
 type ConnectStreamerDto = {
-  user: string;
   dtlsParameters: any;
-  sendNodeId: string;
-  room: string;
   rtpCapabilities: any;
+  mediaPermissionToken: string;
 };
 
 type CreateProducerDto = {
-  user: string;
   producerOptions: any;
-  sendNodeId: string;
-  room: string;
+  mediaPermissionToken: string;
 };
 
 @Controller()
@@ -26,8 +23,10 @@ export class StreamerController {
   constructor(private streamerService: StreamerService) {}
 
   @Post('/streamer')
-  async onCreateStreamer(@Body() { user, room }: CreateStreamerDto) {
-    return this.streamerService.create(user, room);
+  async onCreateStreamer(
+    @Body() { user, room, oldPermissionToken }: CreateStreamerDto,
+  ) {
+    return this.streamerService.create(user, room, oldPermissionToken);
   }
 
   @Put('/streamer')
@@ -36,15 +35,11 @@ export class StreamerController {
     {
       dtlsParameters,
       rtpCapabilities,
-      sendNodeId,
-      user,
-      room,
+      mediaPermissionToken,
     }: ConnectStreamerDto,
   ) {
     return this.streamerService.connect(
-      sendNodeId,
-      user,
-      room,
+      mediaPermissionToken,
       dtlsParameters,
       rtpCapabilities,
     );
@@ -52,13 +47,8 @@ export class StreamerController {
 
   @Post('/streamer/producer')
   async onCreateProducer(
-    @Body() { producerOptions, user, sendNodeId, room }: CreateProducerDto,
+    @Body() { producerOptions, mediaPermissionToken }: CreateProducerDto,
   ) {
-    return this.streamerService.produce(
-      user,
-      room,
-      sendNodeId,
-      producerOptions,
-    );
+    return this.streamerService.produce(mediaPermissionToken, producerOptions);
   }
 }

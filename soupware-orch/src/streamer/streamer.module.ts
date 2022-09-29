@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NodeManagerModule } from 'src/node-manager';
+import { PermissionTokenModule } from 'src/permission-token';
+import { WebhookModule } from 'src/webhook';
 import { StreamerController } from './streamer.controller';
 import { StreamerService } from './streamer.service';
 
@@ -16,6 +18,8 @@ import { StreamerService } from './streamer.service';
       },
     ]),
     NodeManagerModule,
+    PermissionTokenModule,
+    WebhookModule,
   ],
   providers: [StreamerService],
   controllers: [StreamerController],

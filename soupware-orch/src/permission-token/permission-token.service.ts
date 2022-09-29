@@ -8,7 +8,7 @@ type CreateTokenParams = Optional<MediaPermission, 'produce'>;
 type UpdateTokenParams = Partial<MediaPermission>;
 
 @Injectable()
-export class PermissionService {
+export class PermissionTokenService {
   constructor(private configService: ConfigService) {}
 
   create(data: CreateTokenParams) {

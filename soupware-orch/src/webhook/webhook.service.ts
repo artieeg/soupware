@@ -2,14 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import axios from 'axios';
-import { ConsumerParams } from '@soupware/shared';
+import { ProducerParams } from '@soupware/shared';
 
 type WebhookName = 'producer-created' | 'producer-deleted';
 
 type TrackPublished = {
   user: string;
   room: string;
-  params: ConsumerParams;
+  params: ProducerParams;
 };
 
 type WebhookPayload = TrackPublished;

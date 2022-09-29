@@ -1,8 +1,9 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ConsumerParams } from '@soupware/shared';
+import { ProducerParams, MediaPermission } from '@soupware/shared';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
+import { PermissionTokenService } from 'src/permission-token';
 import { WebhookService } from 'src/webhook';
 
 @Injectable()
@@ -11,13 +12,14 @@ export class StreamerService implements OnApplicationBootstrap {
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private nodeManagerService: NodeManagerService,
     private webhookService: WebhookService,
+    private permissionTokenService: PermissionTokenService,
   ) {}
 
   async onApplicationBootstrap() {
     await this.client.connect();
   }
 
-  async create(streamer: string, room: string) {
+  async create(streamer: string, room: string, oldPermissionToken?: string) {
     const sendNodeId = await this.nodeManagerService.getNode('SEND');
 
     const response = await firstValueFrom(
@@ -29,16 +31,42 @@ export class StreamerService implements OnApplicationBootstrap {
 
     await this.nodeManagerService.addNodeForRoom(room, sendNodeId);
 
-    return { ...response, sendNodeId };
+    let mediaPermissionToken: string;
+
+    const createNewToken = () =>
+      this.permissionTokenService.create({
+        room,
+        user: streamer,
+        sendNodeId,
+        produce: { video: true, audio: true },
+      });
+
+    const updateOldToken = (oldTokenData: MediaPermission) =>
+      this.permissionTokenService.update(oldPermissionToken, {
+        ...oldTokenData,
+        sendNodeId,
+        produce: { audio: true, video: true },
+      });
+
+    if (oldPermissionToken) {
+      const oldTokenData =
+        this.permissionTokenService.decode(oldPermissionToken);
+      if (oldTokenData.room !== room) {
+        mediaPermissionToken = createNewToken();
+      } else {
+        mediaPermissionToken = updateOldToken(oldTokenData);
+      }
+    } else {
+      mediaPermissionToken = createNewToken();
+    }
+
+    return { ...response, mediaPermissionToken };
   }
 
-  async connect(
-    sendNodeId: string,
-    user: string,
-    room: string,
-    dtlsParameters: any,
-    rtpCapabilities: any,
-  ) {
+  async connect(token: string, dtlsParameters: any, rtpCapabilities: any) {
+    const { sendNodeId, user, room } =
+      this.permissionTokenService.decode(token);
+
     await firstValueFrom(
       this.client.send(`soupware.transport.send.connect.${sendNodeId}`, {
         user,
@@ -49,28 +77,17 @@ export class StreamerService implements OnApplicationBootstrap {
     );
   }
 
-  async produce(
-    user: string,
-    room: string,
-    sendNodeId: string,
-    producerOptions: any,
-  ) {
-    const params: ConsumerParams = await firstValueFrom(
+  async produce(token: string, producerOptions: any) {
+    const { sendNodeId, user, room } =
+      this.permissionTokenService.decode(token);
+
+    const params: ProducerParams = await firstValueFrom(
       this.client.send(`soupware.producer.create.${sendNodeId}`, {
         user,
         producerOptions,
         room,
       }),
     );
-
-    this.webhookService.post({
-      name: 'producer-created',
-      payload: {
-        user,
-        room,
-        params,
-      },
-    });
 
     return params;
   }

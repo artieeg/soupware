@@ -39,7 +39,7 @@ export async function main() {
 
   const {
     transportConnectParams: { transportOptions, routerRtpParameters },
-    sendNodeId,
+    mediaPermissionToken,
   } = createStreamerResponse.data;
 
   await sendDevice.load({ routerRtpCapabilities: routerRtpParameters });
@@ -58,10 +58,8 @@ export async function main() {
 
     try {
       await axios.put("/streamer", {
-        user,
         dtlsParameters,
-        sendNodeId,
-        room,
+        mediaPermissionToken,
         rtpCapabilities: sendDevice.rtpCapabilities,
       });
 
@@ -77,10 +75,8 @@ export async function main() {
     try {
       const { id } = (
         await axios.post("/streamer/producer", {
-          user,
           producerOptions,
-          sendNodeId,
-          room,
+          mediaPermissionToken,
         })
       ).data;
 
