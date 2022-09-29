@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MediaPermission } from '@soupware/shared';
 import { Optional } from 'utility-types';
-import jwt, { JwtPayload } from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 type CreateTokenParams = Optional<MediaPermission, 'produce'>;
 type UpdateTokenParams = Partial<MediaPermission>;
@@ -42,7 +42,7 @@ export class PermissionTokenService {
 
     const token = jwt.sign(
       {
-        ...(jwt.decode(prevToken) as JwtPayload),
+        ...(jwt.decode(prevToken) as jwt.JwtPayload),
         ...updatedTokenData,
       },
       secret,

@@ -2,9 +2,7 @@ import { Body, Controller, Post, Put } from '@nestjs/common';
 import { ViewerService } from './viewer.service';
 
 type CreateConsumerDto = {
-  user: string;
-  room: string;
-  recvNodeId: string;
+  mediaPermissionToken: string;
   rtpCapabilities: any;
 };
 
@@ -14,10 +12,8 @@ type CreateViewerDto = {
 };
 
 type ConnectViewerDto = {
-  user: string;
-  room: string;
+  mediaPermissionToken: string;
   dtls: any;
-  recvNodeId: string;
 };
 
 @Controller()
@@ -26,16 +22,16 @@ export class ViewerController {
 
   @Put('/viewer')
   async onConnectViewer(
-    @Body() { user, room, dtls, recvNodeId }: ConnectViewerDto,
+    @Body() { mediaPermissionToken, dtls }: ConnectViewerDto,
   ) {
-    return this.viewerService.connect(user, room, dtls, recvNodeId);
+    return this.viewerService.connect(mediaPermissionToken, dtls);
   }
 
   @Post('/viewer/consumer')
   async onCreateConsumer(
-    @Body() { user, room, recvNodeId, rtpCapabilities }: CreateConsumerDto,
+    @Body() { mediaPermissionToken, rtpCapabilities }: CreateConsumerDto,
   ) {
-    return this.viewerService.consume(user, room, recvNodeId, rtpCapabilities);
+    return this.viewerService.consume(mediaPermissionToken, rtpCapabilities);
   }
 
   @Post('/viewer')

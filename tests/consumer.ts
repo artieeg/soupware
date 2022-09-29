@@ -22,7 +22,7 @@ async function main() {
 
   const {
     transportConnectParams: { transportOptions, routerRtpParameters },
-    recvNodeId,
+    mediaPermissionToken,
   } = createViewerResponse.data;
 
   await recvDevice.load({ routerRtpCapabilities: routerRtpParameters });
@@ -30,9 +30,7 @@ async function main() {
 
   transport.on("connect", async ({ dtlsParameters }, cb, erb) => {
     const r = await axios.put("/viewer", {
-      room,
-      user,
-      recvNodeId,
+      mediaPermissionToken,
       dtls: dtlsParameters,
     });
 
@@ -40,9 +38,7 @@ async function main() {
   });
 
   const consumerResponse = await axios.post("/viewer/consumer", {
-    room,
-    user,
-    recvNodeId,
+    mediaPermissionToken,
     rtpCapabilities: recvDevice.rtpCapabilities,
   });
 

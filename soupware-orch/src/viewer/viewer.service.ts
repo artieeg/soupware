@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
+import { PermissionTokenService } from 'src/permission-token';
 import { PiperService } from 'src/piper';
 
 @Injectable()
@@ -10,6 +12,7 @@ export class ViewerService {
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private nodeManagerService: NodeManagerService,
     private piperService: PiperService,
+    private permissionTokenService: PermissionTokenService,
   ) {}
 
   async create(viewer: string, room: string) {
@@ -24,15 +27,19 @@ export class ViewerService {
 
     await this.nodeManagerService.addNodeForRoom(room, recvNodeId);
 
-    return { ...response, recvNodeId };
+    const mediaPermissionToken = this.permissionTokenService.create({
+      room,
+      user: viewer,
+      recvNodeId,
+    });
+
+    return { ...response, mediaPermissionToken };
   }
 
-  async consume(
-    viewer: string,
-    room: string,
-    recvNodeId: string,
-    rtpCapabilities: any,
-  ) {
+  async consume(token: string, rtpCapabilities: any) {
+    const { room, user, recvNodeId } =
+      this.permissionTokenService.decode(token);
+
     if (this.nodeManagerService.isRoomPipedTo(room, recvNodeId)) {
       await this.piperService.pipeRoomToNode(room, recvNodeId);
     }
@@ -40,7 +47,7 @@ export class ViewerService {
     const response = await firstValueFrom(
       this.client.send(`soupware.consumer.create.${recvNodeId}`, {
         room,
-        user: viewer,
+        user,
         rtpCapabilities,
       }),
     );
@@ -48,7 +55,10 @@ export class ViewerService {
     return { consumerParameters: response };
   }
 
-  async connect(user: string, room: string, dtls: any, recvNodeId: string) {
+  async connect(token: string, dtls: DtlsParameters) {
+    const { room, user, recvNodeId } =
+      this.permissionTokenService.decode(token);
+
     const response = await firstValueFrom(
       this.client.send(`soupware.transport.recv.connect.${recvNodeId}`, {
         user,
