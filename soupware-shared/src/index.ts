@@ -1,6 +1,8 @@
 import { MediaKind, RtpParameters } from "mediasoup/node/lib/types";
 
 export type MediaPermission = {
+  recvNodeId?: string;
+  sendNodeId?: string;
   user: string;
   room: string;
   produce: {
@@ -9,9 +11,8 @@ export type MediaPermission = {
   };
 };
 
-export type ConsumerParams = {
+export type ProducerParams = {
   id: string;
   kind: MediaKind;
   rtpParameters: RtpParameters;
-  producerId: string;
 };
