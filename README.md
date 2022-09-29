@@ -8,5 +8,7 @@ Minimalistic, scalable, and extendable WebRTC infrastructure, running mediasoup 
 - [ ]  Scalability
 - [ ]  Load balancing
 - [ ]  Manage via HTTP API
-- [ ]  Permissions, user upgrade/downgrade/kicks
+- [ ]  Permissions
+- [ ]  Upgrading/Downgrading user roles
+- [ ]  Kicking users from rooms
 - [ ]  Region support (?)
