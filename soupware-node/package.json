@@ -28,7 +28,7 @@
     "@nestjs/core": "^8.0.0",
     "@nestjs/microservices": "^9.0.11",
     "@nestjs/platform-express": "^8.0.0",
-    "@soupware/shared": "1.0.0",
+    "@soupware/internals": "1.0.0",
     "dotenv": "^16.0.2",
     "jsonwebtoken": "^8.5.1",
     "mediasoup": "3.10.6",

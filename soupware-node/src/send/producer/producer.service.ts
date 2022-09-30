@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ProducerParams } from '@soupware/shared';
+import { ProducerParams } from '@soupware/internals';
 import { ProducerOptions } from 'mediasoup/node/lib/Producer';
 import { SendPipeService } from '../pipe';
 import { RoomService } from '../room';
