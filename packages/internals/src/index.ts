@@ -18,6 +18,15 @@ export type ProducerParams = {
 };
 
 export type MediaNodeLoad = {
-  load: number[];
-  bandwidth: number;
+  id: string;
+  kind: string;
+
+  /** CPU usage (0 - 1) */
+  cpu: number;
+
+  /** Bandwidth usage in bytes */
+  bandwidth: {
+    inbound: number;
+    outbound: number;
+  };
 };

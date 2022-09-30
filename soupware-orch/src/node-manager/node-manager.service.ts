@@ -26,8 +26,9 @@ export class NodeManagerService implements OnModuleInit, OnApplicationShutdown {
     }
   }
 
-  async updateNodeLoad(node: string, data: MediaNodeLoad) {
-    await this.redis.hmset(node, data);
+  async updateNodeLoad(data: MediaNodeLoad) {
+    console.log('received node load', data);
+    await this.redis.hmset(data.id, data);
   }
 
   async addNodeForRoom(room: string, node: string) {
