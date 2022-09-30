@@ -1,5 +1,5 @@
 {
-  "name": "nest-typed-emitter",
+  "name": "@soupware/typed-emitter",
   "version": "1.0.0",
   "main": "index.ts",
   "license": "MIT",

@@ -2,8 +2,6 @@ import { Injectable } from "@nestjs/common";
 import TypedEmitter, { EventMap } from "typed-emitter";
 import EventEmitter from "events";
 
-// ⚠️  Beware of hacks ahead 🙃
-
 @Injectable()
 export class TypedEmitterService<T extends EventMap> {
   private emitter: TypedEmitter<T>;

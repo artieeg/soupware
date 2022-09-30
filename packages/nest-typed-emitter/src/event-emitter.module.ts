@@ -1,4 +1,4 @@
-import { Module } from "@nestjs/common";
+import { Module, Global } from "@nestjs/common";
 import { TypedEmitterService } from "./event-emitter.service";
 
 @Module({
@@ -7,4 +7,5 @@ import { TypedEmitterService } from "./event-emitter.service";
   controllers: [],
   exports: [TypedEmitterService],
 })
+@Global()
 export class TypedEmitterModule {}
