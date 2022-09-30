@@ -75,7 +75,8 @@ export class StreamerService implements OnApplicationBootstrap {
   ) {
     const tokenData = this.permissionTokenService.decode(token);
 
-    // TODO: check if permission got revoked
+    // TODO: check if audio or video permission got revoked,
+    // if so, close the corresponding producer
 
     const newToken = this.permissionTokenService.update(token, {
       ...tokenData,
