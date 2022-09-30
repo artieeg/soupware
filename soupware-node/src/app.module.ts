@@ -11,7 +11,11 @@ import {
   SendPipeModule,
 } from './send';
 import { ProducerModule } from './send/producer';
-import { NodeInfoModule } from './shared';
+import {
+  LoadReporterModule,
+  BandwidthTrackerModule,
+  NodeInfoModule,
+} from './shared';
 import { NodeKind } from './types';
 
 const shared = [
@@ -21,6 +25,8 @@ const shared = [
   }),
   NodeInfoModule,
   RecvTransportModule,
+  BandwidthTrackerModule,
+  LoadReporterModule,
   NestEmitterModule.forRoot(new EventEmitter()),
 ];
 

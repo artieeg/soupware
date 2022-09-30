@@ -16,3 +16,17 @@ export type ProducerParams = {
   kind: MediaKind;
   rtpParameters: RtpParameters;
 };
+
+export type MediaNodeLoad = {
+  id: string;
+  kind: string;
+
+  /** CPU usage (0 - 1) */
+  cpu: number;
+
+  /** Bandwidth usage in bytes */
+  bandwidth: {
+    inbound: number;
+    outbound: number;
+  };
+};

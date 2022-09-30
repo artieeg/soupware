@@ -4,6 +4,7 @@ import {
   OnModuleInit,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { MediaNodeLoad } from '@soupware/internals';
 import Redis from 'ioredis';
 
 const PREFIX_ROOM_PIPES = 'room_pipes_';
@@ -23,6 +24,11 @@ export class NodeManagerService implements OnModuleInit, OnApplicationShutdown {
     if (process.env.NODE_ENV !== 'production') {
       await this.redis.flushdb();
     }
+  }
+
+  async updateNodeLoad(data: MediaNodeLoad) {
+    console.log('received node load', data);
+    await this.redis.hmset(data.id, data);
   }
 
   async addNodeForRoom(room: string, node: string) {
