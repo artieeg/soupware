@@ -29,7 +29,7 @@ export async function main() {
     handlerFactory: worker.createHandlerFactory(),
   });
 
-  const user = "user0";
+  const user = process.env.S_UID ?? "user0";
   const room = "room0";
 
   const createStreamerResponse = await axios.post("/streamer", {

@@ -21,6 +21,6 @@ import { ClientsModule, Transport } from '@nestjs/microservices';
   ],
   providers: [SendPipeService],
   controllers: [SendPipeController],
-  exports: [],
+  exports: [SendPipeService],
 })
 export class SendPipeModule {}

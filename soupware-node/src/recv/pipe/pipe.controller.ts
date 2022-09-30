@@ -8,6 +8,19 @@ import { PipeService } from './pipe.service';
 export class PipeController {
   constructor(private pipeService: PipeService) {}
 
+  @MessagePattern(`soupware.pipe.recv.producer.${NODE_ID}`)
+  async onNewProducer({
+    room,
+    sendNodeId,
+    consumer,
+  }: {
+    room: string;
+    sendNodeId: string;
+    consumer: PipeConsumerParams;
+  }) {
+    return this.pipeService.createPipeProducer(sendNodeId, room, consumer);
+  }
+
   @MessagePattern(`soupware.pipe.recv.producers.${NODE_ID}`)
   async onCreatePipeProducers({
     room,
