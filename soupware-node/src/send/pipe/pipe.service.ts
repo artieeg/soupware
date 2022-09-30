@@ -21,7 +21,35 @@ export class SendPipeService {
     this.pipes = new Map();
   }
 
-  async pipeMediaRoom(room_id: string, targetRecvNodeId: string) {
+  async pipeNewProducer(producer: Producer) {
+    const room = (producer.appData as any).room as string;
+
+    const { pipes: pipedRecvNodeIds } = this.roomService.get(room);
+
+    for (const recvNodeId of pipedRecvNodeIds) {
+      const pipeTransport = await this.getPipeTo(recvNodeId);
+
+      const consumer = await pipeTransport.consume({
+        producerId: producer.id,
+        appData: producer.appData,
+      });
+
+      await firstValueFrom(
+        this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
+          consumer: {
+            id: consumer.id,
+            kind: consumer.kind,
+            rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
+            rtpParameters: consumer.rtpParameters,
+          },
+          room,
+          sendNodeId: NODE_ID,
+        }),
+      );
+    }
+  }
+
+  async pipeRoomProducers(room_id: string, targetRecvNodeId: string) {
     const room = this.roomService.get(room_id);
     const pipe = await this.getPipeTo(targetRecvNodeId);
     const producers = this.getRoomProducers(room);
@@ -41,6 +69,8 @@ export class SendPipeService {
       }),
     );
 
+    room.pipes.push(targetRecvNodeId);
+
     return { status: 'ok' };
   }
 
@@ -53,6 +83,10 @@ export class SendPipeService {
         pipe.consume({ producerId: producer.id, appData: producer.appData }),
       ),
     );
+  }
+
+  private getPipedNodeIds() {
+    return Array.from(this.pipes.keys());
   }
 
   private async getPipeTo(node: string) {

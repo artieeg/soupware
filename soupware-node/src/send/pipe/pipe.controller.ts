@@ -15,6 +15,6 @@ export class SendPipeController {
     room: string;
     targetRecvNodeId: string;
   }) {
-    return this.sendPipeService.pipeMediaRoom(room_id, targetRecvNodeId);
+    return this.sendPipeService.pipeRoomProducers(room_id, targetRecvNodeId);
   }
 }
