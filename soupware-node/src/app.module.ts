@@ -3,14 +3,19 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitter } from 'events';
 import { NestEmitterModule } from 'nest-emitter';
 import { SEND_NODE } from './constants';
-import { ConsumerModule, RecvPipeModule, RecvTransportModule } from './recv';
+import {
+  ConsumerModule,
+  RecvBandwidthTrackerModule,
+  RecvPipeModule,
+  RecvTransportModule,
+} from './recv';
 import {
   SendRouterModule,
   SendTransportModule,
   RoomModule,
   SendPipeModule,
+  SendBandwidthTrackerModule,
 } from './send';
-import { SendBandwidthTrackerModule } from './send/bandwidth-tracker';
 import { ProducerModule } from './send/producer';
 import { NodeInfoModule } from './shared';
 import { NodeKind } from './types';
@@ -34,7 +39,12 @@ const sendNodeModules = [
   SendBandwidthTrackerModule,
 ];
 
-const recvNodeModules = [RecvTransportModule, RecvPipeModule, ConsumerModule];
+const recvNodeModules = [
+  RecvTransportModule,
+  RecvPipeModule,
+  ConsumerModule,
+  RecvBandwidthTrackerModule,
+];
 
 const nodeKind = process.env.NODE_KIND as NodeKind;
 
