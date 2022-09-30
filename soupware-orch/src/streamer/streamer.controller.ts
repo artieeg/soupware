@@ -22,6 +22,14 @@ type CreateProducerDto = {
   mediaPermissionToken: string;
 };
 
+type UpdatePermissionsDto = {
+  mediaPermissionToken: string;
+  permissions: {
+    audio: boolean;
+    video: boolean;
+  };
+};
+
 @Controller()
 export class StreamerController {
   constructor(private streamerService: StreamerService) {}
@@ -35,6 +43,16 @@ export class StreamerController {
       room,
       permissions,
       oldPermissionToken,
+    );
+  }
+
+  @Put('/streamer/permissions')
+  async onPermissionsUpdate(
+    @Body() { mediaPermissionToken, permissions }: UpdatePermissionsDto,
+  ) {
+    return this.streamerService.updatePermissions(
+      mediaPermissionToken,
+      permissions,
     );
   }
 
