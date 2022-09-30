@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import axios from 'axios';
-import { ProducerParams } from '@soupware/shared';
+import { ProducerParams } from '@soupware/internals';
 
 type WebhookName = 'producer-created' | 'producer-deleted';
 

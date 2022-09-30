@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { MediaPermission } from '@soupware/shared';
+import { MediaPermission } from '@soupware/internals';
 import { Optional } from 'utility-types';
 import * as jwt from 'jsonwebtoken';
 

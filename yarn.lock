@@ -3876,6 +3876,11 @@ neo-async@^2.6.2:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.2.tgz#b4aafb93e3aeb2d8174ca53cf163ab7d7308305f"
   integrity sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
 
+nest-emitter@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/nest-emitter/-/nest-emitter-1.1.1.tgz#7237432afb926a7439c5d1e00ea6d003bb97b8d3"
+  integrity sha512-lsDJIuMl3A2xT4CYbHMNpoUdbIHUomRLcJJcLy4ZJzLoj09DXw79jVx1T/8YcTDKgk0smAKTq5JocXO6Hwy4tQ==
+
 nkeys.js@^1.0.0-9:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/nkeys.js/-/nkeys.js-1.0.3.tgz#487688a6f4f36f4a2796eee000cc6e54e122cb08"

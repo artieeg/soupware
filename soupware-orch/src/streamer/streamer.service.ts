@@ -1,6 +1,6 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ProducerParams, MediaPermission } from '@soupware/shared';
+import { ProducerParams, MediaPermission } from '@soupware/internals';
 import { ProducerOptions } from 'mediasoup/node/lib/Producer';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
