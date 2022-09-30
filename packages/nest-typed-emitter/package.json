@@ -1,0 +1,9 @@
+{
+  "name": "nest-typed-emitter",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "license": "MIT",
+  "dependencies": {
+    "typed-emitter": "^2.1.0"
+  }
+}
