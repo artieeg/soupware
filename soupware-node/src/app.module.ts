@@ -10,6 +10,7 @@ import {
   RoomModule,
   SendPipeModule,
 } from './send';
+import { SendBandwidthTrackerModule } from './send/bandwidth-tracker';
 import { ProducerModule } from './send/producer';
 import { NodeInfoModule } from './shared';
 import { NodeKind } from './types';
@@ -30,6 +31,7 @@ const sendNodeModules = [
   SendRouterModule,
   SendTransportModule,
   ProducerModule,
+  SendBandwidthTrackerModule,
 ];
 
 const recvNodeModules = [RecvTransportModule, RecvPipeModule, ConsumerModule];
