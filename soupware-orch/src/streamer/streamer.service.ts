@@ -69,6 +69,23 @@ export class StreamerService implements OnApplicationBootstrap {
     return { ...response, mediaPermissionToken };
   }
 
+  async updatePermissions(
+    token: string,
+    newPermissions: { audio: boolean; video: boolean },
+  ) {
+    const tokenData = this.permissionTokenService.decode(token);
+
+    // TODO: check if audio or video permission got revoked,
+    // if so, close the corresponding producer
+
+    const newToken = this.permissionTokenService.update(token, {
+      ...tokenData,
+      produce: newPermissions,
+    });
+
+    return newToken;
+  }
+
   async connect(token: string, dtlsParameters: any, rtpCapabilities: any) {
     const { sendNodeId, user, room } =
       this.permissionTokenService.decode(token);
