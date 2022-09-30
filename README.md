@@ -11,4 +11,5 @@ Minimalistic, scalable, and extendable WebRTC infrastructure, running mediasoup 
 - [ ]  Kicking users from rooms
 - [ ]  Manage via HTTP API
 - [ ]  Load balancing
+- [ ]  Extendable
 - [ ]  Region support (?)
