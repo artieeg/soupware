@@ -1,17 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
-import { NodeManagerService } from 'src/node-manager';
+import { RoomService } from 'src/room/room.service';
 
 @Injectable()
 export class PiperService {
   constructor(
     @Inject('MEDIA_NODE') private client: ClientProxy,
-    private nodeManagerService: NodeManagerService,
+    private roomService: RoomService,
   ) {}
 
   async pipeRoomToNode(room: string, targetRecvNodeId: string) {
-    const sendNodeIds = await this.nodeManagerService.getSendNodesFor(room);
+    const sendNodeIds = await this.roomService.getSendNodesFor(room);
 
     const promises = sendNodeIds.map((node) => {
       return firstValueFrom(

@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
-import { NodeManagerModule } from 'src/node-manager';
+import { RoomModule } from 'src/room/room.module';
 import { PiperService } from './piper.service';
 
 @Module({
@@ -14,7 +14,7 @@ import { PiperService } from './piper.service';
         },
       },
     ]),
-    NodeManagerModule,
+    RoomModule,
   ],
   providers: [PiperService],
   controllers: [],

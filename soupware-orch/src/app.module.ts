@@ -7,6 +7,7 @@ import { StreamerModule } from './streamer/streamer.module';
 import { NodeManagerModule } from './node-manager';
 import { ViewerModule } from './viewer';
 import { WebhookModule } from './webhook';
+import { RoomModule } from './room/room.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { WebhookModule } from './webhook';
     StreamerModule,
     ViewerModule,
     NodeManagerModule,
+    RoomModule,
   ],
   controllers: [AppController],
   providers: [AppService],

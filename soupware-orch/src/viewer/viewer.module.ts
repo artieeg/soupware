@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { NodeManagerModule } from 'src/node-manager';
 import { PermissionTokenModule } from 'src/permission-token';
+import { RoomModule } from 'src/room/room.module';
 import { PiperModule } from '../piper';
 import { ViewerController } from './viewer.controller';
 import { ViewerService } from './viewer.service';
@@ -17,6 +18,7 @@ import { ViewerService } from './viewer.service';
         },
       },
     ]),
+    RoomModule,
     PermissionTokenModule,
     NodeManagerModule,
     PiperModule,
