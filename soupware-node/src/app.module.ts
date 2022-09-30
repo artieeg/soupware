@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitter } from 'events';
+import { NestEmitterModule } from 'nest-emitter';
 import { SEND_NODE } from './constants';
 import { ConsumerModule, RecvPipeModule, RecvTransportModule } from './recv';
 import {
@@ -19,6 +21,7 @@ const shared = [
   }),
   NodeInfoModule,
   RecvTransportModule,
+  NestEmitterModule.forRoot(new EventEmitter()),
 ];
 
 const sendNodeModules = [

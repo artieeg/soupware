@@ -4,10 +4,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
 import { Producer } from 'mediasoup/node/lib/Producer';
+import { InjectEventEmitter } from 'nest-emitter';
 import { firstValueFrom } from 'rxjs';
 import { RoomService } from '../room';
 import { Room, User } from '../room/types';
 import { SendRouterService } from '../send-router';
+import { SendEventEmitter } from '../send.events';
 
 @Injectable()
 export class SendPipeService {
@@ -17,6 +19,7 @@ export class SendPipeService {
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private routerService: SendRouterService,
     private roomService: RoomService,
+    @InjectEventEmitter() private readonly eventEmitter: SendEventEmitter,
   ) {
     this.pipes = new Map();
   }
@@ -85,10 +88,6 @@ export class SendPipeService {
     );
   }
 
-  private getPipedNodeIds() {
-    return Array.from(this.pipes.keys());
-  }
-
   private async getPipeTo(node: string) {
     if (this.pipes.has(node)) {
       return this.pipes.get(node);
@@ -125,6 +124,10 @@ export class SendPipeService {
     });
 
     this.pipes.set(targetRecvNodeId, pipeTransport);
+    this.eventEmitter.emit('new-pipe', {
+      transport: pipeTransport,
+      targetRecvNodeId,
+    });
 
     return pipeTransport;
   }
