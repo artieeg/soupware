@@ -79,7 +79,7 @@ export class TrackService {
             paused: false,
           });
 
-          this.emitter.emit('new-consumer', {
+          this.emitter.emit('new-track-consumer', {
             consumer,
             room: room_id,
             user: user_id,
@@ -96,7 +96,7 @@ export class TrackService {
             paused: false,
           });
 
-          this.emitter.emit('new-consumer', {
+          this.emitter.emit('new-track-consumer', {
             consumer,
             room: room_id,
             user: user_id,

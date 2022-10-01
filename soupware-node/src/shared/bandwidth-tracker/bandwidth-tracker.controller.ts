@@ -15,7 +15,7 @@ export class BandwidthTrackerController {
       this.bandwidthTrackerService.track(producer);
     });
 
-    this.recvEventEmitter.on('new-consumer', ({ consumer }) => {
+    this.recvEventEmitter.on('new-track-consumer', ({ consumer }) => {
       this.bandwidthTrackerService.track(consumer);
     });
   }

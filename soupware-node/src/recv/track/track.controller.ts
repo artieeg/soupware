@@ -2,7 +2,7 @@ import { NODE_ID } from '@app/shared';
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
-import { TrackService } from './consumer.service';
+import { TrackService } from './track.service';
 
 @Controller()
 export class TrackController {

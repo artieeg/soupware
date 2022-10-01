@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { RoomModule } from '../room';
-import { TrackController } from './consumer.controller';
-import { TrackService } from './consumer.service';
+import { TrackController } from './track.controller';
+import { TrackService } from './track.service';
 
 @Module({
   imports: [RoomModule],

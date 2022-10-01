@@ -1,7 +1,7 @@
 import EventEmitter from 'events';
 import { StrictEventEmitter } from 'nest-emitter';
-import { ConsumerEvents } from './consumer';
+import { TrackEvents } from './track';
 
-export interface RecvEvents extends ConsumerEvents {}
+export interface RecvEvents extends TrackEvents {}
 
 export type RecvEventEmitter = StrictEventEmitter<EventEmitter, RecvEvents>;
