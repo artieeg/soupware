@@ -1,4 +1,4 @@
-import { Producer } from 'mediasoup/node/lib/Producer';
+import { Producer } from '@app/types';
 import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransport';
 

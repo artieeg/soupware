@@ -3,7 +3,7 @@ import { NODE_ID, PipeConsumerParams } from '@app/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
-import { Producer } from 'mediasoup/node/lib/Producer';
+import { Producer } from '@app/types';
 import { InjectEventEmitter } from 'nest-emitter';
 import { firstValueFrom } from 'rxjs';
 import { RoomService } from '../room';
@@ -158,6 +158,6 @@ export class SendPipeService {
         if (c.video) r.push(c.video);
 
         return r;
-      }, []);
+      }, [] as Producer[]);
   }
 }
