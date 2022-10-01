@@ -13,23 +13,6 @@ export class ConsumerController {
     return this.consumerService.removeUserFromRoom(room, user);
   }
 
-  @MessagePattern(`soupware.consumer.close-pipe-producer.${NODE_ID}`)
-  async onClosePipeProducer({
-    room,
-    user,
-    to_unpublish: disabled_consumer,
-  }: {
-    room: string;
-    user: string;
-    to_unpublish: { audio: boolean; video: boolean };
-  }) {
-    return this.consumerService.closePipeProducer(
-      room,
-      user,
-      disabled_consumer,
-    );
-  }
-
   @MessagePattern(`soupware.consumer.create.${NODE_ID}`)
   async onCreateConsumer({
     room,

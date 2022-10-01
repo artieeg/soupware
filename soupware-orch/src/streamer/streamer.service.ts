@@ -167,14 +167,11 @@ export class StreamerService implements OnApplicationBootstrap {
     await Promise.all([
       recvNodeIds.map((recvNodeId) =>
         firstValueFrom(
-          this.client.send(
-            `soupware.consumer.close-pipe-producer.${recvNodeId}`,
-            {
-              user: user_id,
-              room: room_id,
-              to_unpublish: { audio, video },
-            },
-          ),
+          this.client.send(`soupware.pipe.recv.close-pipe.${recvNodeId}`, {
+            user: user_id,
+            room: room_id,
+            to_unpublish: { audio, video },
+          }),
         ),
       ),
     ]);

@@ -8,6 +8,19 @@ import { PipeService } from './pipe.service';
 export class PipeController {
   constructor(private pipeService: PipeService) {}
 
+  @MessagePattern(`soupware.pipe.recv.close-pipe.${NODE_ID}`)
+  async onClosePipe({
+    room,
+    user,
+    to_unpublish: disabled_consumer,
+  }: {
+    room: string;
+    user: string;
+    to_unpublish: { audio: boolean; video: boolean };
+  }) {
+    return this.pipeService.closePipeProducer(room, user, disabled_consumer);
+  }
+
   @MessagePattern(`soupware.pipe.recv.producer.${NODE_ID}`)
   async onNewProducer({
     room,

@@ -26,38 +26,6 @@ export class ConsumerService {
     return { status: 'ok' };
   }
 
-  /**
-   * Closes audio and/or video producers of a user,
-   * automatically closes consumers in egress routers
-   * */
-  async closePipeProducer(
-    room_id: string,
-    user_id: string,
-    to_unpublish: { audio: boolean; video: boolean },
-  ) {
-    const room = this.roomService.getRoom(room_id);
-
-    const roomProducer = room.producers.get(user_id);
-
-    if (to_unpublish.video && roomProducer.video) {
-      roomProducer.video.pipe_producer.close();
-      roomProducer.video = undefined;
-    }
-
-    if (to_unpublish.audio && roomProducer.audio) {
-      roomProducer.audio.pipe_producer.close();
-      roomProducer.audio = undefined;
-    }
-
-    /*
-    if (disabled_consumer.audio && disabled_consumer.video) {
-      room.producers.delete(user_id);
-    }
-    */
-
-    return { status: 'ok' };
-  }
-
   async create(
     room_id: string,
     user_id: string,

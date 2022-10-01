@@ -19,6 +19,28 @@ export class PipeService {
     this.pipes = new Map();
   }
 
+  async closePipeProducer(
+    room_id: string,
+    user_id: string,
+    to_unpublish: { audio: boolean; video: boolean },
+  ) {
+    const room = this.roomService.getRoom(room_id);
+
+    const roomProducer = room.producers.get(user_id);
+
+    if (to_unpublish.video && roomProducer.video) {
+      roomProducer.video.pipe_producer.close();
+      roomProducer.video = undefined;
+    }
+
+    if (to_unpublish.audio && roomProducer.audio) {
+      roomProducer.audio.pipe_producer.close();
+      roomProducer.audio = undefined;
+    }
+
+    return { status: 'ok' };
+  }
+
   async pipeToEgressRouters(room_id: string, producer: Producer) {
     const bridgeRouter = this.routerService.getBridgeRouter();
     const egressRouters = this.routerService.getEgressRouters();
