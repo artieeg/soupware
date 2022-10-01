@@ -20,4 +20,20 @@ export class ProducerController {
   }) {
     return this.producerService.create(room, user, producerOptions);
   }
+
+  @MessagePattern(`soupware.producer.delete.${NODE_ID}`)
+  async onProducerDelete({
+    user,
+    room,
+    deleted_producer,
+  }: {
+    user: string;
+    room: string;
+    deleted_producer: {
+      audio?: boolean;
+      video?: boolean;
+    };
+  }) {
+    return this.producerService.close(room, user, deleted_producer);
+  }
 }
