@@ -1,4 +1,5 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
+import { createPipeProducer } from '@app/send/utils';
 import { PipeConsumerParams } from '@app/shared';
 import { Injectable } from '@nestjs/common';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
@@ -76,25 +77,19 @@ export class PipeService {
   ) {
     return Promise.all(
       consumerData.map((data) =>
-        this.createPipeProducer(originNodeId, room, data),
+        this.consumeRemoteProducer(originNodeId, room, data),
       ),
     );
   }
 
-  async createPipeProducer(
+  async consumeRemoteProducer(
     originNodeId: string,
     room: string,
     params: PipeConsumerParams,
   ) {
     const pipeTransport = this.pipes.get(originNodeId);
 
-    const producer = await pipeTransport.produce({
-      id: params.id,
-      kind: params.kind,
-      rtpParameters: params.rtpParameters,
-      appData: params.appData,
-    });
-
+    const producer = await createPipeProducer(pipeTransport, params);
     await this.pipeToEgressRouters(room, producer);
 
     return { producer: producer.id };

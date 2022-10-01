@@ -31,7 +31,7 @@ export class PipeController {
     sendNodeId: string;
     consumer: PipeConsumerParams;
   }) {
-    return this.pipeService.createPipeProducer(sendNodeId, room, consumer);
+    return this.pipeService.consumeRemoteProducer(sendNodeId, room, consumer);
   }
 
   @MessagePattern(`soupware.pipe.recv.producers.${NODE_ID}`)

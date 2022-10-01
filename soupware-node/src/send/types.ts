@@ -1,4 +1,7 @@
-import { Producer as MediasoupProducer } from 'mediasoup/node/lib/types';
+import {
+  Producer as MediasoupProducer,
+  Consumer as MediasoupConsumer,
+} from 'mediasoup/node/lib/types';
 import { UserBase } from './room/types';
 
 export type AppData = {
@@ -8,5 +11,13 @@ export type AppData = {
 
 /** Mediasoup's Producer with strongly typed appData */
 export interface SoupwareSendProducer extends MediasoupProducer {
+  appData: AppData;
+}
+
+export interface SoupwarePipeConsumer extends MediasoupConsumer {
+  appData: AppData;
+}
+
+export interface SoupwarePipeProducer extends MediasoupProducer {
   appData: AppData;
 }

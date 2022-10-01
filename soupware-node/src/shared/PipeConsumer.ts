@@ -1,3 +1,4 @@
+import { AppData } from '@app/send/types';
 import {
   MediaKind,
   RtpCapabilities,
@@ -9,5 +10,5 @@ export type PipeConsumerParams = {
   kind: MediaKind;
   rtpParameters: RtpParameters;
   rtpCapabilities: RtpCapabilities;
-  appData: any;
+  appData: AppData;
 };

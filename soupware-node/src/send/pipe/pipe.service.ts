@@ -9,7 +9,8 @@ import { RoomService } from '../room';
 import { Room, User } from '../room/types';
 import { SendRouterService } from '../send-router';
 import { SendEventEmitter } from '../send.events';
-import { SoupwareSendProducer } from '../types';
+import { SoupwarePipeConsumer, SoupwareSendProducer } from '../types';
+import { createPipeConsumer } from '../utils';
 
 @Injectable()
 export class SendPipeService {
@@ -24,27 +25,23 @@ export class SendPipeService {
     this.pipes = new Map();
   }
 
-  async pipeNewProducer(producer: Producer) {
-    const room = (producer.appData as any).room as string;
-
+  async pipeNewProducer(producer: SoupwareSendProducer) {
+    const room = producer.appData.room;
     const { pipes: pipedRecvNodeIds } = this.roomService.get(room);
 
     for (const recvNodeId of pipedRecvNodeIds) {
       const pipeTransport = await this.getPipeTo(recvNodeId);
 
-      const consumer = await pipeTransport.consume({
-        producerId: producer.id,
-        appData: producer.appData,
-      });
+      const consumer = await createPipeConsumer(pipeTransport, producer);
 
       await firstValueFrom(
         this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
           consumer: {
             id: consumer.id,
             kind: consumer.kind,
-            rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
+            rtpCapabilities: consumer.appData.user.rtpCapabilities,
             rtpParameters: consumer.rtpParameters,
-            appData: { user: (consumer.appData.user as any).id },
+            appData: producer.appData,
           } as PipeConsumerParams,
           room,
           sendNodeId: NODE_ID,
@@ -82,11 +79,9 @@ export class SendPipeService {
   private async createPipeConsumers(
     pipe: PipeTransport,
     producers: SoupwareSendProducer[],
-  ) {
+  ): Promise<SoupwarePipeConsumer[]> {
     return Promise.all(
-      producers.map((producer) =>
-        pipe.consume({ producerId: producer.id, appData: producer.appData }),
-      ),
+      producers.map((producer) => createPipeConsumer(pipe, producer)),
     );
   }
 
@@ -158,6 +153,6 @@ export class SendPipeService {
         if (c.video) r.push(c.video);
 
         return r;
-      }, [] as Producer[]);
+      }, [] as SoupwareSendProducer[]);
   }
 }
