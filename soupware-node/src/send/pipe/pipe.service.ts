@@ -37,10 +37,6 @@ export class SendPipeService {
         appData: producer.appData,
       });
 
-      (producer.appData.user as User).producers[
-        producer.kind
-      ].pipe_consumers.push(consumer);
-
       await firstValueFrom(
         this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
           consumer: {
