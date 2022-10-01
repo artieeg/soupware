@@ -23,12 +23,26 @@ export class NodeManagerService implements OnModuleInit {
     return 'ok';
   }
 
+  async getAvailableNodes(kind: string, exclude_ids: string[]) {
+    const ids = await this.redis.smembers(kind);
+    const filtered = ids.filter((id) => !exclude_ids.includes(id));
+
+    return this.getInfoForNodes(filtered);
+  }
+
   async addNode(id: string, kind: string) {
     await this.redis.sadd(kind, id);
   }
 
-  //Get a random node of kind (temporary solution)
   async getNode(kind: string) {
     return this.redis.srandmember(kind);
+  }
+
+  async getInfoForNodes(ids: string[]): Promise<MediaNodeLoad[]> {
+    const pipe = this.redis.pipeline();
+    ids.forEach((id) => pipe.hgetall(id));
+    const results = await pipe.exec();
+
+    return results.map((result) => result[1] as MediaNodeLoad);
   }
 }

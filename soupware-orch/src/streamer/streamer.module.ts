@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+import { LoadBalancerModule } from 'src/load-balancer';
 import { NodeManagerModule } from 'src/node-manager';
 import { PermissionTokenModule } from 'src/permission-token';
 import { RoomModule } from 'src/room/room.module';
@@ -18,7 +19,7 @@ import { StreamerService } from './streamer.service';
         },
       },
     ]),
-    NodeManagerModule,
+    LoadBalancerModule,
     PermissionTokenModule,
     RoomModule,
     WebhookModule,

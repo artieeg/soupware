@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { firstValueFrom } from 'rxjs';
-import { NodeManagerService } from 'src/node-manager';
+import { LoadBalancerService } from 'src/load-balancer';
 import { PermissionTokenService } from 'src/permission-token';
 import { PiperService } from 'src/piper';
 import { RoomService } from 'src/room/room.service';
@@ -12,13 +12,16 @@ export class ViewerService {
   constructor(
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private roomService: RoomService,
-    private nodeManagerService: NodeManagerService,
+    private loadBalancerService: LoadBalancerService,
     private piperService: PiperService,
     private permissionTokenService: PermissionTokenService,
   ) {}
 
   async create(viewer: string, room: string) {
-    const recvNodeId = await this.nodeManagerService.getNode('RECV');
+    const recvNodeId = await this.loadBalancerService.getBestNodeFor(
+      room,
+      'RECV',
+    );
 
     const response = await firstValueFrom(
       this.client.send(`soupware.transport.recv.create.${recvNodeId}`, {

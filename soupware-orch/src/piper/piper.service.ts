@@ -11,7 +11,7 @@ export class PiperService {
   ) {}
 
   async pipeRoomToNode(room: string, targetRecvNodeId: string) {
-    const sendNodeIds = await this.roomService.getSendNodesFor(room);
+    const sendNodeIds = await this.roomService.getNodesOfKindFor(room, 'SEND');
 
     const promises = sendNodeIds.map((node) => {
       return firstValueFrom(
