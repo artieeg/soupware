@@ -52,37 +52,60 @@ export class ConsumerService {
 
     const user = room.users.find((u) => u.id === user_id);
 
-    const pipedProducersArray = [...room.producers.values()];
+    const roomProducersArray = [...room.producers.values()];
 
     const consumers = await Promise.all(
-      pipedProducersArray.map(async (pipes) => {
-        const producer = pipes.get(user.router.id);
+      roomProducersArray.map(async ({ audio, video }) => {
+        const consumers = [];
+        if (video) {
+          const producer = video.router_producers.get(user.router.id);
 
-        const consumer = await user.transport.consume({
-          rtpCapabilities,
-          producerId: producer.id,
-          paused: false,
-        });
+          const consumer = await user.transport.consume({
+            rtpCapabilities,
+            producerId: producer.id,
+            paused: false,
+          });
 
-        this.emitter.emit('new-consumer', {
-          consumer,
-          room: room_id,
-          user: user_id,
-        });
+          this.emitter.emit('new-consumer', {
+            consumer,
+            room: room_id,
+            user: user_id,
+          });
+          consumers.push(consumer);
+        }
 
-        return consumer;
+        if (audio) {
+          const producer = audio.router_producers.get(user.router.id);
+
+          const consumer = await user.transport.consume({
+            rtpCapabilities,
+            producerId: producer.id,
+            paused: false,
+          });
+
+          this.emitter.emit('new-consumer', {
+            consumer,
+            room: room_id,
+            user: user_id,
+          });
+          consumers.push(consumer);
+        }
+
+        return consumers;
       }),
     );
 
-    return consumers.map((consumer) => ({
-      consumerParameters: {
-        id: consumer.id,
-        kind: consumer.kind,
-        rtpParameters: consumer.rtpParameters,
-        type: consumer.type,
-        producerPaused: false,
-        producerId: consumer.producerId,
-      },
-    }));
+    return consumers
+      .reduce((prev, acc) => prev.concat(acc), [])
+      .map((consumer) => ({
+        consumerParameters: {
+          id: consumer.id,
+          kind: consumer.kind,
+          rtpParameters: consumer.rtpParameters,
+          type: consumer.type,
+          producerPaused: false,
+          producerId: consumer.producerId,
+        },
+      }));
   }
 }
