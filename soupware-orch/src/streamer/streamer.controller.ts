@@ -84,7 +84,7 @@ export class StreamerController {
   @Delete('/streamer/producer')
   async onDeleteProducer(@Body() { user, room, kinds }: DeleteProducerDto) {
     console.log({ user, room, kinds });
-    return this.streamerService.deleteProducer(user, room, kinds);
+    return this.streamerService.closeUserProducers(user, room, kinds);
   }
 
   @Post('/streamer/producer')

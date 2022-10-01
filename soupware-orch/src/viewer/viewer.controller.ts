@@ -46,6 +46,6 @@ export class ViewerController {
 
   @Delete('/viewer/consumer')
   async onDeleteConsumer(@Body() { user, room }: DeleteConsumerDto) {
-    return this.viewerService.deleteViewer(user, room);
+    return this.viewerService.closeUserConsumers(user, room);
   }
 }

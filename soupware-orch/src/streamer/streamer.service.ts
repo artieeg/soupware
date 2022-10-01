@@ -82,14 +82,14 @@ export class StreamerService implements OnApplicationBootstrap {
 
     // If video permission got revoked, delete producers
     if (tokenData.produce.video === true && newPermissions.video === false) {
-      await this.deleteProducer(tokenData.user, tokenData.room, {
+      await this.closeUserProducers(tokenData.user, tokenData.room, {
         video: true,
       });
     }
 
     // If audio permission got revoked, delete producers
     if (tokenData.produce.audio === true && newPermissions.audio === false) {
-      await this.deleteProducer(tokenData.user, tokenData.room, {
+      await this.closeUserProducers(tokenData.user, tokenData.room, {
         audio: true,
       });
     }
@@ -135,7 +135,7 @@ export class StreamerService implements OnApplicationBootstrap {
     return params;
   }
 
-  async deleteProducer(
+  async closeUserProducers(
     user_id: string,
     room_id: string,
     { audio, video }: { audio?: boolean; video?: boolean },
@@ -149,10 +149,10 @@ export class StreamerService implements OnApplicationBootstrap {
     await Promise.all([
       sendNodeIds.map((sendNodeId) =>
         firstValueFrom(
-          this.client.send(`soupware.producer.delete.${sendNodeId}`, {
+          this.client.send(`soupware.producer.close.${sendNodeId}`, {
             user: user_id,
             room: room_id,
-            deleted_producer: { audio, video },
+            to_close: { audio, video },
           }),
         ),
       ),
