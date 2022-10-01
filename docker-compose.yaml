@@ -5,6 +5,12 @@ services:
     ports: 
       - 6380:6379
 
+  rooms:
+    image:
+      redis:7.0.4-alpine
+    ports: 
+      - 6379:6380
+
   media-nodes:
     image:
       redis:7.0.4-alpine

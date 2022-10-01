@@ -5,11 +5,13 @@ import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
 import { PermissionTokenService } from 'src/permission-token';
 import { PiperService } from 'src/piper';
+import { RoomService } from 'src/room/room.service';
 
 @Injectable()
 export class ViewerService {
   constructor(
     @Inject('MEDIA_NODE') private client: ClientProxy,
+    private roomService: RoomService,
     private nodeManagerService: NodeManagerService,
     private piperService: PiperService,
     private permissionTokenService: PermissionTokenService,
@@ -25,7 +27,7 @@ export class ViewerService {
       }),
     );
 
-    await this.nodeManagerService.addNodeForRoom(room, recvNodeId);
+    await this.roomService.addNodeForRoom(room, recvNodeId);
 
     const mediaPermissionToken = this.permissionTokenService.create({
       room,
@@ -40,7 +42,7 @@ export class ViewerService {
     const { room, user, recvNodeId } =
       this.permissionTokenService.decode(token);
 
-    if (this.nodeManagerService.isRoomPipedTo(room, recvNodeId)) {
+    if (this.roomService.isRoomPipedTo(room, recvNodeId)) {
       await this.piperService.pipeRoomToNode(room, recvNodeId);
     }
 

@@ -5,6 +5,7 @@ import { ProducerOptions } from 'mediasoup/node/lib/Producer';
 import { firstValueFrom } from 'rxjs';
 import { NodeManagerService } from 'src/node-manager';
 import { PermissionTokenService } from 'src/permission-token';
+import { RoomService } from 'src/room/room.service';
 import { WebhookService } from 'src/webhook';
 
 @Injectable()
@@ -12,6 +13,7 @@ export class StreamerService implements OnApplicationBootstrap {
   constructor(
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private nodeManagerService: NodeManagerService,
+    private roomService: RoomService,
     private webhookService: WebhookService,
     private permissionTokenService: PermissionTokenService,
   ) {}
@@ -35,7 +37,7 @@ export class StreamerService implements OnApplicationBootstrap {
       }),
     );
 
-    await this.nodeManagerService.addNodeForRoom(room, sendNodeId);
+    await this.roomService.addNodeForRoom(room, sendNodeId);
 
     let mediaPermissionToken: string;
 
