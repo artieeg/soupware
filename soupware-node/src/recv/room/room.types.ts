@@ -7,8 +7,19 @@ import {
 
 export type Room = {
   id: string;
-  producers: PipedProducer[];
+  producers: Map<
+    string,
+    {
+      audio?: RoomProducer;
+      video?: RoomProducer;
+    }
+  >;
   users: User[];
+};
+
+export type RoomProducer = {
+  router_producers: RouterProducers;
+  pipe_producer: Producer;
 };
 
 /**
@@ -16,7 +27,7 @@ export type Room = {
  * key -- egress router id
  * value -- producer on that router
  * */
-export type PipedProducer = Map<string, Producer>;
+export type RouterProducers = Map<string, Producer>;
 
 export type User = {
   id: string;

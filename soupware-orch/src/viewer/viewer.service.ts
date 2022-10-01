@@ -74,4 +74,22 @@ export class ViewerService {
 
     return { response };
   }
+
+  async deleteViewer(user: string, room: string) {
+    const recvNodeIds = await this.roomService.getNodesOfKindFor(room, 'RECV');
+
+    for (const recvNodeId of recvNodeIds) {
+      await firstValueFrom(
+        this.client.send(
+          `soupware.consumer.close-consumers-for-user.${recvNodeId}`,
+          {
+            user,
+            room,
+          },
+        ),
+      );
+    }
+
+    return { status: 'ok' };
+  }
 }

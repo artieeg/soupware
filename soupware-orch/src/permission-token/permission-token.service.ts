@@ -24,7 +24,7 @@ export class PermissionTokenService {
       },
       secret,
       {
-        expiresIn: '1d',
+        expiresIn: this.configService.get('SOUPWARE_JWT_EXP'),
       },
     );
 

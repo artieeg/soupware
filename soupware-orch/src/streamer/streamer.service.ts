@@ -80,8 +80,19 @@ export class StreamerService implements OnApplicationBootstrap {
   ) {
     const tokenData = this.permissionTokenService.decode(token);
 
-    // TODO: check if audio or video permission got revoked,
-    // if so, close the corresponding producer
+    // If video permission got revoked, delete producers
+    if (tokenData.produce.video === true && newPermissions.video === false) {
+      await this.deleteProducer(tokenData.user, tokenData.room, {
+        video: true,
+      });
+    }
+
+    // If audio permission got revoked, delete producers
+    if (tokenData.produce.audio === true && newPermissions.audio === false) {
+      await this.deleteProducer(tokenData.user, tokenData.room, {
+        audio: true,
+      });
+    }
 
     const newToken = this.permissionTokenService.update(token, {
       ...tokenData,
@@ -122,5 +133,50 @@ export class StreamerService implements OnApplicationBootstrap {
     );
 
     return params;
+  }
+
+  async deleteProducer(
+    user_id: string,
+    room_id: string,
+    { audio, video }: { audio?: boolean; video?: boolean },
+  ) {
+    const sendNodeIds = await this.roomService.getNodesOfKindFor(
+      room_id,
+      'SEND',
+    );
+
+    //Delete producers
+    await Promise.all([
+      sendNodeIds.map((sendNodeId) =>
+        firstValueFrom(
+          this.client.send(`soupware.producer.delete.${sendNodeId}`, {
+            user: user_id,
+            room: room_id,
+            deleted_producer: { audio, video },
+          }),
+        ),
+      ),
+    ]);
+
+    //Close pipe producers on recv nodes
+    const recvNodeIds = await this.roomService.getNodesOfKindFor(
+      room_id,
+      'RECV',
+    );
+
+    await Promise.all([
+      recvNodeIds.map((recvNodeId) =>
+        firstValueFrom(
+          this.client.send(
+            `soupware.consumer.close-pipe-producer.${recvNodeId}`,
+            {
+              user: user_id,
+              room: room_id,
+              to_unpublish: { audio, video },
+            },
+          ),
+        ),
+      ),
+    ]);
   }
 }

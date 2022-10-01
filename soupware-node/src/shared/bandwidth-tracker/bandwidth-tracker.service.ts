@@ -20,24 +20,26 @@ export class BandwidthTrackerService {
     let newOutboudByteCount = 0;
 
     for (const item of this.tracked) {
-      const stats = await item.getStats();
-      const inboundRtpStats = stats.filter(
-        (stat) => stat.type === 'inbound-rtp',
-      );
+      try {
+        const stats = await item.getStats();
+        const inboundRtpStats = stats.filter(
+          (stat) => stat.type === 'inbound-rtp',
+        );
 
-      const outboundRtpStats = stats.filter(
-        (stat) => stat.type === 'outbound-rtp',
-      );
+        const outboundRtpStats = stats.filter(
+          (stat) => stat.type === 'outbound-rtp',
+        );
 
-      newOutboudByteCount += outboundRtpStats.reduce(
-        (acc, stat) => acc + stat.byteCount,
-        0,
-      );
+        newOutboudByteCount += outboundRtpStats.reduce(
+          (acc, stat) => acc + stat.byteCount,
+          0,
+        );
 
-      newInboudByteCount += inboundRtpStats.reduce(
-        (acc, stat) => acc + stat.byteCount,
-        0,
-      );
+        newInboudByteCount += inboundRtpStats.reduce(
+          (acc, stat) => acc + stat.byteCount,
+          0,
+        );
+      } catch (e) {}
     }
 
     this.dOutboundByteCount = newOutboudByteCount - this.prevOutboundByteCount;
@@ -45,6 +47,10 @@ export class BandwidthTrackerService {
 
     this.dInboundByteCount = newInboudByteCount - this.prevInboundByteCount;
     this.prevInboundByteCount = newInboudByteCount;
+
+    if (process.env.NODE_KIND === 'RECV') {
+      console.log('dBytes', this.dOutboundByteCount);
+    }
 
     return {
       inbound: this.dInboundByteCount,

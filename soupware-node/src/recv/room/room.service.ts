@@ -17,7 +17,7 @@ export class RoomService {
     let room = this.rooms.get(room_id);
 
     if (!room) {
-      room = { id: room_id, producers: [], users: [] };
+      room = { id: room_id, producers: new Map(), users: [] };
       this.rooms.set(room_id, room);
     }
 

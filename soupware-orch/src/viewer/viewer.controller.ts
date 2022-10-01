@@ -1,5 +1,10 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
 import { ViewerService } from './viewer.service';
+
+type DeleteConsumerDto = {
+  room: string;
+  user: string;
+};
 
 type CreateConsumerDto = {
   mediaPermissionToken: string;
@@ -37,5 +42,10 @@ export class ViewerController {
   @Post('/viewer')
   async onCreateViewer(@Body() { user, room }: CreateViewerDto) {
     return this.viewerService.create(user, room);
+  }
+
+  @Delete('/viewer/consumer')
+  async onDeleteConsumer(@Body() { user, room }: DeleteConsumerDto) {
+    return this.viewerService.deleteViewer(user, room);
   }
 }

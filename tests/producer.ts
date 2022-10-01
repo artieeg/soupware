@@ -84,6 +84,22 @@ export async function main() {
         })
       ).data;
 
+      /*
+      setTimeout(async () => {
+        console.log("closing producer");
+        await axios.delete("/streamer/producer", {
+          data: {
+            user,
+            room,
+            kinds: {
+              audio: true,
+              video: true,
+            },
+          },
+        });
+      }, 10000);
+      */
+
       cb({ id });
     } catch {
       erb(new Error());

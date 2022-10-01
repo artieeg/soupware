@@ -6,7 +6,7 @@ import { Producer } from 'mediasoup/node/lib/Producer';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { RecvRouterService } from '../recv-router';
 import { RoomService } from '../room/room.service';
-import { PipedProducer } from '../room/room.types';
+import { RouterProducers } from '../room/room.types';
 
 @Injectable()
 export class PipeService {
@@ -23,7 +23,9 @@ export class PipeService {
     const bridgeRouter = this.routerService.getBridgeRouter();
     const egressRouters = this.routerService.getEgressRouters();
 
-    const pipedProducer: PipedProducer = new Map();
+    const user_id = (producer.appData as any).user;
+
+    const pipedProducer: RouterProducers = new Map();
 
     for (const router of egressRouters) {
       const r = await bridgeRouter.pipeToRouter({
@@ -35,7 +37,14 @@ export class PipeService {
     }
 
     const room = this.roomService.getOrCreate(room_id);
-    room.producers.push(pipedProducer);
+    const oldRoomProducer = room.producers.get(user_id);
+    room.producers.set(user_id, {
+      ...oldRoomProducer,
+      [producer.kind]: {
+        router_producers: pipedProducer,
+        pipe_producer: producer,
+      },
+    });
   }
 
   async createPipeProducers(
@@ -61,6 +70,7 @@ export class PipeService {
       id: params.id,
       kind: params.kind,
       rtpParameters: params.rtpParameters,
+      appData: params.appData,
     });
 
     await this.pipeToEgressRouters(room, producer);

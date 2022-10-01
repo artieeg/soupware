@@ -1,5 +1,14 @@
-import { Body, Controller, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
 import { StreamerService } from './streamer.service';
+
+type DeleteProducerDto = {
+  room: string;
+  user: string;
+  kinds: {
+    audio?: boolean;
+    video?: boolean;
+  };
+};
 
 type CreateStreamerDto = {
   user: string;
@@ -70,6 +79,12 @@ export class StreamerController {
       dtlsParameters,
       rtpCapabilities,
     );
+  }
+
+  @Delete('/streamer/producer')
+  async onDeleteProducer(@Body() { user, room, kinds }: DeleteProducerDto) {
+    console.log({ user, room, kinds });
+    return this.streamerService.deleteProducer(user, room, kinds);
   }
 
   @Post('/streamer/producer')

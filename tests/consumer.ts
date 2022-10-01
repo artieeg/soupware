@@ -59,6 +59,16 @@ async function main() {
   setInterval(async () => {
     console.log(await consumers[0].getStats());
   }, 1000);
+
+  setTimeout(async () => {
+    console.log("closing consumers");
+    await axios.delete("/viewer/consumer", {
+      data: {
+        user,
+        room,
+      },
+    });
+  }, 10000);
 }
 
 main();

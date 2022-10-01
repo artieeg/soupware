@@ -14,6 +14,29 @@ export class ProducerService {
     @InjectEventEmitter() private readonly emitter: SendEventEmitter,
   ) {}
 
+  close(
+    room_id: string,
+    user_id: string,
+    deleted_producer: {
+      audio?: boolean;
+      video?: boolean;
+    },
+  ) {
+    const user = this.roomService.getUser(room_id, user_id);
+
+    if (deleted_producer.audio && user.producers.audio) {
+      user.producers.audio.close();
+      user.producers.audio = undefined;
+    }
+
+    if (deleted_producer.video && user.producers.video) {
+      user.producers.video.close();
+      user.producers.video = undefined;
+    }
+
+    return { status: 'ok' };
+  }
+
   async create(
     room: string,
     user_id: string,

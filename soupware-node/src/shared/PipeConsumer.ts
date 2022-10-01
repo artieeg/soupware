@@ -9,4 +9,5 @@ export type PipeConsumerParams = {
   kind: MediaKind;
   rtpParameters: RtpParameters;
   rtpCapabilities: RtpCapabilities;
+  appData: any;
 };
