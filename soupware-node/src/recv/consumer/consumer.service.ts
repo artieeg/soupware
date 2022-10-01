@@ -18,15 +18,19 @@ export class ConsumerService {
     //Close user's consumers
     user.consumers.forEach((c) => c.close());
 
+    console.log(user.consumers);
+
     //Delete the user
     room.users = room.users.filter((u) => u.id !== user_id);
+
+    return { status: 'ok' };
   }
 
   /**
    * Closes audio and/or video producers of a user,
    * automatically closes consumers in egress routers
    * */
-  async unpublish(
+  async closePipeProducer(
     room_id: string,
     user_id: string,
     to_unpublish: { audio: boolean; video: boolean },
@@ -101,6 +105,8 @@ export class ConsumerService {
           });
           consumers.push(consumer);
         }
+
+        user.consumers.push(...consumers);
 
         return consumers;
       }),

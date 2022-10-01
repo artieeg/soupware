@@ -84,6 +84,7 @@ export async function main() {
         })
       ).data;
 
+      /*
       setTimeout(async () => {
         console.log("closing producer");
         await axios.delete("/streamer/producer", {
@@ -97,6 +98,7 @@ export async function main() {
           },
         });
       }, 10000);
+      */
 
       cb({ id });
     } catch {

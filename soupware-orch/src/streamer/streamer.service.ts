@@ -80,8 +80,19 @@ export class StreamerService implements OnApplicationBootstrap {
   ) {
     const tokenData = this.permissionTokenService.decode(token);
 
-    // TODO: check if audio or video permission got revoked,
-    // if so, close the corresponding producer
+    // If video permission got revoked, delete producers
+    if (tokenData.produce.video === true && newPermissions.video === false) {
+      await this.deleteProducer(tokenData.user, tokenData.room, {
+        video: true,
+      });
+    }
+
+    // If audio permission got revoked, delete producers
+    if (tokenData.produce.audio === true && newPermissions.audio === false) {
+      await this.deleteProducer(tokenData.user, tokenData.room, {
+        audio: true,
+      });
+    }
 
     const newToken = this.permissionTokenService.update(token, {
       ...tokenData,
