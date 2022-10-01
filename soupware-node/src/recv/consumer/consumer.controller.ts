@@ -8,6 +8,23 @@ import { ConsumerService } from './consumer.service';
 export class ConsumerController {
   constructor(private consumerService: ConsumerService) {}
 
+  @MessagePattern(`soupware.consumers.delete.${NODE_ID}`)
+  async onDeleteConsumers({
+    room,
+    user,
+    disabled_consumer,
+  }: {
+    room: string;
+    user: string;
+    disabled_consumer: { audio: boolean; video: boolean };
+  }) {
+    return this.consumerService.deleteRoomProducer(
+      room,
+      user,
+      disabled_consumer,
+    );
+  }
+
   @MessagePattern(`soupware.consumer.create.${NODE_ID}`)
   async onCreateConsumer({
     room,

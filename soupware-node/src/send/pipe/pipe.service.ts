@@ -44,7 +44,8 @@ export class SendPipeService {
             kind: consumer.kind,
             rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
             rtpParameters: consumer.rtpParameters,
-          },
+            appData: { user: (consumer.appData.user as any).id },
+          } as PipeConsumerParams,
           room,
           sendNodeId: NODE_ID,
         }),
@@ -68,6 +69,7 @@ export class SendPipeService {
           kind: consumer.kind,
           rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
           rtpParameters: consumer.rtpParameters,
+          appData: { user: (consumer.appData.user as any).id },
         })) as PipeConsumerParams[],
       }),
     );
