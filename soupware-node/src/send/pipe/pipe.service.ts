@@ -3,13 +3,13 @@ import { NODE_ID, PipeConsumerParams } from '@app/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
-import { Producer } from '@app/types';
 import { InjectEventEmitter } from 'nest-emitter';
 import { firstValueFrom } from 'rxjs';
 import { RoomService } from '../room';
 import { Room, User } from '../room/types';
 import { SendRouterService } from '../send-router';
 import { SendEventEmitter } from '../send.events';
+import { SoupwareSendProducer } from '../types';
 
 @Injectable()
 export class SendPipeService {
@@ -81,7 +81,7 @@ export class SendPipeService {
 
   private async createPipeConsumers(
     pipe: PipeTransport,
-    producers: Producer[],
+    producers: SoupwareSendProducer[],
   ) {
     return Promise.all(
       producers.map((producer) =>

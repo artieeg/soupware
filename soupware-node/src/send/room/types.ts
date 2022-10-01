@@ -1,6 +1,5 @@
-import { Producer } from '@app/types';
-import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
-import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransport';
+import { RtpCapabilities, WebRtcTransport } from 'mediasoup/node/lib/types';
+import { SoupwareSendProducer } from '../types';
 
 export type Room = {
   id: string;
@@ -10,13 +9,16 @@ export type Room = {
   pipes: string[];
 };
 
-export type User = {
+/** Serializable user */
+export interface UserBase {
   id: string;
-  transport: WebRtcTransport;
   rtpCapabilities?: RtpCapabilities;
+}
 
+export interface User extends UserBase {
+  transport: WebRtcTransport;
   producers: {
-    audio?: Producer;
-    video?: Producer;
+    audio?: SoupwareSendProducer;
+    video?: SoupwareSendProducer;
   };
-};
+}
