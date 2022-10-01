@@ -8,21 +8,22 @@ import { ConsumerService } from './consumer.service';
 export class ConsumerController {
   constructor(private consumerService: ConsumerService) {}
 
-  @MessagePattern(`soupware.consumers.delete.${NODE_ID}`)
-  async onDeleteConsumers({
+  @MessagePattern(`soupware.consumer.close-all.${NODE_ID}`)
+  async onCloseAllConsumers({ room, user }: { room: string; user: string }) {
+    return this.consumerService.removeUserFromRoom(room, user);
+  }
+
+  @MessagePattern(`soupware.consumer.close-pipe-producer.${NODE_ID}`)
+  async onUnpublishVideo({
     room,
     user,
-    disabled_consumer,
+    to_unpublish: disabled_consumer,
   }: {
     room: string;
     user: string;
-    disabled_consumer: { audio: boolean; video: boolean };
+    to_unpublish: { audio: boolean; video: boolean };
   }) {
-    return this.consumerService.deleteRoomProducer(
-      room,
-      user,
-      disabled_consumer,
-    );
+    return this.consumerService.unpublish(room, user, disabled_consumer);
   }
 
   @MessagePattern(`soupware.consumer.create.${NODE_ID}`)

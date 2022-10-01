@@ -11,25 +11,36 @@ export class ConsumerService {
     @InjectEventEmitter() private readonly emitter: RecvEventEmitter,
   ) {}
 
+  async removeUserFromRoom(room_id: string, user_id: string) {
+    const room = this.roomService.getRoom(room_id);
+    const user = room.users.find((u) => u.id === user_id);
+
+    //Close user's consumers
+    user.consumers.forEach((c) => c.close());
+
+    //Delete the user
+    room.users = room.users.filter((u) => u.id !== user_id);
+  }
+
   /**
    * Closes audio and/or video producers of a user,
    * automatically closes consumers in egress routers
    * */
-  async deleteRoomProducer(
+  async unpublish(
     room_id: string,
     user_id: string,
-    disabled_consumer: { audio: boolean; video: boolean },
+    to_unpublish: { audio: boolean; video: boolean },
   ) {
     const room = this.roomService.getRoom(room_id);
 
     const roomProducer = room.producers.get(user_id);
 
-    if (disabled_consumer.video && roomProducer.video) {
+    if (to_unpublish.video && roomProducer.video) {
       roomProducer.video.pipe_producer.close();
       roomProducer.video = undefined;
     }
 
-    if (disabled_consumer.audio && roomProducer.audio) {
+    if (to_unpublish.audio && roomProducer.audio) {
       roomProducer.audio.pipe_producer.close();
       roomProducer.audio = undefined;
     }

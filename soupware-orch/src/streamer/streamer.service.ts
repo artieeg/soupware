@@ -123,4 +123,49 @@ export class StreamerService implements OnApplicationBootstrap {
 
     return params;
   }
+
+  async deleteProducer(
+    user_id: string,
+    room_id: string,
+    { audio, video }: { audio?: boolean; video?: boolean },
+  ) {
+    const sendNodeIds = await this.roomService.getNodesOfKindFor(
+      room_id,
+      'SEND',
+    );
+
+    //Delete producers
+    await Promise.all([
+      sendNodeIds.map((sendNodeId) =>
+        firstValueFrom(
+          this.client.send(`soupware.producer.delete.${sendNodeId}`, {
+            user: user_id,
+            room: room_id,
+            deleted_producer: { audio, video },
+          }),
+        ),
+      ),
+    ]);
+
+    //Close pipe producers on recv nodes
+    const recvNodeIds = await this.roomService.getNodesOfKindFor(
+      room_id,
+      'RECV',
+    );
+
+    await Promise.all([
+      recvNodeIds.map((recvNodeId) =>
+        firstValueFrom(
+          this.client.send(
+            `soupware.consumer.close-pipe-producer.${recvNodeId}`,
+            {
+              user: user_id,
+              room: room_id,
+              to_unpublish: { audio, video },
+            },
+          ),
+        ),
+      ),
+    ]);
+  }
 }
