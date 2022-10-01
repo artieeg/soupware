@@ -1,5 +1,4 @@
-import { Producer } from 'mediasoup/node/lib/Producer';
-import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
+import { Consumer, Producer, RtpCapabilities } from 'mediasoup/node/lib/types';
 import { WebRtcTransport } from 'mediasoup/node/lib/WebRtcTransport';
 
 export type Room = {
@@ -16,7 +15,13 @@ export type User = {
   rtpCapabilities?: RtpCapabilities;
 
   producers: {
-    audio?: Producer;
-    video?: Producer;
+    audio?: {
+      producer: Producer;
+      pipe_consumers: Consumer[];
+    };
+    video?: {
+      producer: Producer;
+      pipe_consumers: Consumer[];
+    };
   };
 };

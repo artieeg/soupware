@@ -25,12 +25,19 @@ export class ProducerService {
     const user = this.roomService.getUser(room_id, user_id);
 
     if (deleted_producer.audio && user.producers.audio) {
-      user.producers.audio.close();
+      user.producers.audio.producer.close();
+      user.producers.audio.pipe_consumers.forEach((consumer) =>
+        consumer.close(),
+      );
+
       user.producers.audio = undefined;
     }
 
     if (deleted_producer.video && user.producers.video) {
-      user.producers.video.close();
+      user.producers.video.producer.close();
+      user.producers.video.pipe_consumers.forEach((consumer) =>
+        consumer.close(),
+      );
       user.producers.video = undefined;
     }
 
@@ -51,7 +58,10 @@ export class ProducerService {
       },
     });
 
-    user.producers[producer.kind] = producer;
+    user.producers[producer.kind] = {
+      producer,
+      pipe_consumers: [],
+    };
 
     await this.sendPipeService.pipeNewProducer(producer);
 
