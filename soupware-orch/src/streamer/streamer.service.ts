@@ -168,7 +168,7 @@ export class StreamerService implements OnApplicationBootstrap {
       recvNodeIds.map((recvNodeId) =>
         firstValueFrom(
           this.client.send(
-            `soupware.consumer.close-pipe-producer.${recvNodeId}`,
+            `soupware.recv.track.close-tracks-produced-by-user.${recvNodeId}`,
             {
               user: user_id,
               room: room_id,

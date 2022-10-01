@@ -81,7 +81,7 @@ export class ViewerService {
     for (const recvNodeId of recvNodeIds) {
       await firstValueFrom(
         this.client.send(
-          `soupware.recv.track.close-tracks-produced-by-user.${recvNodeId}`,
+          `soupware.recv.track.close-all-tracks-for-user.${recvNodeId}`,
           {
             user,
             room,
