@@ -50,7 +50,7 @@ export class ViewerService {
     }
 
     const response = await firstValueFrom(
-      this.client.send(`soupware.consumer.create.${recvNodeId}`, {
+      this.client.send(`soupware.recv.track.consume.${recvNodeId}`, {
         room,
         user,
         rtpCapabilities,
@@ -81,7 +81,7 @@ export class ViewerService {
     for (const recvNodeId of recvNodeIds) {
       await firstValueFrom(
         this.client.send(
-          `soupware.consumer.close-consumers-for-user.${recvNodeId}`,
+          `soupware.recv.track.close-tracks-produced-by-user.${recvNodeId}`,
           {
             user,
             room,

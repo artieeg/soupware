@@ -5,20 +5,18 @@ import { RecvEventEmitter } from '../recv.events';
 import { RoomService } from '../room/room.service';
 
 @Injectable()
-export class ConsumerService {
+export class TrackService {
   constructor(
     private roomService: RoomService,
     @InjectEventEmitter() private readonly emitter: RecvEventEmitter,
   ) {}
 
-  async removeUserFromRoom(room_id: string, user_id: string) {
+  async closeAllTracksForUser(room_id: string, user_id: string) {
     const room = this.roomService.getRoom(room_id);
     const user = room.users.find((u) => u.id === user_id);
 
     //Close user's consumers
     user.consumers.forEach((c) => c.close());
-
-    console.log(user.consumers);
 
     //Delete the user
     room.users = room.users.filter((u) => u.id !== user_id);
@@ -30,7 +28,7 @@ export class ConsumerService {
    * Closes audio and/or video producers of a user,
    * automatically closes consumers in egress routers
    * */
-  async closePipeProducer(
+  async closeTracksProducedByUser(
     room_id: string,
     user_id: string,
     to_unpublish: { audio: boolean; video: boolean },
@@ -58,7 +56,7 @@ export class ConsumerService {
     return { status: 'ok' };
   }
 
-  async create(
+  async consumeTrack(
     room_id: string,
     user_id: string,
     rtpCapabilities: RtpCapabilities,

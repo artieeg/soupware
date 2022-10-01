@@ -3,7 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { EventEmitter } from 'events';
 import { NestEmitterModule } from 'nest-emitter';
 import { SEND_NODE } from './constants';
-import { ConsumerModule, RecvPipeModule, RecvTransportModule } from './recv';
+import { TrackModule, RecvPipeModule, RecvTransportModule } from './recv';
 import {
   SendRouterModule,
   SendTransportModule,
@@ -38,7 +38,7 @@ const sendNodeModules = [
   ProducerModule,
 ];
 
-const recvNodeModules = [RecvTransportModule, RecvPipeModule, ConsumerModule];
+const recvNodeModules = [RecvTransportModule, RecvPipeModule, TrackModule];
 
 const nodeKind = process.env.NODE_KIND as NodeKind;
 
