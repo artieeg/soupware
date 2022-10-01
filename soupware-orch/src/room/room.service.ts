@@ -25,18 +25,14 @@ export class RoomService implements OnApplicationShutdown {
     await this.redis.sadd(PREFIX_NODES_FOR_ROOM + room, node);
   }
 
-  async getSendNodesFor(room: string) {
-    const nodes = await this.redis.smembers(PREFIX_NODES_FOR_ROOM + room);
+  async getNodesOfKindFor(room: string, kind: 'SEND' | 'RECV') {
+    const ids = await this.redis.smembers(PREFIX_NODES_FOR_ROOM + room);
 
-    return nodes.filter((node) => node.startsWith('SEND'));
+    return ids.filter((node) => node.startsWith(kind));
   }
 
   async addRoomPipe(room: string, pipedRecvNodeId: string) {
     await this.redis.sadd(PREFIX_ROOM_PIPES + room, pipedRecvNodeId);
-  }
-
-  async getPipedNodeIds(room: string) {
-    return this.redis.smembers(PREFIX_ROOM_PIPES + room);
   }
 
   async isRoomPipedTo(room: string, recvNodeId: string) {

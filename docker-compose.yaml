@@ -9,7 +9,7 @@ services:
     image:
       redis:7.0.4-alpine
     ports: 
-      - 6379:6380
+      - 6381:6379
 
   media-nodes:
     image:
