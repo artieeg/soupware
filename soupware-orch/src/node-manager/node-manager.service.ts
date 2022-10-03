@@ -47,6 +47,8 @@ export class NodeManagerService implements OnModuleInit {
     ids.forEach((id) => pipe.hgetall(id));
     const results = await pipe.exec();
 
+    console.log(results);
+
     return results
       .filter(([err, result]) => !err && result)
       .map(
@@ -54,7 +56,7 @@ export class NodeManagerService implements OnModuleInit {
           ({
             ...result,
             bandwidth: JSON.parse(result.bandwidth),
-            scores: JSON.parse(result.score),
+            scores: JSON.parse(result.scores),
           } as MediaNodeLoad),
       );
   }

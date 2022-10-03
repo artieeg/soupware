@@ -25,6 +25,11 @@ export interface SoupwareProducer extends MediasoupProducer {
   appData: AppData;
 }
 
+/** Same as SoupwareProducer, but appData cannot be assigned */
+export interface SoupwareRouterProducer extends MediasoupProducer {
+  appData: null;
+}
+
 /** Mediasoup's Consumer with strongly typed appData */
 export interface SoupwareConsumer extends MediasoupConsumer {
   appData: AppData;

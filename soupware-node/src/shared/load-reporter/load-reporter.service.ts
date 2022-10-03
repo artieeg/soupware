@@ -8,7 +8,7 @@ import { ClientProxy } from '@nestjs/microservices';
 import { MediaNodeLoad } from '@soupware/internals';
 import * as os from 'os-utils';
 import { BandwidthTrackerService } from '../bandwidth-tracker';
-import { NODE_ID } from '../node-info';
+import { NODE_BANDWIDTH, NODE_ID } from '../node-info';
 import { ScoreTrackerService } from '../score-tracker';
 
 @Injectable()
@@ -43,6 +43,7 @@ export class LoadReporterService implements OnModuleInit, OnModuleDestroy {
         id: NODE_ID,
         kind: process.env.NODE_KIND,
         bandwidth,
+        max_bandwidth: NODE_BANDWIDTH,
         cpu: p,
         scores: {
           consumers: consumerScores,

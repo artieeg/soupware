@@ -10,6 +10,9 @@ import { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 export const NODE_ID = `${process.env.NODE_KIND}_${nanoid()}`;
+export const NODE_BANDWIDTH = Number.parseInt(
+  process.env.SOUPWARE_BANDWIDTH_BPS,
+);
 
 @Injectable()
 export class NodeInfoService implements OnModuleInit, OnApplicationShutdown {

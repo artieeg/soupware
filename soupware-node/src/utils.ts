@@ -10,6 +10,7 @@ import {
   PipeConsumerParams,
   SoupwareConsumer,
   SoupwareProducer,
+  SoupwareRouterProducer,
 } from './types';
 
 export function createNewProducer(
@@ -69,7 +70,7 @@ export async function pipeProducerToRouter({
     router: targetRouter,
   });
 
-  r.pipeProducer!.appData = producer.appData;
+  //r.pipeProducer!.appData = producer.appData;
 
-  return r.pipeProducer as SoupwareProducer;
+  return r.pipeProducer as SoupwareRouterProducer;
 }

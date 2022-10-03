@@ -24,6 +24,9 @@ export interface MediaNodeLoad {
   /** CPU usage (0 - 1) */
   cpu: number;
 
+  /** Node max bandwidth */
+  max_bandwidth: number;
+
   /** Bandwidth usage in bytes */
   bandwidth: {
     inbound: number;
