@@ -48,10 +48,6 @@ export class BandwidthTrackerService {
     this.dInboundByteCount = newInboudByteCount - this.prevInboundByteCount;
     this.prevInboundByteCount = newInboudByteCount;
 
-    if (process.env.NODE_KIND === 'RECV') {
-      console.log('dBytes', this.dOutboundByteCount);
-    }
-
     return {
       inbound: this.dInboundByteCount,
       outbound: this.dOutboundByteCount,

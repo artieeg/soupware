@@ -1,4 +1,5 @@
-import { NODE_ID, PipeConsumerParams } from '@app/shared';
+import { NODE_ID } from '@app/shared';
+import { PipeConsumerParams } from '@app/types';
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';

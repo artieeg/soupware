@@ -1,9 +1,8 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
-import { createPipeProducer } from '@app/send/utils';
-import { PipeConsumerParams } from '@app/shared';
+import { SoupwareProducer, PipeConsumerParams } from '@app/types';
+import { pipeProducerToRouter, createPipeProducer } from '@app/utils';
 import { Injectable } from '@nestjs/common';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
-import { Producer } from 'mediasoup/node/lib/Producer';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { RecvRouterService } from '../recv-router';
 import { RoomService } from '../room/room.service';
@@ -42,21 +41,22 @@ export class PipeService {
     return { status: 'ok' };
   }
 
-  async pipeToEgressRouters(room_id: string, producer: Producer) {
+  async pipeToEgressRouters(room_id: string, producer: SoupwareProducer) {
     const bridgeRouter = this.routerService.getBridgeRouter();
     const egressRouters = this.routerService.getEgressRouters();
 
-    const user_id = (producer.appData as any).user;
+    const user_id = producer.appData.user.id;
 
     const pipedProducer: RouterProducers = new Map();
 
     for (const router of egressRouters) {
-      const r = await bridgeRouter.pipeToRouter({
-        producerId: producer.id,
-        router,
+      const routerProducer = await pipeProducerToRouter({
+        sourceRouter: bridgeRouter,
+        targetRouter: router,
+        producer,
       });
 
-      pipedProducer.set(router.id, r.pipeProducer!);
+      pipedProducer.set(router.id, routerProducer);
     }
 
     const room = this.roomService.getOrCreate(room_id);

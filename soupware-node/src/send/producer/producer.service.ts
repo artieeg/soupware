@@ -5,7 +5,7 @@ import { InjectEventEmitter } from 'nest-emitter';
 import { SendPipeService } from '../pipe';
 import { RoomService } from '../room';
 import { SendEventEmitter } from '../send.events';
-import { createNewProducer } from '../utils';
+import { createNewProducer } from '@app/utils';
 
 @Injectable()
 export class ProducerService {
