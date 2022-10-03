@@ -5,6 +5,7 @@ import { InjectEventEmitter } from 'nest-emitter';
 import { SendPipeService } from '../pipe';
 import { RoomService } from '../room';
 import { SendEventEmitter } from '../send.events';
+import { createNewProducer } from '@app/utils';
 
 @Injectable()
 export class ProducerService {
@@ -43,7 +44,7 @@ export class ProducerService {
     options: ProducerOptions,
   ): Promise<ProducerParams> {
     const user = this.roomService.getUser(room, user_id);
-    const producer = await user.transport.produce({
+    const producer = await createNewProducer(user.transport, {
       ...options,
       appData: {
         user,

@@ -1,9 +1,5 @@
-import {
-  Producer,
-  Consumer,
-  Transport,
-  Router,
-} from 'mediasoup/node/lib/types';
+import { SoupwareProducer, SoupwareConsumer } from '@app/types';
+import { Transport, Router } from 'mediasoup/node/lib/types';
 
 export type Room = {
   id: string;
@@ -19,7 +15,7 @@ export type Room = {
 
 export type RoomProducer = {
   router_producers: RouterProducers;
-  pipe_producer: Producer;
+  pipe_producer: SoupwareProducer;
 };
 
 /**
@@ -27,11 +23,11 @@ export type RoomProducer = {
  * key -- egress router id
  * value -- producer on that router
  * */
-export type RouterProducers = Map<string, Producer>;
+export type RouterProducers = Map<string, SoupwareProducer>;
 
 export type User = {
   id: string;
   router: Router;
   transport: Transport;
-  consumers: Consumer[];
+  consumers: SoupwareConsumer[];
 };

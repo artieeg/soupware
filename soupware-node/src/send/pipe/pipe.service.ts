@@ -1,9 +1,14 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
-import { NODE_ID, PipeConsumerParams } from '@app/shared';
+import { NODE_ID } from '@app/shared';
+import {
+  SoupwareProducer,
+  PipeConsumerParams,
+  SoupwareConsumer,
+} from '@app/types';
+import { createPipeConsumer } from '@app/utils';
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
-import { Producer } from 'mediasoup/node/lib/Producer';
 import { InjectEventEmitter } from 'nest-emitter';
 import { firstValueFrom } from 'rxjs';
 import { RoomService } from '../room';
@@ -24,27 +29,23 @@ export class SendPipeService {
     this.pipes = new Map();
   }
 
-  async pipeNewProducer(producer: Producer) {
-    const room = (producer.appData as any).room as string;
-
+  async pipeNewProducer(producer: SoupwareProducer) {
+    const room = producer.appData.room;
     const { pipes: pipedRecvNodeIds } = this.roomService.get(room);
 
     for (const recvNodeId of pipedRecvNodeIds) {
       const pipeTransport = await this.getPipeTo(recvNodeId);
 
-      const consumer = await pipeTransport.consume({
-        producerId: producer.id,
-        appData: producer.appData,
-      });
+      const consumer = await createPipeConsumer(pipeTransport, producer);
 
       await firstValueFrom(
         this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
           consumer: {
             id: consumer.id,
             kind: consumer.kind,
-            rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
+            rtpCapabilities: consumer.appData.user.rtpCapabilities,
             rtpParameters: consumer.rtpParameters,
-            appData: { user: (consumer.appData.user as any).id },
+            appData: producer.appData,
           } as PipeConsumerParams,
           room,
           sendNodeId: NODE_ID,
@@ -81,12 +82,10 @@ export class SendPipeService {
 
   private async createPipeConsumers(
     pipe: PipeTransport,
-    producers: Producer[],
-  ) {
+    producers: SoupwareProducer[],
+  ): Promise<SoupwareConsumer[]> {
     return Promise.all(
-      producers.map((producer) =>
-        pipe.consume({ producerId: producer.id, appData: producer.appData }),
-      ),
+      producers.map((producer) => createPipeConsumer(pipe, producer)),
     );
   }
 
@@ -158,6 +157,6 @@ export class SendPipeService {
         if (c.video) r.push(c.video);
 
         return r;
-      }, []);
+      }, [] as SoupwareProducer[]);
   }
 }

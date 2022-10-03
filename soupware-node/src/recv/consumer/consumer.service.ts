@@ -1,3 +1,4 @@
+import { createNewConsumer } from '@app/utils';
 import { Injectable } from '@nestjs/common';
 import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { InjectEventEmitter } from 'nest-emitter';
@@ -17,8 +18,6 @@ export class ConsumerService {
 
     //Close user's consumers
     user.consumers.forEach((c) => c.close());
-
-    console.log(user.consumers);
 
     //Delete the user
     room.users = room.users.filter((u) => u.id !== user_id);
@@ -43,10 +42,10 @@ export class ConsumerService {
         if (video) {
           const producer = video.router_producers.get(user.router.id);
 
-          const consumer = await user.transport.consume({
+          const consumer = await createNewConsumer(user.transport, {
             rtpCapabilities,
             producerId: producer.id,
-            paused: false,
+            appData: producer.appData,
           });
 
           this.emitter.emit('new-consumer', {
@@ -60,10 +59,10 @@ export class ConsumerService {
         if (audio) {
           const producer = audio.router_producers.get(user.router.id);
 
-          const consumer = await user.transport.consume({
+          const consumer = await createNewConsumer(user.transport, {
             rtpCapabilities,
             producerId: producer.id,
-            paused: false,
+            appData: producer.appData,
           });
 
           this.emitter.emit('new-consumer', {

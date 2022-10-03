@@ -1,8 +1,8 @@
-import { Consumer } from 'mediasoup/node/lib/Consumer';
+import { SoupwareConsumer } from '@app/types';
 
 export interface ConsumerEvents {
   'new-consumer': {
-    consumer: Consumer;
+    consumer: SoupwareConsumer;
     room: string;
     user: string;
   };

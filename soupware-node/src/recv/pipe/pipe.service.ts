@@ -1,8 +1,8 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
-import { PipeConsumerParams } from '@app/shared';
+import { SoupwareProducer, PipeConsumerParams } from '@app/types';
+import { pipeProducerToRouter, createPipeProducer } from '@app/utils';
 import { Injectable } from '@nestjs/common';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
-import { Producer } from 'mediasoup/node/lib/Producer';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { RecvRouterService } from '../recv-router';
 import { RoomService } from '../room/room.service';
@@ -41,21 +41,22 @@ export class PipeService {
     return { status: 'ok' };
   }
 
-  async pipeToEgressRouters(room_id: string, producer: Producer) {
+  async pipeToEgressRouters(room_id: string, producer: SoupwareProducer) {
     const bridgeRouter = this.routerService.getBridgeRouter();
     const egressRouters = this.routerService.getEgressRouters();
 
-    const user_id = (producer.appData as any).user;
+    const user_id = producer.appData.user.id;
 
     const pipedProducer: RouterProducers = new Map();
 
     for (const router of egressRouters) {
-      const r = await bridgeRouter.pipeToRouter({
-        producerId: producer.id,
-        router,
+      const routerProducer = await pipeProducerToRouter({
+        sourceRouter: bridgeRouter,
+        targetRouter: router,
+        producer,
       });
 
-      pipedProducer.set(router.id, r.pipeProducer!);
+      pipedProducer.set(router.id, routerProducer);
     }
 
     const room = this.roomService.getOrCreate(room_id);
@@ -76,25 +77,19 @@ export class PipeService {
   ) {
     return Promise.all(
       consumerData.map((data) =>
-        this.createPipeProducer(originNodeId, room, data),
+        this.consumeRemoteProducer(originNodeId, room, data),
       ),
     );
   }
 
-  async createPipeProducer(
+  async consumeRemoteProducer(
     originNodeId: string,
     room: string,
     params: PipeConsumerParams,
   ) {
     const pipeTransport = this.pipes.get(originNodeId);
 
-    const producer = await pipeTransport.produce({
-      id: params.id,
-      kind: params.kind,
-      rtpParameters: params.rtpParameters,
-      appData: params.appData,
-    });
-
+    const producer = await createPipeProducer(pipeTransport, params);
     await this.pipeToEgressRouters(room, producer);
 
     return { producer: producer.id };
