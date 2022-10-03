@@ -17,7 +17,7 @@ export type ProducerParams = {
   rtpParameters: RtpParameters;
 };
 
-export type MediaNodeLoad = {
+export interface MediaNodeLoad {
   id: string;
   kind: string;
 
@@ -29,4 +29,10 @@ export type MediaNodeLoad = {
     inbound: number;
     outbound: number;
   };
-};
+
+  /** RTP Stream Score Distribution */
+  scores: {
+    consumers: Record<number, number>;
+    producers: Record<number, number>;
+  };
+}

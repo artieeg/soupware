@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { BandwidthTrackerModule } from '../bandwidth-tracker';
+import { ScoreTrackerModule } from '../score-tracker/score-tracker.module';
 import { LoadReporterService } from './load-reporter.service';
 
 @Module({
@@ -15,6 +16,7 @@ import { LoadReporterService } from './load-reporter.service';
       },
     ]),
     BandwidthTrackerModule,
+    ScoreTrackerModule,
   ],
   providers: [LoadReporterService],
   controllers: [],
