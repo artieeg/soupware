@@ -7,6 +7,7 @@ import { RoomService } from 'src/room';
 @Injectable()
 export class LoadBalancerService {
   private CPU_THRESHOLD: number;
+  private BANDWIDTH_BUFFER: number;
 
   constructor(
     private configService: ConfigService,
@@ -14,6 +15,34 @@ export class LoadBalancerService {
     private roomService: RoomService,
   ) {
     this.CPU_THRESHOLD = this.configService.get('SOUPWARE_NODE_CPU_THRESHOLD');
+    this.BANDWIDTH_BUFFER = this.configService.get(
+      'SOUPWARE_BANDWIDTH_BUFFER_BPS',
+    );
+  }
+
+  getAvailableNodes(nodes: MediaNodeLoad[], kind: 'SEND' | 'RECV') {
+    return nodes
+      .filter((node) => {
+        if (!node.max_bandwidth) {
+          return true;
+        }
+
+        if (kind === 'SEND') {
+          return (
+            node.bandwidth.inbound < node.max_bandwidth - this.BANDWIDTH_BUFFER
+          );
+        } else {
+          return (
+            node.bandwidth.outbound < node.max_bandwidth - this.BANDWIDTH_BUFFER
+          );
+        }
+      })
+      .filter((node) => {
+        return node.cpu < this.CPU_THRESHOLD;
+      })
+      .sort((a, b) => {
+        return a.cpu - b.cpu;
+      });
   }
 
   async getBestNodeFor(room: string, kind: 'SEND' | 'RECV'): Promise<string> {
@@ -26,35 +55,23 @@ export class LoadBalancerService {
       assignedNodeIds,
     );
 
-    // Find node with minimal cpu load
-    const nodeWithMinimalLoad: MediaNodeLoad | undefined =
-      assignedNodeInfo.reduce((acc, node) => {
-        if (node.cpu < acc.cpu) {
-          return node;
-        }
+    const rankedAssignedNodes = this.getAvailableNodes(assignedNodeInfo, kind);
+    const bestAssignedNode = rankedAssignedNodes[0];
 
-        return acc;
-      }, assignedNodeInfo[0]);
-
-    if (!nodeWithMinimalLoad || nodeWithMinimalLoad.cpu > this.CPU_THRESHOLD) {
+    if (!bestAssignedNode) {
       const availableNodeInfo = await this.nodeManagerService.getAvailableNodes(
         kind,
         assignedNodeIds,
       );
 
-      // Find available node with minimal cpu load
-      const availableNodeWithMinimalLoad: MediaNodeLoad =
-        availableNodeInfo.reduce((acc, node) => {
-          if (node.cpu < acc.cpu) {
-            return node;
-          }
+      const rankedAvailableNodes = this.getAvailableNodes(
+        availableNodeInfo,
+        kind,
+      );
 
-          return acc;
-        }, availableNodeInfo[0]);
-
-      return availableNodeWithMinimalLoad.id;
+      return rankedAvailableNodes[0].id;
     } else {
-      return nodeWithMinimalLoad.id;
+      return bestAssignedNode.id;
     }
   }
 }

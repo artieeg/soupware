@@ -1,4 +1,8 @@
-import { SoupwareProducer, SoupwareConsumer } from '@app/types';
+import {
+  SoupwareProducer,
+  SoupwareConsumer,
+  SoupwareRouterProducer,
+} from '@app/types';
 import { Transport, Router } from 'mediasoup/node/lib/types';
 
 export type Room = {
@@ -15,7 +19,7 @@ export type Room = {
 
 export type RoomProducer = {
   router_producers: RouterProducers;
-  pipe_producer: SoupwareProducer;
+  pipe_producer: SoupwareRouterProducer;
 };
 
 /**

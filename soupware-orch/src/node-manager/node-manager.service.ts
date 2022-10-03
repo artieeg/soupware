@@ -14,7 +14,11 @@ export class NodeManagerService implements OnModuleInit {
   }
 
   async updateNodeLoad(data: MediaNodeLoad) {
-    await this.redis.hmset(data.id, data);
+    await this.redis.hmset(data.id, {
+      ...data,
+      bandwidth: JSON.stringify(data.bandwidth),
+      scores: JSON.stringify(data.scores),
+    });
   }
 
   async delNode(id: string, kind: string) {
@@ -43,6 +47,17 @@ export class NodeManagerService implements OnModuleInit {
     ids.forEach((id) => pipe.hgetall(id));
     const results = await pipe.exec();
 
-    return results.map((result) => result[1] as MediaNodeLoad);
+    console.log(results);
+
+    return results
+      .filter(([err, result]) => !err && result)
+      .map(
+        ([_err, result]: [any, any]) =>
+          ({
+            ...result,
+            bandwidth: JSON.parse(result.bandwidth),
+            scores: JSON.parse(result.scores),
+          } as MediaNodeLoad),
+      );
   }
 }

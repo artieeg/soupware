@@ -17,16 +17,25 @@ export type ProducerParams = {
   rtpParameters: RtpParameters;
 };
 
-export type MediaNodeLoad = {
+export interface MediaNodeLoad {
   id: string;
   kind: string;
 
   /** CPU usage (0 - 1) */
   cpu: number;
 
+  /** Node max bandwidth */
+  max_bandwidth: number;
+
   /** Bandwidth usage in bytes */
   bandwidth: {
     inbound: number;
     outbound: number;
   };
-};
+
+  /** RTP Stream Score Distribution */
+  scores: {
+    consumers: Record<number, number>;
+    producers: Record<number, number>;
+  };
+}
