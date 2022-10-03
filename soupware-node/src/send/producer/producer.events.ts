@@ -1,5 +1,5 @@
-import { Producer } from 'mediasoup/node/lib/types';
+import { SoupwareProducer } from '@app/types';
 
 export interface ProducerEvents {
-  'new-producer': { producer: Producer; room: string; user: string };
+  'new-producer': { producer: SoupwareProducer; room: string; user: string };
 }

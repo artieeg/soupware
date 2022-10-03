@@ -16,6 +16,7 @@ import {
   BandwidthTrackerModule,
   NodeInfoModule,
 } from './shared';
+import { ScoreTrackerModule } from './shared/score-tracker/score-tracker.module';
 import { NodeKind } from './types';
 
 const shared = [
@@ -27,6 +28,7 @@ const shared = [
   RecvTransportModule,
   BandwidthTrackerModule,
   LoadReporterModule,
+  ScoreTrackerModule,
   NestEmitterModule.forRoot(new EventEmitter()),
 ];
 
