@@ -1,4 +1,8 @@
-import { MediaKind, RtpParameters } from "mediasoup/node/lib/types";
+import {
+  MediaKind,
+  RtpCapabilities,
+  RtpParameters,
+} from "mediasoup/node/lib/types";
 
 export type MediaPermission = {
   recvNodeId?: string;
@@ -39,3 +43,16 @@ export interface MediaNodeLoad {
     producers: Record<number, number>;
   };
 }
+
+export type RecordParams = {
+  remoteRtpPort: number;
+  localRtcpPort?: number;
+  rtpCapabilities: RtpCapabilities;
+  rtpParameters: RtpParameters;
+  room: string;
+  user: string;
+};
+
+export type RequestRoomRecording = {
+  params: RecordParams[];
+};

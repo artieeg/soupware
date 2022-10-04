@@ -5,10 +5,12 @@ import {
   RtpCapabilities,
   Transport,
 } from 'mediasoup/node/lib/types';
+import { mediaSoupConfig } from './mediasoup.config';
 import {
   AppData,
   PipeConsumerParams,
   SoupwareConsumer,
+  SoupwarePlainTransport,
   SoupwareProducer,
   SoupwareRouterProducer,
 } from './types';
@@ -73,4 +75,10 @@ export async function pipeProducerToRouter({
   //r.pipeProducer!.appData = producer.appData;
 
   return r.pipeProducer as SoupwareRouterProducer;
+}
+
+export async function createPlainTransport(router: Router) {
+  return router.createPlainTransport(
+    mediaSoupConfig.plainTransport,
+  ) as Promise<SoupwarePlainTransport>;
 }
