@@ -77,8 +77,21 @@ export async function pipeProducerToRouter({
   return r.pipeProducer as SoupwareRouterProducer;
 }
 
-export async function createPlainTransport(router: Router) {
-  return router.createPlainTransport(
-    mediaSoupConfig.plainTransport,
-  ) as Promise<SoupwarePlainTransport>;
+export async function createPlainTransport(
+  router: Router,
+  remoteRtpPort: number,
+) {
+  const transport: SoupwarePlainTransport = (await router.createPlainTransport({
+    ...mediaSoupConfig.plainTransport,
+    appData: {
+      remoteRtpPort,
+    } as any,
+  })) as any;
+
+  await transport.connect({
+    ip: mediaSoupConfig.plainTransport.listenIp.ip,
+    port: remoteRtpPort,
+  });
+
+  return transport;
 }

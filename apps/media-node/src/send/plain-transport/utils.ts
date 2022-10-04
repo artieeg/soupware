@@ -1,5 +1,5 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
-import net from 'net';
+import * as net from 'net';
 
 function isPortAvailable(port: number) {
   return new Promise<boolean>((resolve) => {
@@ -34,7 +34,7 @@ export async function getRemoteRTPPort() {
   let isAvailable = false;
   let count = 0;
 
-  while (!isPortAvailable) {
+  while (!isAvailable) {
     count++;
     port = getRandomMediasoupPort();
     isAvailable = await isPortAvailable(port);

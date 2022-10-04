@@ -1,4 +1,3 @@
-import { mediaSoupConfig } from '@app/mediasoup.config';
 import { createPlainTransport } from '@app/utils';
 import { Injectable } from '@nestjs/common';
 import { RecordParams } from '@soupware/internals';
@@ -21,14 +20,9 @@ export class PlainTransportService {
 
     // Create a plain transport for the room
     if (!room.plain_transport) {
-      room.plain_transport = await createPlainTransport(router);
       const remoteRtpPort = await getRemoteRTPPort();
-      room.plain_transport.appData.remoteRtpPort = remoteRtpPort;
 
-      await room.plain_transport.connect({
-        ip: mediaSoupConfig.plainTransport.listenIp.ip,
-        port: remoteRtpPort,
-      });
+      room.plain_transport = await createPlainTransport(router, remoteRtpPort);
     }
 
     const transport = room.plain_transport!;
@@ -41,8 +35,8 @@ export class PlainTransportService {
               producerId: user.producers.audio.id,
               rtpCapabilities: router.rtpCapabilities,
               paused: false,
+              appData: { user: user.id },
             });
-            user.plainConsumers.audio.appData = { user: user.id };
           }
 
           if (user.producers.video) {
@@ -50,8 +44,10 @@ export class PlainTransportService {
               producerId: user.producers.video.id,
               rtpCapabilities: router.rtpCapabilities,
               paused: false,
+              appData: {
+                user: user.id,
+              },
             });
-            user.plainConsumers.video.appData = { user: user.id };
           }
 
           return Object.values(user.plainConsumers);

@@ -14,7 +14,6 @@ export class StreamerService implements OnApplicationBootstrap {
     @Inject('MEDIA_NODE') private client: ClientProxy,
     private loadBalancerService: LoadBalancerService,
     private roomService: RoomService,
-    private webhookService: WebhookService,
     private permissionTokenService: PermissionTokenService,
   ) {}
 
