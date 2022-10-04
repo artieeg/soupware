@@ -1,8 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "soupware-node",
     "packages/*",
-    "soupware-orch"
+    "apps/*"
   ]
 }
