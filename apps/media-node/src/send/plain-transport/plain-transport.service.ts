@@ -34,7 +34,7 @@ export class PlainTransportService {
             user.plainConsumers.audio = await transport.consume({
               producerId: user.producers.audio.id,
               rtpCapabilities: router.rtpCapabilities,
-              paused: false,
+              paused: true,
               appData: { user: user.id },
             });
           }
@@ -43,7 +43,7 @@ export class PlainTransportService {
             user.plainConsumers.video = await transport.consume({
               producerId: user.producers.video.id,
               rtpCapabilities: router.rtpCapabilities,
-              paused: false,
+              paused: true,
               appData: {
                 user: user.id,
               },
@@ -54,6 +54,11 @@ export class PlainTransportService {
         }),
       )
     ).reduce((acc, val) => acc.concat(val), []);
+
+    //Resume consumers
+    setTimeout(() => {
+      consumers.forEach((consumer) => consumer.resume());
+    }, 2000);
 
     const videoCodec = router.rtpCapabilities.codecs?.find(
       (c) => c.mimeType.toLowerCase() === 'video/vp8',

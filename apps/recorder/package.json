@@ -27,7 +27,9 @@
     "@nestjs/platform-express": "^8.0.0",
     "dotenv": "^16.0.3",
     "mediasoup": "3.10.6",
+    "nanoid": "^3.0.0",
     "nats": "^2.7.1",
+    "@soupware/internals": "1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0"
