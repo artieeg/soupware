@@ -1,4 +1,5 @@
 import {
+  ConsumerType,
   MediaKind,
   RtpCapabilities,
   RtpParameters,
@@ -13,6 +14,14 @@ export type MediaPermission = {
     audio: boolean;
     video: boolean;
   };
+};
+
+export type ConsumerParams = {
+  id: string;
+  kind: MediaKind;
+  rtpParameters: RtpParameters;
+  type: ConsumerType;
+  producerId: string;
 };
 
 export type ProducerParams = {

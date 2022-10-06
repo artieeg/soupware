@@ -6,6 +6,7 @@ import { firstValueFrom } from 'rxjs';
 import { LoadBalancerService } from 'src/load-balancer';
 import { PermissionTokenService } from 'src/permission-token';
 import { RoomService } from 'src/room/room.service';
+import { WebhookNewProducer, WebhookService } from 'src/webhook';
 
 @Injectable()
 export class StreamerService implements OnApplicationBootstrap {
@@ -14,6 +15,7 @@ export class StreamerService implements OnApplicationBootstrap {
     private loadBalancerService: LoadBalancerService,
     private roomService: RoomService,
     private permissionTokenService: PermissionTokenService,
+    private webhookService: WebhookService,
   ) {}
 
   async onApplicationBootstrap() {
@@ -122,7 +124,7 @@ export class StreamerService implements OnApplicationBootstrap {
       throw new Error('Permission denied');
     }
 
-    const params: ProducerParams = await firstValueFrom(
+    const { producerParams, consumers } = await firstValueFrom(
       this.client.send(`soupware.producer.create.${sendNodeId}`, {
         user,
         producerOptions,
@@ -130,7 +132,14 @@ export class StreamerService implements OnApplicationBootstrap {
       }),
     );
 
-    return params;
+    this.webhookService.post<WebhookNewProducer>({
+      name: 'producer-created',
+      payload: {
+        consumers,
+      },
+    });
+
+    return producerParams;
   }
 
   async closeUserProducers(

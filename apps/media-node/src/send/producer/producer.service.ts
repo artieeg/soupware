@@ -42,7 +42,10 @@ export class ProducerService {
     room: string,
     user_id: string,
     options: ProducerOptions,
-  ): Promise<ProducerParams> {
+  ): Promise<{
+    producerParams: ProducerParams;
+    consumers: any[];
+  }> {
     const user = this.roomService.getUser(room, user_id);
     const producer = await createNewProducer(user.transport, {
       ...options,
@@ -54,14 +57,17 @@ export class ProducerService {
 
     user.producers[producer.kind] = producer;
 
-    await this.sendPipeService.pipeNewProducer(producer);
+    const { consumers } = await this.sendPipeService.pipeNewProducer(producer);
 
     this.emitter.emit('new-producer', { producer, room, user: user_id });
 
     return {
-      id: producer.id,
-      kind: producer.kind,
-      rtpParameters: producer.rtpParameters,
+      producerParams: {
+        id: producer.id,
+        kind: producer.kind,
+        rtpParameters: producer.rtpParameters,
+      },
+      consumers,
     };
   }
 }

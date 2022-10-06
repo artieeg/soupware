@@ -33,25 +33,31 @@ export class SendPipeService {
     const room = producer.appData.room;
     const { pipes: pipedRecvNodeIds } = this.roomService.get(room);
 
-    for (const recvNodeId of pipedRecvNodeIds) {
-      const pipeTransport = await this.getPipeTo(recvNodeId);
+    const consumers = (
+      await Promise.all(
+        pipedRecvNodeIds.map(async (recvNodeId) => {
+          const pipeTransport = await this.getPipeTo(recvNodeId);
 
-      const consumer = await createPipeConsumer(pipeTransport, producer);
+          const consumer = await createPipeConsumer(pipeTransport, producer);
 
-      await firstValueFrom(
-        this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
-          consumer: {
-            id: consumer.id,
-            kind: consumer.kind,
-            rtpCapabilities: consumer.appData.user.rtpCapabilities,
-            rtpParameters: consumer.rtpParameters,
-            appData: producer.appData,
-          } as PipeConsumerParams,
-          room,
-          sendNodeId: NODE_ID,
+          return firstValueFrom(
+            this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
+              consumer: {
+                id: consumer.id,
+                kind: consumer.kind,
+                rtpCapabilities: consumer.appData.user.rtpCapabilities,
+                rtpParameters: consumer.rtpParameters,
+                appData: producer.appData,
+              } as PipeConsumerParams,
+              room,
+              sendNodeId: NODE_ID,
+            }),
+          );
         }),
-      );
-    }
+      )
+    ).flat();
+
+    return { consumers };
   }
 
   async pipeRoomProducers(room_id: string, targetRecvNodeId: string) {

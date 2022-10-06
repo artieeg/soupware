@@ -2,28 +2,29 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import axios from 'axios';
-import { ProducerParams } from '@soupware/internals';
+import { ConsumerParams } from '@soupware/internals';
 
 type WebhookName = 'producer-created' | 'producer-deleted';
 
-type TrackPublished = {
-  user: string;
-  room: string;
-  params: ProducerParams;
+export type WebhookNewProducer = {
+  consumers: {
+    consumerParameters: ConsumerParams[];
+    user: string;
+  }[];
 };
 
-type WebhookPayload = TrackPublished;
+type WebhookPayload = WebhookNewProducer;
 
-type WebhookEvent = {
+type WebhookEvent<T extends WebhookPayload> = {
   name: WebhookName;
-  payload: WebhookPayload;
+  payload: T;
 };
 
 @Injectable()
 export class WebhookService {
   constructor(private configService: ConfigService) {}
 
-  async post(event: WebhookEvent) {
+  async post<T extends WebhookPayload>(event: WebhookEvent<T>) {
     const url = this.configService.get('SOUPWARE_WEBHOOK');
     const secret = this.configService.get('SOUPWARE_WEBHOOK_SECRET');
 

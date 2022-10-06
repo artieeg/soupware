@@ -1,9 +1,11 @@
 import { createNewConsumer } from '@app/utils';
 import { Injectable } from '@nestjs/common';
+import { ConsumerParams } from '@soupware/internals';
 import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { InjectEventEmitter } from 'nest-emitter';
 import { RecvEventEmitter } from '../recv.events';
 import { RoomService } from '../room/room.service';
+import { getConsumerParams } from './utils';
 
 @Injectable()
 export class ConsumerService {
@@ -29,7 +31,7 @@ export class ConsumerService {
     room_id: string,
     user_id: string,
     rtpCapabilities: RtpCapabilities,
-  ) {
+  ): Promise<{ consumerParameters: ConsumerParams }[]> {
     const room = this.roomService.getRoom(room_id);
 
     const user = room.users.find((u) => u.id === user_id);
@@ -82,14 +84,7 @@ export class ConsumerService {
     return consumers
       .reduce((prev, acc) => prev.concat(acc), [])
       .map((consumer) => ({
-        consumerParameters: {
-          id: consumer.id,
-          kind: consumer.kind,
-          rtpParameters: consumer.rtpParameters,
-          type: consumer.type,
-          producerPaused: false,
-          producerId: consumer.producerId,
-        },
+        consumerParameters: getConsumerParams(consumer),
       }));
   }
 }

@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
+import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { firstValueFrom } from 'rxjs';
 import { LoadBalancerService } from 'src/load-balancer';
@@ -17,7 +18,7 @@ export class ViewerService {
     private permissionTokenService: PermissionTokenService,
   ) {}
 
-  async create(viewer: string, room: string) {
+  async create(viewer: string, room: string, rtpCapabilities: RtpCapabilities) {
     const recvNodeId = await this.loadBalancerService.getBestNodeFor(
       room,
       'RECV',
@@ -27,6 +28,7 @@ export class ViewerService {
       this.client.send(`soupware.transport.recv.create.${recvNodeId}`, {
         user: viewer,
         room,
+        rtpCapabilities,
       }),
     );
 

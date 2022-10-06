@@ -1,4 +1,5 @@
 import { Body, Controller, Delete, Post, Put } from '@nestjs/common';
+import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { ViewerService } from './viewer.service';
 
 type DeleteConsumerDto = {
@@ -14,6 +15,7 @@ type CreateConsumerDto = {
 type CreateViewerDto = {
   user: string;
   room: string;
+  rtpCapabilities: RtpCapabilities;
 };
 
 type ConnectViewerDto = {
@@ -40,8 +42,10 @@ export class ViewerController {
   }
 
   @Post('/viewer')
-  async onCreateViewer(@Body() { user, room }: CreateViewerDto) {
-    return this.viewerService.create(user, room);
+  async onCreateViewer(
+    @Body() { user, room, rtpCapabilities }: CreateViewerDto,
+  ) {
+    return this.viewerService.create(user, room, rtpCapabilities);
   }
 
   @Delete('/viewer/consumer')
