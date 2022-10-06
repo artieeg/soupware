@@ -10,9 +10,9 @@ Minimalistic, scalable, and extensible WebRTC infrastructure, running mediasoup 
 - [x]  Upgrading/Downgrading user roles
 - [x]  Kicking users from rooms
 - [x]  Load balancing
-- [ ]  Recordings
+- [x]  Recordings
 - [ ]  Reporting audio-levels
-- [ ]  Easy-to-use HTTP API and NodeJS SDK
+- [ ]  Server/Client SDKs
 - [ ]  Well-documented + easy to extend
 
 
