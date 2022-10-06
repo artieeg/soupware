@@ -12,13 +12,18 @@ import { spawn } from 'child_process';
 import * as path from 'path';
 import { convertStringToReadable, getCommandArgs, getSdpParams } from './utils';
 import { RoomRecorders } from './recorder.types';
+import { InjectEventEmitter } from 'nest-emitter';
+import { RecorderEventEmitter } from 'src/types';
 
 export const RECORDER_ID = nanoid();
 
 @Injectable()
 export class RecorderService implements OnModuleInit, OnApplicationShutdown {
   private recorders: Map<string, RoomRecorders>;
-  constructor(@Inject('ORCHESTRATOR') private client: ClientProxy) {
+  constructor(
+    @Inject('ORCHESTRATOR') private client: ClientProxy,
+    @InjectEventEmitter() private emitter: RecorderEventEmitter,
+  ) {
     this.recorders = new Map();
   }
 
@@ -146,6 +151,11 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
     );
 
     this.recorders.delete(room);
+
+    this.emitter.emit('recording:ready', {
+      files: recorders.files,
+      room,
+    });
 
     return { status: 'ok' };
   }
