@@ -1,6 +1,11 @@
-# Soupware 🍲 (WIP)
+# Soupware 🍲
 
 Minimalistic, scalable, and extensible WebRTC infrastructure, running mediasoup under the hood.
+
+## Project Status
+🚧 Work in progress 🚧
+
+![cooking](https://media.giphy.com/media/102xzU5V7M1YOs/giphy-downsized-large.gif)
 
 ## Project Scope
 
@@ -17,6 +22,6 @@ Minimalistic, scalable, and extensible WebRTC infrastructure, running mediasoup 
 
 
 ## Nice to have
-- [ ]  [Server-side reencoders](https://mediasoup.org/documentation/v3/scalability/)
+- [ ]  Server-side reencoders
 - [ ]  MCU
 - [ ]  Region support
