@@ -21,20 +21,18 @@ export class RecorderService implements OnModuleInit {
 
   private spawnRecorder(params: RecordParams) {
     const filename = `${params.room}.${params.user}.${params.kind}.${
-      params.kind === 'video' ? 'mp4' : '.aac'
+      params.kind === 'video' ? 'mp4' : 'aac'
     }`;
 
-    console.log(params);
-
     const p = path.join('./recordings', filename);
-    const process = spawn('ffmpeg', getCommandArgs(p));
+    const process = spawn('ffmpeg', getCommandArgs(p, params.kind));
 
     const sdp = convertStringToReadable(
-      getSdpParams(params.rtpParameters, params.remoteRtpPort),
+      getSdpParams(params.kind, params.rtpParameters, params.remoteRtpPort),
     );
 
-    process.stdout.setEncoding('utf8');
-    process.stdout.on('data', (str: string) => {
+    process.stderr.setEncoding('utf-8');
+    process.stderr.on('data', (str: string) => {
       console.log(str);
     });
 

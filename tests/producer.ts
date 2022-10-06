@@ -50,11 +50,16 @@ export async function main() {
   const transport = sendDevice.createSendTransport(transportOptions);
 
   const userMedia = await worker.getUserMedia({
-    audio: false,
+    audio: {
+      source: "file",
+      file: `file://${media.audios[0]}`,
+    },
+    /*
     video: {
       source: "file",
       file: `file://${media.videos[0]}`,
     },
+    */
   });
 
   transport.on("connect", async ({ dtlsParameters }, cb, errb) => {
@@ -106,7 +111,7 @@ export async function main() {
     }
   });
 
-  const p = await transport.produce({ track: userMedia.getVideoTracks()[0] });
+  const p = await transport.produce({ track: userMedia.getAudioTracks()[0] });
 }
 
 main();
