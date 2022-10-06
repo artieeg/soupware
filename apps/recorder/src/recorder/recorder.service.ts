@@ -37,7 +37,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
     await Promise.all(
       Array.from(this.recorders.values()).map((item) => {
         return Promise.all(
-          Object.values(item).map((recorder) => {
+          Object.values(item.processes).map((recorder) => {
             return new Promise((resolve) => {
               recorder.on('close', resolve);
               recorder.kill();
@@ -68,6 +68,40 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
 
     sdp.resume();
     sdp.pipe(ffmpeg.stdin);
+
+    const room = this.getOrCreateRoom(params.room);
+    room.files.push(p);
+    const processes = this.getOrCreateProcesses(params.room, params.user);
+    processes[params.kind] = ffmpeg;
+  }
+
+  private getOrCreateProcesses(room: string, user: string) {
+    const roomRecorders = this.getOrCreateRoom(room);
+    let processes = roomRecorders.processes.get(user);
+    if (!processes) {
+      processes = {
+        audio: null,
+        video: null,
+      };
+      roomRecorders.processes.set(user, processes);
+    }
+
+    return processes;
+  }
+
+  private getOrCreateRoom(room_id: string) {
+    let room = this.recorders.get(room_id);
+
+    if (!room) {
+      room = {
+        processes: new Map(),
+        files: [],
+      };
+
+      this.recorders.set(room_id, room);
+    }
+
+    return room;
   }
 
   async spawnRecorders(params: RecordParams[]) {
@@ -75,7 +109,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
   }
 
   async stopRecordersForUser(room: string, user: string) {
-    const recorders = this.recorders.get(room)?.get(user);
+    const recorders = this.recorders.get(room)?.processes.get(user);
     if (!recorders) return;
 
     //Close audio and video producers
@@ -88,7 +122,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
       }),
     );
 
-    this.recorders.get(room).delete(user);
+    this.recorders.get(room).processes.delete(user);
 
     return { status: 'ok' };
   }
@@ -99,7 +133,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
 
     //Close audio and video producers
     await Promise.all(
-      Array.from(recorders.values()).map((item) => {
+      Array.from(recorders.processes.values()).map((item) => {
         return Promise.all(
           Object.values(item).map((recorder) => {
             return new Promise((resolve) => {
