@@ -10,6 +10,7 @@ import {
   RoomModule,
   SendPipeModule,
 } from './send';
+import { PlainTransportModule } from './send/plain-transport/plain-transport.module';
 import { ProducerModule } from './send/producer';
 import {
   LoadReporterModule,
@@ -38,6 +39,7 @@ const sendNodeModules = [
   SendRouterModule,
   SendTransportModule,
   ProducerModule,
+  PlainTransportModule,
 ];
 
 const recvNodeModules = [RecvTransportModule, RecvPipeModule, ConsumerModule];

@@ -55,6 +55,7 @@ export class SendTransportService {
       id: user,
       transport,
       producers: {},
+      plainConsumers: {},
     });
 
     return {

@@ -5,6 +5,10 @@ import {
 
 export const mediaSoupConfig = {
   mediasoup: {
+    worker: {
+      rtcMinPort: 40000,
+      rtcMaxPort: 49999,
+    },
     mediaCodecs: [
       {
         kind: 'audio',
@@ -48,5 +52,14 @@ export const mediaSoupConfig = {
       },
     ] as TransportListenIp[],
     initialAvailableOutgoingBitrate: 800000,
+  },
+
+  plainTransport: {
+    listenIp: {
+      ip: process.env.MEDIASOUP_IP,
+      announcedIp: process.env.MEDIASOUP_IP,
+    },
+    rtcpMux: true,
+    comedia: false,
   },
 } as const;

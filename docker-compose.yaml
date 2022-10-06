@@ -1,21 +1,23 @@
 services:
+  media-nodes:
+    image: redis:7.0.4-alpine
+    ports:
+      - 6379:6379
+
   api-keys:
-    image:
-      redis:7.0.4-alpine
-    ports: 
+    image: redis:7.0.4-alpine
+    ports:
       - 6380:6379
 
   rooms:
-    image:
-      redis:7.0.4-alpine
-    ports: 
+    image: redis:7.0.4-alpine
+    ports:
       - 6381:6379
 
-  media-nodes:
-    image:
-      redis:7.0.4-alpine
-    ports: 
-      - 6379:6379
+  recorder-pool:
+    image: redis:7.0.4-alpine
+    ports:
+      - 6382:6379
 
   nats:
     image: nats:latest

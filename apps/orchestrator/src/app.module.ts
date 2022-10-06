@@ -8,6 +8,7 @@ import { NodeManagerModule } from './node-manager';
 import { ViewerModule } from './viewer';
 import { WebhookModule } from './webhook';
 import { RoomModule } from './room/room.module';
+import { RecordingModule } from './recording/recording.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { RoomModule } from './room/room.module';
     StreamerModule,
     ViewerModule,
     NodeManagerModule,
+    RecordingModule,
     RoomModule,
   ],
   controllers: [AppController],

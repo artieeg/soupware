@@ -5,10 +5,12 @@ import {
   RtpCapabilities,
   Transport,
 } from 'mediasoup/node/lib/types';
+import { mediaSoupConfig } from './mediasoup.config';
 import {
   AppData,
   PipeConsumerParams,
   SoupwareConsumer,
+  SoupwarePlainTransport,
   SoupwareProducer,
   SoupwareRouterProducer,
 } from './types';
@@ -73,4 +75,23 @@ export async function pipeProducerToRouter({
   //r.pipeProducer!.appData = producer.appData;
 
   return r.pipeProducer as SoupwareRouterProducer;
+}
+
+export async function createPlainTransport(
+  router: Router,
+  remoteRtpPort: number,
+) {
+  const transport: SoupwarePlainTransport = (await router.createPlainTransport({
+    ...mediaSoupConfig.plainTransport,
+    appData: {
+      remoteRtpPort,
+    } as any,
+  })) as any;
+
+  await transport.connect({
+    ip: mediaSoupConfig.plainTransport.listenIp.ip,
+    port: remoteRtpPort,
+  });
+
+  return transport;
 }

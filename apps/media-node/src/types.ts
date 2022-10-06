@@ -4,6 +4,7 @@ import {
   Consumer as MediasoupConsumer,
   MediaKind,
   RtpParameters,
+  PlainTransport,
 } from 'mediasoup/node/lib/types';
 import { SEND_NODE, RECV_NODE } from './constants';
 
@@ -43,3 +44,9 @@ export type PipeConsumerParams = {
   rtpCapabilities: RtpCapabilities;
   appData: AppData;
 };
+
+export interface SoupwarePlainTransport extends PlainTransport {
+  appData: {
+    remoteRtpPort: number;
+  };
+}
