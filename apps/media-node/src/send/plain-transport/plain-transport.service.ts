@@ -82,6 +82,7 @@ export class PlainTransportService {
       rtpParameters: consumer.rtpParameters,
       room: room_id,
       user: consumer.appData.user as string,
+      kind: consumer.kind,
     }));
   }
 }

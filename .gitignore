@@ -18,6 +18,8 @@ lerna-debug.log*
 /coverage
 /.nyc_output
 
+apps/recorder/recordings/*
+
 # IDEs and editors
 /.idea
 .project

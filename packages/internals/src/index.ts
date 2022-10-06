@@ -51,6 +51,7 @@ export type RecordParams = {
   rtpParameters: RtpParameters;
   room: string;
   user: string;
+  kind: MediaKind;
 };
 
 export type RequestRoomRecording = {

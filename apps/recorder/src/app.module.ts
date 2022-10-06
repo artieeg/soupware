@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { RecorderModule } from './recorder/recorder.module';
 
 @Module({
-  imports: [],
+  imports: [RecorderModule],
   controllers: [],
   providers: [],
 })

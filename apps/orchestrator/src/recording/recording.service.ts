@@ -31,7 +31,15 @@ export class RecordingService {
       ),
     );
 
-    console.log(recordParams);
+    const recorderId = await this.recorderPoolStore.getRecorder();
+
+    const flatRecordParams = recordParams.flat();
+
+    await firstValueFrom(
+      this.client.send(`soupware.recorder.record-room.${recorderId}`, {
+        params: flatRecordParams,
+      }),
+    );
 
     return { status: 'ok', recordParams };
   }
