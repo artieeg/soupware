@@ -20,6 +20,6 @@ import { RecordingService } from './recording.service';
   ],
   providers: [RecordingService, RecorderPoolStore],
   controllers: [RecordingController],
-  exports: [],
+  exports: [RecordingService],
 })
 export class RecordingModule {}

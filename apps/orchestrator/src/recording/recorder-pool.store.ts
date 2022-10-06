@@ -2,6 +2,8 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
+const PREFIX_ASSIGNED_RECORDER_ID = 'RECORDER_FOR_';
+
 @Injectable()
 export class RecorderPoolStore implements OnModuleInit {
   private redis = new Redis();
@@ -28,5 +30,15 @@ export class RecorderPoolStore implements OnModuleInit {
     }
 
     return recorderId;
+  }
+
+  async setRecorderFor(room: string, recorderId: string) {
+    await this.redis.set(`${PREFIX_ASSIGNED_RECORDER_ID}${room}`, recorderId);
+
+    return recorderId;
+  }
+
+  async getRecorderFor(room: string) {
+    return this.redis.get(`${PREFIX_ASSIGNED_RECORDER_ID}${room}`);
   }
 }

@@ -16,12 +16,12 @@ export class RecorderController {
     };
   }
 
-  @MessagePattern(`soupware.recorder.stop-recording-for-user.${RECORDER_ID}`)
+  @MessagePattern(`soupware.recorder.stop-recording-user.${RECORDER_ID}`)
   async onStopRecordingForUser({ room, user }: { room: string; user: string }) {
     return this.recorderService.stopRecordersForUser(room, user);
   }
 
-  @MessagePattern(`soupware.recorder.stop-recording-for-room.${RECORDER_ID}`)
+  @MessagePattern(`soupware.recorder.stop-recording-room.${RECORDER_ID}`)
   async onStopRecordingForRoom({ room }: { room: string }) {
     return this.recorderService.stopRecordersForRoom(room);
   }

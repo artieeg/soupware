@@ -88,6 +88,8 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
     );
 
     this.recorders.get(room).delete(user);
+
+    return { status: 'ok' };
   }
 
   async stopRecordersForRoom(room: string) {
@@ -109,5 +111,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
     );
 
     this.recorders.delete(room);
+
+    return { status: 'ok' };
   }
 }

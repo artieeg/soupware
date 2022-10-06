@@ -41,6 +41,29 @@ export class RecordingService {
       }),
     );
 
+    await this.recorderPoolStore.setRecorderFor(room, recorderId);
+
     return { status: 'ok', recordParams };
+  }
+
+  async stopRecordingRoom(room: string) {
+    const recorderId = await this.recorderPoolStore.getRecorderFor(room);
+
+    await firstValueFrom(
+      this.client.send(`soupware.recorder.stop-recording-room.${recorderId}`, {
+        room,
+      }),
+    );
+  }
+
+  async stopRecordingUser(room: string, user: string) {
+    const recorderId = await this.recorderPoolStore.getRecorderFor(room);
+
+    await firstValueFrom(
+      this.client.send(`soupware.recorder.stop-recording-user.${recorderId}`, {
+        room,
+        user,
+      }),
+    );
   }
 }

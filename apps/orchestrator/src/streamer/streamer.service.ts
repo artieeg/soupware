@@ -6,7 +6,6 @@ import { firstValueFrom } from 'rxjs';
 import { LoadBalancerService } from 'src/load-balancer';
 import { PermissionTokenService } from 'src/permission-token';
 import { RoomService } from 'src/room/room.service';
-import { WebhookService } from 'src/webhook';
 
 @Injectable()
 export class StreamerService implements OnApplicationBootstrap {
