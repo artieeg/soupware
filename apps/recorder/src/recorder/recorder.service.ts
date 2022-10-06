@@ -62,7 +62,8 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
 
     ffmpeg.stderr.setEncoding('utf-8');
     ffmpeg.stderr.on('data', (str: string) => {
-      console.log(str);
+      //Log ffmpeg messages here
+      //console.log(str);
     });
 
     sdp.resume();
