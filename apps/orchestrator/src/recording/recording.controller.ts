@@ -21,4 +21,11 @@ export class RecordingController {
 
     return { status: 'ok' };
   }
+
+  @MessagePattern('soupware.recorder.delete')
+  async onDelRecorder({ recorderId }: { recorderId: string }) {
+    await this.recorderPoolStore.delRecorder(recorderId);
+
+    return { status: 'ok' };
+  }
 }

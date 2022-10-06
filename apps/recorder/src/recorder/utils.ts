@@ -1,10 +1,7 @@
 import { MediaKind, RtpParameters } from 'mediasoup/node/lib/types';
 import { Readable } from 'stream';
 
-function getCodecInfoFromRtpParameters(
-  kind: MediaKind,
-  rtpParameters: RtpParameters,
-) {
+function getCodecDetails(kind: MediaKind, rtpParameters: RtpParameters) {
   return {
     payloadType: rtpParameters.codecs[0].payloadType,
     codecName: rtpParameters.codecs[0].mimeType.replace(`${kind}/`, ''),
@@ -18,17 +15,15 @@ export function getSdpParams(
   rtpParameters: RtpParameters,
   remoteRtpPort: number,
 ) {
-  const videoCodecInfo = getCodecInfoFromRtpParameters(kind, rtpParameters);
-
-  console.log(videoCodecInfo);
+  const codec = getCodecDetails(kind, rtpParameters);
 
   return `v=0
   o=- 0 0 IN IP4 127.0.0.1
   s=FFmpeg
   c=IN IP4 127.0.0.1
   t=0 0
-  m=${kind} ${remoteRtpPort} RTP/AVP ${videoCodecInfo.payloadType} 
-  a=rtpmap:${videoCodecInfo.payloadType} ${videoCodecInfo.codecName}/${videoCodecInfo.clockRate}
+  m=${kind} ${remoteRtpPort} RTP/AVP ${codec.payloadType} 
+  a=rtpmap:${codec.payloadType} ${codec.codecName}/${codec.clockRate}
   a=sendonly
   `;
 }

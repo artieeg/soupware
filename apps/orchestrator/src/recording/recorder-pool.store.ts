@@ -12,6 +12,10 @@ export class RecorderPoolStore implements OnModuleInit {
     this.redis = new Redis(this.configService.get('RECORDER_POOL_STORE_ADDR'));
   }
 
+  async delRecorder(recorderId: string) {
+    await this.redis.srem('recorders', recorderId);
+  }
+
   async addNewRecorder(recorderId: string) {
     await this.redis.sadd('recorders', recorderId);
   }
