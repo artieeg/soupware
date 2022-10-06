@@ -1,9 +1,14 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
 import { SoupwareProducer, PipeConsumerParams } from '@app/types';
-import { pipeProducerToRouter, createPipeProducer } from '@app/utils';
+import {
+  pipeProducerToRouter,
+  createPipeProducer,
+  createNewConsumer,
+} from '@app/utils';
 import { Injectable } from '@nestjs/common';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
+import { getConsumerParams } from '../consumer';
 import { RecvRouterService } from '../recv-router';
 import { RoomService } from '../room/room.service';
 import { RouterProducers } from '../room/room.types';
@@ -68,6 +73,28 @@ export class PipeService {
         pipe_producer: producer,
       },
     });
+
+    return Promise.all(
+      room.users
+        //Filter out the user who published the producer
+        .filter((user) => user.id !== producer.appData.user.id)
+        //Create a consumer for each user
+        .map(async (user) => {
+          const routerId = user.router.id;
+          const routerProducer = pipedProducer.get(routerId);
+
+          const consumer = await createNewConsumer(user.transport, {
+            rtpCapabilities: user.rtpCapabilities,
+            producerId: routerProducer.id,
+            appData: producer.appData,
+          });
+
+          return {
+            consumerParameters: getConsumerParams(consumer),
+            user: user.id,
+          };
+        }),
+    );
   }
 
   async createPipeProducers(
@@ -90,9 +117,8 @@ export class PipeService {
     const pipeTransport = this.pipes.get(originNodeId);
 
     const producer = await createPipeProducer(pipeTransport, params);
-    await this.pipeToEgressRouters(room, producer);
 
-    return { producer: producer.id };
+    return this.pipeToEgressRouters(room, producer);
   }
 
   async connectRemotePipe(

@@ -3,7 +3,7 @@ import {
   SoupwareConsumer,
   SoupwareRouterProducer,
 } from '@app/types';
-import { Transport, Router } from 'mediasoup/node/lib/types';
+import { Transport, Router, RtpCapabilities } from 'mediasoup/node/lib/types';
 
 export type Room = {
   id: string;
@@ -34,4 +34,5 @@ export type User = {
   router: Router;
   transport: Transport;
   consumers: SoupwareConsumer[];
+  rtpCapabilities: RtpCapabilities;
 };

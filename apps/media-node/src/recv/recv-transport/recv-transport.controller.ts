@@ -1,6 +1,7 @@
 import { NODE_ID } from '@app/shared';
 import { Controller } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
+import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { RecvTransportService } from './recv-transport.service';
 
@@ -22,9 +23,21 @@ export class RecvTransportController {
   }
 
   @MessagePattern(`soupware.transport.recv.create.${NODE_ID}`)
-  async onCreateTransport({ user, room }: { user: string; room: string }) {
+  async onCreateTransport({
+    user,
+    room,
+    rtpCapabilities,
+  }: {
+    user: string;
+    room: string;
+    rtpCapabilities: RtpCapabilities;
+  }) {
     const transportConnectParams =
-      await this.recvTransportService.createRecvTransport(user, room);
+      await this.recvTransportService.createRecvTransport(
+        user,
+        room,
+        rtpCapabilities,
+      );
 
     return { transportConnectParams };
   }

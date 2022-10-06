@@ -4,6 +4,7 @@ import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { InjectEventEmitter } from 'nest-emitter';
 import { RecvEventEmitter } from '../recv.events';
 import { RoomService } from '../room/room.service';
+import { getConsumerParams } from './utils';
 
 @Injectable()
 export class ConsumerService {
@@ -82,14 +83,7 @@ export class ConsumerService {
     return consumers
       .reduce((prev, acc) => prev.concat(acc), [])
       .map((consumer) => ({
-        consumerParameters: {
-          id: consumer.id,
-          kind: consumer.kind,
-          rtpParameters: consumer.rtpParameters,
-          type: consumer.type,
-          producerPaused: false,
-          producerId: consumer.producerId,
-        },
+        consumerParameters: getConsumerParams(consumer),
       }));
   }
 }

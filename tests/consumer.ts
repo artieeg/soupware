@@ -18,6 +18,7 @@ async function main() {
   const createViewerResponse = await axios.post("/viewer", {
     user,
     room,
+    rtpCapabilities: recvDevice.rtpCapabilities,
   });
 
   const {
