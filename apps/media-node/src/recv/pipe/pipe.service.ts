@@ -6,6 +6,7 @@ import {
   createNewConsumer,
 } from '@app/utils';
 import { Injectable } from '@nestjs/common';
+import { ConsumerParams } from '@soupware/internals';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { getConsumerParams } from '../consumer';
@@ -46,7 +47,15 @@ export class PipeService {
     return { status: 'ok' };
   }
 
-  async pipeToEgressRouters(room_id: string, producer: SoupwareProducer) {
+  async pipeToEgressRouters(
+    room_id: string,
+    producer: SoupwareProducer,
+  ): Promise<
+    {
+      consumerParameters: ConsumerParams;
+      user: string;
+    }[]
+  > {
     const bridgeRouter = this.routerService.getBridgeRouter();
     const egressRouters = this.routerService.getEgressRouters();
 

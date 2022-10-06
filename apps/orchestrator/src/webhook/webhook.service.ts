@@ -2,12 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import axios from 'axios';
+import { ConsumerParams } from '@soupware/internals';
 
 type WebhookName = 'producer-created' | 'producer-deleted';
 
 export type WebhookNewProducer = {
   consumers: {
-    consumerParameters: any[];
+    consumerParameters: ConsumerParams[];
     user: string;
   }[];
 };
