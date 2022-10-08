@@ -16,6 +16,7 @@ export function getSdpParams(
   remoteRtpPort: number,
 ) {
   const codec = getCodecDetails(kind, rtpParameters);
+  console.log(codec);
 
   return `v=0
   o=- 0 0 IN IP4 127.0.0.1
@@ -53,11 +54,11 @@ export function getCommandArgs(path: string, kind: MediaKind) {
   ];
 
   if (kind === 'audio') {
-    commandArgs = commandArgs.concat(['-map', '0:v:0', '-c:v', 'copy']);
+    //commandArgs = commandArgs.concat(['-map', '0:a:0', '-c:a', 'copy']);
   }
 
   if (kind === 'video') {
-    commandArgs = commandArgs.concat(['-map', '0:a:0', '-c:a', 'copy']);
+    //commandArgs = commandArgs.concat(['-map', '0:v:0', '-c:v', 'copy']);
   }
 
   commandArgs = commandArgs.concat(['-flags', '+global_header', `${path}`]);
