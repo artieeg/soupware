@@ -1,4 +1,5 @@
 services:
+
   media-nodes:
     image: redis:7.0.4-alpine
     ports:
@@ -18,6 +19,11 @@ services:
     image: redis:7.0.4-alpine
     ports:
       - 6382:6379
+
+  audio-levels:
+    image: redis:7.0.4-alpine
+    ports:
+      - 6383:6379
 
   nats:
     image: nats:latest
