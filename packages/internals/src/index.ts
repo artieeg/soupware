@@ -66,3 +66,11 @@ export type RecordParams = {
 export type RequestRoomRecording = {
   params: RecordParams[];
 };
+
+export type AudioLevel = {
+  room: string;
+  user: string;
+  volume: number;
+};
+
+export type AudioLevelEvent = AudioLevel[];

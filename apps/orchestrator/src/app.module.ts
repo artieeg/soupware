@@ -9,6 +9,7 @@ import { ViewerModule } from './viewer';
 import { WebhookModule } from './webhook';
 import { RoomModule } from './room/room.module';
 import { RecordingModule } from './recording/recording.module';
+import { AudioLevelsModule } from './audio-levels/audio-levels.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { RecordingModule } from './recording/recording.module';
     NodeManagerModule,
     RecordingModule,
     RoomModule,
+    AudioLevelsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
