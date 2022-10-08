@@ -52,7 +52,7 @@ export class AudioLevelsService implements OnModuleInit, OnModuleDestroy {
   private onReceiveVolumes(volumes: SoupwareAudioLevel[]) {
     const data = volumes.map(({ producer, volume }) => {
       return {
-        user: producer.appData.user,
+        user: producer.appData.user.id,
         room: producer.appData.room,
         volume,
       };

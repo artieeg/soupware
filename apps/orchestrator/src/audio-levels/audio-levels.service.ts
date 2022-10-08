@@ -4,6 +4,8 @@ import { AudioLevel } from '@soupware/internals';
 import Redis from 'ioredis';
 import { WebhookAudioLevels, WebhookService } from 'src/webhook';
 
+const PREFIX_SPOKE_RECENTLY = 'SPOKE_RECENTLY_';
+
 @Injectable()
 export class AudioLevelsService implements OnModuleInit, OnModuleDestroy {
   private redis: Redis;
@@ -36,10 +38,13 @@ export class AudioLevelsService implements OnModuleInit, OnModuleDestroy {
       pipe.hgetall(room);
     });
 
+    //Reset audio levels
+    pipe.flushdb();
+
     const result = await pipe.exec();
-    const userVolumeMaps: Record<string, number>[] = result.map(
-      ([, audioLevels]) => audioLevels as any,
-    );
+    const userVolumeMaps: Record<string, number>[] = result
+      .slice(0, -1) //Remove the result from FLUSHDB
+      .map(([, audioLevels]) => audioLevels as any);
 
     const roomAudioLevels: Record<
       string,
@@ -66,6 +71,7 @@ export class AudioLevelsService implements OnModuleInit, OnModuleDestroy {
   async updateAudioLevels(receivedAudioLevels: AudioLevel[]) {
     const pipe = this.redis.pipeline();
 
+    const date = Date.now();
     receivedAudioLevels.forEach(({ user, room, volume }) => {
       pipe.hset(room, user, volume);
     });

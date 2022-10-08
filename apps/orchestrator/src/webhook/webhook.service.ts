@@ -30,6 +30,10 @@ export class WebhookService {
 
   async post<T extends WebhookPayload>(event: WebhookEvent<T>) {
     const url = this.configService.get('SOUPWARE_WEBHOOK');
+    if (!url) {
+      return;
+    }
+
     const secret = this.configService.get('SOUPWARE_WEBHOOK_SECRET');
 
     // Create a signature
