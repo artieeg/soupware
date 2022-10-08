@@ -1,10 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import crypto from 'crypto';
+import * as crypto from 'crypto';
 import axios from 'axios';
 import { ConsumerParams } from '@soupware/internals';
 
-type WebhookName = 'producer-created' | 'producer-deleted';
+type WebhookName = 'producer-created' | 'producer-deleted' | 'audio-levels';
+
+export type WebhookAudioLevels = {
+  levels: Record<string, Record<string, number>>;
+};
 
 export type WebhookNewProducer = {
   consumers: {
@@ -13,7 +17,7 @@ export type WebhookNewProducer = {
   }[];
 };
 
-type WebhookPayload = WebhookNewProducer;
+type WebhookPayload = WebhookNewProducer | WebhookAudioLevels;
 
 type WebhookEvent<T extends WebhookPayload> = {
   name: WebhookName;
@@ -26,6 +30,10 @@ export class WebhookService {
 
   async post<T extends WebhookPayload>(event: WebhookEvent<T>) {
     const url = this.configService.get('SOUPWARE_WEBHOOK');
+    if (!url) {
+      return;
+    }
+
     const secret = this.configService.get('SOUPWARE_WEBHOOK_SECRET');
 
     // Create a signature

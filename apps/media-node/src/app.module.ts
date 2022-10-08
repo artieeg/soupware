@@ -10,6 +10,7 @@ import {
   RoomModule,
   SendPipeModule,
 } from './send';
+import { AudioLevelsModule } from './send/audio-levels';
 import { PlainTransportModule } from './send/plain-transport/plain-transport.module';
 import { ProducerModule } from './send/producer';
 import {
@@ -40,6 +41,7 @@ const sendNodeModules = [
   SendTransportModule,
   ProducerModule,
   PlainTransportModule,
+  AudioLevelsModule,
 ];
 
 const recvNodeModules = [RecvTransportModule, RecvPipeModule, ConsumerModule];
