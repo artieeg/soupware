@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { RecordParams } from '@soupware/internals';
 import { RoomService } from '../room';
 import { SendRouterService } from '../send-router';
-import { getRemoteRTPPort } from './utils';
+import { getRemoteRTPPort } from '../utils';
 
 @Injectable()
 export class PlainTransportService {
@@ -58,6 +58,9 @@ export class PlainTransportService {
     //Resume consumers
     setTimeout(() => {
       consumers.forEach((consumer) => consumer.resume());
+      setInterval(async () => {
+        console.log(await consumers[0].getStats());
+      }, 1000);
     }, 2000);
 
     const videoCodec = router.rtpCapabilities.codecs?.find(

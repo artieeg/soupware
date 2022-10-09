@@ -82,14 +82,33 @@ export async function createPlainTransport(
   remoteRtpPort: number,
 ) {
   const transport: SoupwarePlainTransport = (await router.createPlainTransport({
-    ...mediaSoupConfig.plainTransport,
+    ...mediaSoupConfig.recorderPlainTransport,
     appData: {
       remoteRtpPort,
     } as any,
   })) as any;
 
   await transport.connect({
-    ip: mediaSoupConfig.plainTransport.listenIp.ip,
+    ip: mediaSoupConfig.recorderPlainTransport.listenIp.ip,
+    port: remoteRtpPort,
+  });
+
+  return transport;
+}
+
+export async function createPlainReencoderTransport(
+  router: Router,
+  remoteRtpPort: number,
+) {
+  const transport: SoupwarePlainTransport = (await router.createPlainTransport({
+    ...mediaSoupConfig.reencoderPlainTransport,
+    appData: {
+      remoteRtpPort,
+    } as any,
+  })) as any;
+
+  await transport.connect({
+    ip: mediaSoupConfig.reencoderPlainTransport.listenIp.ip,
     port: remoteRtpPort,
   });
 

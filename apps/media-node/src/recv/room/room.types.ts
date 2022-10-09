@@ -34,5 +34,5 @@ export type User = {
   router: Router;
   transport: Transport;
   consumers: SoupwareConsumer[];
-  rtpCapabilities: RtpCapabilities;
+  rtpCapabilities?: RtpCapabilities;
 };

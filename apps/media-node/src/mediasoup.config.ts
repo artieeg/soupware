@@ -54,12 +54,21 @@ export const mediaSoupConfig = {
     initialAvailableOutgoingBitrate: 800000,
   },
 
-  plainTransport: {
+  recorderPlainTransport: {
     listenIp: {
       ip: process.env.MEDIASOUP_IP,
       announcedIp: process.env.MEDIASOUP_IP,
     },
     rtcpMux: true,
     comedia: false,
+  },
+
+  reencoderPlainTransport: {
+    listenIp: {
+      ip: process.env.MEDIASOUP_IP,
+      announcedIp: process.env.MEDIASOUP_IP,
+    },
+    rtcpMux: false,
+    comedia: true,
   },
 } as const;

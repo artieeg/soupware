@@ -6,12 +6,14 @@ import { SendPipeService } from '../pipe';
 import { RoomService } from '../room';
 import { SendEventEmitter } from '../send.events';
 import { createNewProducer } from '@app/utils';
+import { ReencoderService } from '../reencoder';
 
 @Injectable()
 export class ProducerService {
   constructor(
     private roomService: RoomService,
     private sendPipeService: SendPipeService,
+    private reencoderService: ReencoderService,
     @InjectEventEmitter() private readonly emitter: SendEventEmitter,
   ) {}
 
@@ -56,6 +58,8 @@ export class ProducerService {
     });
 
     user.producers[producer.kind] = producer;
+
+    await this.reencoderService.reencode(producer);
 
     const { consumers } = await this.sendPipeService.pipeNewProducer(producer);
 

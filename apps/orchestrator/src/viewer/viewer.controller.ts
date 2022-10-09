@@ -15,7 +15,6 @@ type CreateConsumerDto = {
 type CreateViewerDto = {
   user: string;
   room: string;
-  rtpCapabilities: RtpCapabilities;
 };
 
 type ConnectViewerDto = {
@@ -42,10 +41,8 @@ export class ViewerController {
   }
 
   @Post('/viewer')
-  async onCreateViewer(
-    @Body() { user, room, rtpCapabilities }: CreateViewerDto,
-  ) {
-    return this.viewerService.create(user, room, rtpCapabilities);
+  async onCreateViewer(@Body() { user, room }: CreateViewerDto) {
+    return this.viewerService.create(user, room);
   }
 
   @Delete('/viewer/consumer')
