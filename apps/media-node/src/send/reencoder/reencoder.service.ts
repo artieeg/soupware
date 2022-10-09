@@ -11,6 +11,7 @@ import {
   MediaKind,
   RtpCodecParameters,
 } from 'mediasoup/node/lib/RtpParameters';
+import { mediaSoupConfig } from '@app/mediasoup.config';
 
 @Injectable()
 export class ReencoderService {
@@ -53,12 +54,6 @@ export class ReencoderService {
       c.mimeType.includes(producer.kind),
     );
 
-    await this.startGStreamer(producer.kind, codec, {
-      port: inbound_remoteRtpPort,
-    });
-
-    return;
-
     console.log('CODEC RTPC FEEDBACK', codec.rtcpFeedback);
 
     const payloadType = codec.payloadType;
@@ -80,19 +75,36 @@ export class ReencoderService {
         appData: producer.appData as any,
       })) as any;
 
+    await this.startGStreamer(
+      producer.kind,
+      mediaSoupConfig.webRtcTransport.listenIps[0].announcedIp,
+      codec,
+      {
+        port: inbound_remoteRtpPort,
+      },
+      { ssrc, rtp_port: rtpPort, rtcp_port: rtcpPort },
+    );
+
+    reencodedProducer.on('trace', (trace) => {
+      console.log(trace);
+    });
+
     return reencodedProducer;
   }
 
   async startGStreamer(
     kind: MediaKind,
+    host: string,
     codec: RtpCodecParameters,
     inbound: { port: number },
+    outbound: { ssrc: number; rtp_port: number; rtcp_port: number },
   ) {
     const opts = [
       `rtpbin name=rtpbin udpsrc port=${inbound.port} caps="application/x-rtp,media=${kind},clock-rate=${codec.clockRate},encoding-name=OPUS,payload=${codec.payloadType}"`,
       //'rtpbin.recv_rtp_sink_0 rtpbin.',
       '! rtpopusdepay',
       '! opusdec',
+      '! queue',
       //'! audioconvert',
       //'! audioresample',
 
@@ -101,7 +113,14 @@ export class ReencoderService {
       //'autoaudiosink',
       //'opusparse',
       //'oggmux',
-      `! pulsesink`,
+      //`! pulsesink`,
+
+      //SEND
+      '! opusenc',
+      `! rtpopuspay pt=${codec.payloadType} ssrc=${outbound.ssrc}`,
+      '! rtpbin.send_rtp_sink_0',
+      `rtpbin.send_rtp_src_0 ! udpsink host=${host} port=${outbound.rtp_port}`,
+      `rtpbin.send_rtcp_src_0 ! udpsink host=${host} port=${outbound.rtcp_port} sync=false async=false`,
     ].join(' ');
 
     console.log('spawning gst with opts');
@@ -109,15 +128,7 @@ export class ReencoderService {
 
     const gst = exec(`gst-launch-1.0 ${opts}`);
 
-    gst.stderr.setEncoding('utf8');
-    gst.stderr.on('data', (msg: any) => {
-      console.log(msg);
-    });
-
-    gst.stdout.setEncoding('utf8');
-    gst.stdout.on('data', (msg: any) => {
-      console.log(msg);
-    });
+    return gst;
   }
 
   /**
