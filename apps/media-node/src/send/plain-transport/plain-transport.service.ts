@@ -59,7 +59,7 @@ export class PlainTransportService {
     setTimeout(() => {
       consumers.forEach((consumer) => consumer.resume());
       setInterval(async () => {
-        console.log(await consumers[0].getStats());
+        //console.log(await consumers[0].getStats());
       }, 1000);
     }, 2000);
 

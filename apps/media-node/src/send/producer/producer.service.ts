@@ -49,7 +49,7 @@ export class ProducerService {
     consumers: any[];
   }> {
     const user = this.roomService.getUser(room, user_id);
-    const producer = await createNewProducer(user.transport, {
+    const _producer = await createNewProducer(user.transport, {
       ...options,
       appData: {
         user,
@@ -57,9 +57,20 @@ export class ProducerService {
       },
     });
 
-    user.producers[producer.kind] = producer;
+    const producer = await this.reencoderService.reencode(_producer);
 
-    await this.reencoderService.reencode(producer);
+    _producer.enableTraceEvent(['keyframe']);
+    producer.enableTraceEvent(['keyframe']);
+
+    _producer.on('trace', (trace) => {
+      console.log('orignal producer', trace);
+    });
+
+    _producer.on('trace', (trace) => {
+      console.log('reencded producer', trace);
+    });
+
+    user.producers[producer.kind] = producer;
 
     const { consumers } = await this.sendPipeService.pipeNewProducer(producer);
 

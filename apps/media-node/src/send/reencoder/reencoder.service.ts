@@ -85,10 +85,6 @@ export class ReencoderService {
       { ssrc, rtp_port: rtpPort, rtcp_port: rtcpPort },
     );
 
-    reencodedProducer.on('trace', (trace) => {
-      console.log(trace);
-    });
-
     return reencodedProducer;
   }
 
