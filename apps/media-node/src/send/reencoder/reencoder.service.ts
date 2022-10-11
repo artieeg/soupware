@@ -103,9 +103,9 @@ export class ReencoderService {
     console.log('spawning gst with opts');
     console.log('gst-launch-1.0', opts);
 
-    const gst = exec(`gst-launch-1.0 ${opts}`);
+    //const gst = exec(`gst-launch-1.0 ${opts}`);
 
-    return gst;
+    //return gst;
   }
 
   private getCodecSpecificParameters(codec: RtpCodecParameters, ssrc: number) {
@@ -128,6 +128,16 @@ export class ReencoderService {
         '! queue',
         '! vp8enc',
         `! rtpvp8pay picture-id-mode=1 pt=${codec.payloadType} ssrc=${ssrc}`,
+      ];
+    }
+
+    if (mime === 'H264') {
+      return [
+        '! rtph264depay',
+        '! h264parse',
+        '! queue',
+        '! h264parse',
+        '! rtph264pay pt=${codec.payloadType} ssrc=${ssrc}',
       ];
     }
   }
