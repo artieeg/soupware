@@ -23,21 +23,9 @@ export class RecvTransportController {
   }
 
   @MessagePattern(`soupware.transport.recv.create.${NODE_ID}`)
-  async onCreateTransport({
-    user,
-    room,
-    rtpCapabilities,
-  }: {
-    user: string;
-    room: string;
-    rtpCapabilities: RtpCapabilities;
-  }) {
+  async onCreateTransport({ user, room }: { user: string; room: string }) {
     const transportConnectParams =
-      await this.recvTransportService.createRecvTransport(
-        user,
-        room,
-        rtpCapabilities,
-      );
+      await this.recvTransportService.createRecvTransport(user, room);
 
     return { transportConnectParams };
   }

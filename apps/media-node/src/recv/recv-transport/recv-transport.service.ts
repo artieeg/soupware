@@ -25,11 +25,7 @@ export class RecvTransportService {
     return { status: 'ok' };
   }
 
-  async createRecvTransport(
-    user: string,
-    room_id: string,
-    rtpCapabilities: RtpCapabilities,
-  ) {
+  async createRecvTransport(user: string, room_id: string) {
     const router = this.recvRouterService.getNextRouter();
 
     const { listenIps, initialAvailableOutgoingBitrate } =
@@ -50,7 +46,6 @@ export class RecvTransportService {
       transport,
       router,
       consumers: [],
-      rtpCapabilities,
     });
 
     return {

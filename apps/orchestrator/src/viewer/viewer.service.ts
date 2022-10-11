@@ -18,7 +18,7 @@ export class ViewerService {
     private permissionTokenService: PermissionTokenService,
   ) {}
 
-  async create(viewer: string, room: string, rtpCapabilities: RtpCapabilities) {
+  async create(viewer: string, room: string) {
     const recvNodeId = await this.loadBalancerService.getBestNodeFor(
       room,
       'RECV',
@@ -28,7 +28,6 @@ export class ViewerService {
       this.client.send(`soupware.transport.recv.create.${recvNodeId}`, {
         user: viewer,
         room,
-        rtpCapabilities,
       }),
     );
 

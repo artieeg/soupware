@@ -85,8 +85,11 @@ export class PipeService {
 
     return Promise.all(
       room.users
-        //Filter out the user who published the producer
-        .filter((user) => user.id !== producer.appData.user.id)
+        //Filter out the user who published the producer and user that haven't connected their transport yet
+        .filter(
+          (user) =>
+            user.id !== producer.appData.user.id && !!user.rtpCapabilities,
+        )
         //Create a consumer for each user
         .map(async (user) => {
           const routerId = user.router.id;

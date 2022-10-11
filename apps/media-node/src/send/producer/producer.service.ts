@@ -6,12 +6,14 @@ import { SendPipeService } from '../pipe';
 import { RoomService } from '../room';
 import { SendEventEmitter } from '../send.events';
 import { createNewProducer } from '@app/utils';
+import { ReencoderService } from '../reencoder';
 
 @Injectable()
 export class ProducerService {
   constructor(
     private roomService: RoomService,
     private sendPipeService: SendPipeService,
+    private reencoderService: ReencoderService,
     @InjectEventEmitter() private readonly emitter: SendEventEmitter,
   ) {}
 
@@ -47,12 +49,26 @@ export class ProducerService {
     consumers: any[];
   }> {
     const user = this.roomService.getUser(room, user_id);
-    const producer = await createNewProducer(user.transport, {
+    const _producer = await createNewProducer(user.transport, {
       ...options,
+      keyFrameRequestDelay: 500,
       appData: {
         user,
         room,
       },
+    });
+
+    const producer = await this.reencoderService.reencode(_producer);
+
+    //_producer.enableTraceEvent(['keyframe']);
+    //producer.enableTraceEvent(['keyframe']);
+
+    _producer.on('trace', (trace) => {
+      console.log('orignal producer', trace);
+    });
+
+    _producer.on('trace', (trace) => {
+      console.log('reencded producer', trace);
     });
 
     user.producers[producer.kind] = producer;

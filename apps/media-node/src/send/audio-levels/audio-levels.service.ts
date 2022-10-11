@@ -62,7 +62,7 @@ export class AudioLevelsService implements OnModuleInit, OnModuleDestroy {
   }
 
   track(producer: SoupwareProducer) {
-    if (!this.enabled) {
+    if (!this.enabled || producer.kind !== 'audio') {
       return;
     }
 

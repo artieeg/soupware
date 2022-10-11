@@ -17,7 +17,7 @@ export async function main() {
   files.forEach((file) => {
     const p = path.resolve("./media", file);
 
-    if (p.endsWith(".mp4")) {
+    if (p.endsWith(".webm")) {
       media.videos.push(p);
     } else {
       media.audios.push(p);
@@ -50,17 +50,18 @@ export async function main() {
   const transport = sendDevice.createSendTransport(transportOptions);
 
   const userMedia = await worker.getUserMedia({
+    /*
     audio: {
       source: "file",
       file: `file://${media.audios[0]}`,
     },
-    /*
+    */
     video: {
       source: "file",
       file: `file://${media.videos[0]}`,
     },
-    */
   });
+  const track = userMedia.getTracks()[0];
 
   transport.on("connect", async ({ dtlsParameters }, cb, errb) => {
     console.log("connect", dtlsParameters);
@@ -111,7 +112,7 @@ export async function main() {
     }
   });
 
-  const p = await transport.produce({ track: userMedia.getAudioTracks()[0] });
+  const p = await transport.produce({ track });
 }
 
 main();

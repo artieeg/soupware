@@ -55,7 +55,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
 
   private spawnRecorder(params: RecordParams) {
     const filename = `${params.room}.${params.user}.${params.kind}.${
-      params.kind === 'video' ? 'mp4' : 'aac'
+      params.kind === 'video' ? 'mkv' : 'aac'
     }`;
 
     const p = path.join('./recordings', filename);
@@ -68,7 +68,7 @@ export class RecorderService implements OnModuleInit, OnApplicationShutdown {
     ffmpeg.stderr.setEncoding('utf-8');
     ffmpeg.stderr.on('data', (str: string) => {
       //Log ffmpeg messages here
-      //console.log(str);
+      console.log(str);
     });
 
     sdp.resume();

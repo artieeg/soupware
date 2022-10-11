@@ -16,12 +16,12 @@ Minimalistic, scalable, and extensible WebRTC infrastructure, running mediasoup 
 - [x]  Kicking users from rooms
 - [x]  Load balancing
 - [x]  Recordings
-- [ ]  Reporting audio-levels
+- [x]  Reporting audio-levels
 - [ ]  Server/Client SDKs
 - [ ]  Well-documented + easy to extend
 
 
 ## Nice to have
-- [ ]  Server-side reencoders
+- [x]  Server-side reencoders
 - [ ]  MCU
 - [ ]  Region support
