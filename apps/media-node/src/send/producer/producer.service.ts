@@ -51,6 +51,7 @@ export class ProducerService {
     const user = this.roomService.getUser(room, user_id);
     const _producer = await createNewProducer(user.transport, {
       ...options,
+      keyFrameRequestDelay: 500,
       appData: {
         user,
         room,
@@ -59,8 +60,8 @@ export class ProducerService {
 
     const producer = await this.reencoderService.reencode(_producer);
 
-    _producer.enableTraceEvent(['keyframe']);
-    producer.enableTraceEvent(['keyframe']);
+    //_producer.enableTraceEvent(['keyframe']);
+    //producer.enableTraceEvent(['keyframe']);
 
     _producer.on('trace', (trace) => {
       console.log('orignal producer', trace);

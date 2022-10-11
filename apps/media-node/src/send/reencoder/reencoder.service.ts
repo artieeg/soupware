@@ -23,9 +23,6 @@ export class ReencoderService {
     //Port on GStreamer to send to
     const inbound_remoteRtpPort = await getRemoteRTPPort();
 
-    //Port on GStreamer to receive from
-    const outbound_remoteRtpPort = await getRemoteRTPPort();
-
     //Transport to GStreamer
     const outbound_transport = await createPlainTransport(
       router,
@@ -55,8 +52,6 @@ export class ReencoderService {
     );
 
     console.log('CODEC RTPC FEEDBACK', codec.rtcpFeedback);
-
-    const payloadType = codec.payloadType;
 
     const {
       tuple: { localPort: rtpPort },
@@ -95,25 +90,11 @@ export class ReencoderService {
     inbound: { port: number },
     outbound: { ssrc: number; rtp_port: number; rtcp_port: number },
   ) {
+    const encoding = '(string)' + codec.mimeType.split('/')[1].toUpperCase();
+
     const opts = [
-      `rtpbin name=rtpbin udpsrc port=${inbound.port} caps="application/x-rtp,media=${kind},clock-rate=${codec.clockRate},encoding-name=OPUS,payload=${codec.payloadType}"`,
-      //'rtpbin.recv_rtp_sink_0 rtpbin.',
-      '! rtpopusdepay',
-      '! opusdec',
-      '! queue',
-      //'! audioconvert',
-      //'! audioresample',
-
-      // debug: echo back
-      //'opusdec',
-      //'autoaudiosink',
-      //'opusparse',
-      //'oggmux',
-      //`! pulsesink`,
-
-      //SEND
-      '! opusenc',
-      `! rtpopuspay pt=${codec.payloadType} ssrc=${outbound.ssrc}`,
+      `rtpbin name=rtpbin udpsrc port=${inbound.port} caps="application/x-rtp,media=${kind},clock-rate=${codec.clockRate},encoding-name=${encoding},payload=${codec.payloadType}"`,
+      ...this.getCodecSpecificParameters(codec, outbound.ssrc),
       '! rtpbin.send_rtp_sink_0',
       `rtpbin.send_rtp_src_0 ! udpsink host=${host} port=${outbound.rtp_port}`,
       `rtpbin.send_rtcp_src_0 ! udpsink host=${host} port=${outbound.rtcp_port} sync=false async=false`,
@@ -125,6 +106,30 @@ export class ReencoderService {
     const gst = exec(`gst-launch-1.0 ${opts}`);
 
     return gst;
+  }
+
+  private getCodecSpecificParameters(codec: RtpCodecParameters, ssrc: number) {
+    const mime = codec.mimeType.split('/')[1].toUpperCase();
+
+    if (mime === 'OPUS') {
+      return [
+        '! rtpopusdepay',
+        '! opusdec',
+        '! queue',
+        '! opusenc',
+        `! rtpopuspay pt=${codec.payloadType} ssrc=${ssrc}`,
+      ];
+    }
+
+    if (mime === 'VP8') {
+      return [
+        '! rtpvp8depay',
+        '! vp8dec',
+        '! queue',
+        '! vp8enc',
+        `! rtpvp8pay picture-id-mode=1 pt=${codec.payloadType} ssrc=${ssrc}`,
+      ];
+    }
   }
 
   /**

@@ -59,6 +59,7 @@ export function getCommandArgs(path: string, kind: MediaKind) {
 
   if (kind === 'video') {
     //commandArgs = commandArgs.concat(['-map', '0:v:0', '-c:v', 'copy']);
+    //commandArgs = commandArgs.concat(['-map', '0:v:0', '-c:v', 'libvpx']);
   }
 
   commandArgs = commandArgs.concat(['-flags', '+global_header', `${path}`]);

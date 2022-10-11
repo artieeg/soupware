@@ -48,6 +48,10 @@ export class PlainTransportService {
                 user: user.id,
               },
             });
+
+            setInterval(async () => {
+              await user.plainConsumers.video.requestKeyFrame();
+            }, 500);
           }
 
           return Object.values(user.plainConsumers);
