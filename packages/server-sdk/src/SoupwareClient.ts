@@ -1,4 +1,5 @@
 import axios, { AxiosInstance } from "axios";
+import { Consumer } from "./Consumer";
 import { StreamerImpl as Streamer } from "./Streamer";
 import { WebhookHandler } from "./WebhookHandler";
 
@@ -12,6 +13,7 @@ type ServerClientConfig = {
 export class SoupwareClient {
   private axios: AxiosInstance;
   private _streamer: Streamer;
+  private _consumer: Consumer;
   private _webhook: WebhookHandler;
 
   constructor(config: ServerClientConfig) {
@@ -23,6 +25,7 @@ export class SoupwareClient {
     });
 
     this._webhook = new WebhookHandler(config.secret);
+    this._consumer = new Consumer(this.axios);
     this._streamer = new Streamer(this.axios);
   }
 
@@ -32,5 +35,9 @@ export class SoupwareClient {
 
   get streamer() {
     return this._streamer;
+  }
+
+  get consumer() {
+    return this._consumer;
   }
 }
