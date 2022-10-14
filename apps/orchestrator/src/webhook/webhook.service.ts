@@ -2,27 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import axios from 'axios';
-import { ConsumerParams } from '@soupware/internals';
-
-type WebhookName = 'producer-created' | 'producer-deleted' | 'audio-levels';
-
-export type WebhookAudioLevels = {
-  levels: Record<string, Record<string, number>>;
-};
-
-export type WebhookNewProducer = {
-  consumers: {
-    consumerParameters: ConsumerParams[];
-    user: string;
-  }[];
-};
-
-type WebhookPayload = WebhookNewProducer | WebhookAudioLevels;
-
-type WebhookEvent<T extends WebhookPayload> = {
-  name: WebhookName;
-  payload: T;
-};
+import { WebhookPayload, WebhookEvent } from '@soupware/shared';
 
 @Injectable()
 export class WebhookService {
