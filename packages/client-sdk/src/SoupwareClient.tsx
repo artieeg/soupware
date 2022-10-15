@@ -23,8 +23,10 @@ export class SoupwareClient {
     await this.recvDevice.load({ routerRtpCapabilities: routerRtpParameters });
     const transport = this.recvDevice.createSendTransport(transportOptions);
 
+    console.log("created new transport");
     return new Promise<Transport>(async (resolve, reject) => {
       transport.on("connect", async ({ dtlsParameters }, callback, errback) => {
+        console.log({ dtlsParameters });
         try {
           await signal({
             dtls: dtlsParameters,
