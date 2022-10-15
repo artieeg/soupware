@@ -18,7 +18,7 @@ export class SoupwareClient {
       dtls: DtlsParameters;
       mediaPermissionToken: string;
       rtpCapabilities: RtpCapabilities;
-    }) => Promise<string>
+    }) => Promise<void>
   ) {
     await this.recvDevice.load({ routerRtpCapabilities: routerRtpParameters });
     const transport = this.recvDevice.createSendTransport(transportOptions);
@@ -33,8 +33,8 @@ export class SoupwareClient {
           });
           callback();
           resolve(transport);
-        } catch (error) {
-          errback(error);
+        } catch {
+          errback(new Error());
           reject();
         }
       });
