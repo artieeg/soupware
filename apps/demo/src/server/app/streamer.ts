@@ -10,3 +10,11 @@ export function createStreamer(room: string, user: string) {
     },
   });
 }
+
+export function connectStreamer(params: {
+  mediaPermissionToken: string;
+  dtlsParameters: any;
+  rtpCapabilities: any;
+}) {
+  return soupware.streamer.connect(params);
+}

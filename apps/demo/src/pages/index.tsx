@@ -16,11 +16,11 @@ const Home: NextPage = () => {
   const [hidden, setHidden] = useState(false);
 
   const onCreateRoom = async () => {
-    const { id } = await createRoomMutation.mutateAsync({});
+    const { room, user } = await createRoomMutation.mutateAsync({});
     setHidden(true);
-    router.push(`/${id}`);
 
-    queryClient.setQueryData(["streamer", id], { hello: "hello" });
+    queryClient.setQueryData(["streamer", room.id], user.streamer);
+    router.push(`/${room.id}`);
   };
 
   return (
