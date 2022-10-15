@@ -1,1 +1,1 @@
-export class SoupwareClient {}
+export * from "./src/SoupwareClient";
