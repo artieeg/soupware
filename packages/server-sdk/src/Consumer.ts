@@ -3,8 +3,11 @@ import { Axios } from "axios";
 export class Consumer {
   constructor(private client: Axios) {}
 
-  async create({ user, room }: { user: string; room: string }) {
-    return await this.client.post("/consumer", { user, room });
+  async create({ user, room }: { user: string; room: string }): Promise<{
+    transportConnectParams: { transportOptions: any; routerRtpParameters: any };
+    mediaPermissionToken: string;
+  }> {
+    return (await this.client.post("/consumer", { user, room })).data;
   }
 
   async connect(params: { mediaPermissionToken: string; dtlsParameters: any }) {

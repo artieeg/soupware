@@ -1,6 +1,8 @@
 // @ts-check
 import { env } from "./src/env/server.mjs";
 
+import withTM from 'next-transpile-modules';
+
 /**
  * Don't be scared of the generics here.
  * All they do is to give us autocompletion when using this.
@@ -10,7 +12,7 @@ import { env } from "./src/env/server.mjs";
  * @constraint {{import('next').NextConfig}}
  */
 function defineNextConfig(config) {
-  return config;
+  return withTM(['@soupware/server'])(config);
 }
 
 export default defineNextConfig({

@@ -1,1 +1,2 @@
-export * from "./index";
+export * from "./src/SoupwareClient";
+export * from "./src/types";

@@ -1,11 +1,8 @@
 import { Axios } from "axios";
+import { CreateStreamerResponse } from "./types";
 
 export class StreamerImpl {
-  client: Axios;
-
-  constructor(client: Axios) {
-    this.client = client;
-  }
+  constructor(private client: Axios) {}
 
   async create({
     user,
@@ -18,12 +15,14 @@ export class StreamerImpl {
       audio: boolean;
       video: boolean;
     };
-  }) {
-    return await this.client.post("/streamer", {
-      user,
-      room,
-      permissions,
-    });
+  }): Promise<CreateStreamerResponse> {
+    return (
+      await this.client.post("/streamer", {
+        user,
+        room,
+        permissions,
+      })
+    ).data;
   }
 
   async connect(params: {
