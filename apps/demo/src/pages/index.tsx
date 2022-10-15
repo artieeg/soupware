@@ -19,8 +19,12 @@ const Home: NextPage = () => {
     const { room, user } = await createRoomMutation.mutateAsync({});
     setHidden(true);
 
+    queryClient.setQueryData(
+      ["media-permission-token", "send"],
+      user.streamer?.mediaPermissionToken
+    );
     queryClient.setQueryData(["streamer", room.id], user.streamer);
-    router.push(`/${room.id}`);
+    router.push(`/${room.id}?role=streamer`);
   };
 
   return (
