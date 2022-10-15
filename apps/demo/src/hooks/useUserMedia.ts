@@ -4,7 +4,11 @@ export function useUserMedia() {
   const userMedia = useQuery(
     ["user-media"],
     () => navigator.mediaDevices.getUserMedia({ video: true, audio: true }),
-    { enabled: true }
+    {
+      enabled: true,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    }
   );
 
   return {

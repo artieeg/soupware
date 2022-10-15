@@ -8,9 +8,7 @@ import {
   useUserMedia,
 } from "../../hooks";
 import { UserCircle } from "../../components";
-import { useEffect } from "react";
-import { stream } from "../../app";
-import { trpc } from "../../utils/trpc";
+import { useEffect, useRef } from "react";
 import { useRoomId } from "../../hooks/useRoomId";
 
 const useMediaStreaming = () => {
@@ -20,10 +18,11 @@ const useMediaStreaming = () => {
   const { media } = useUserMedia();
   const client = useSoupwareClient();
   const streamerParams = useStreamerParams(room);
-  const connectStreamerMutation = trpc.streamer.connect.useMutation();
 
-  const connect = async () => {
-    if (!client || !streamerParams) return;
+  const isStreaming = useRef(false);
+
+  const stream = async () => {
+    if (!client || !streamerParams || !media || isStreaming.current) return;
 
     const {
       transportConnectParams: { routerRtpParameters, transportOptions },
@@ -31,21 +30,19 @@ const useMediaStreaming = () => {
 
     const transport = await client.createSendTransport(
       routerRtpParameters,
-      transportOptions,
-      (params) => {
-        return connectStreamerMutation.mutateAsync({
-          dtlsParameters: params.dtls,
-          mediaPermissionToken: params.mediaPermissionToken,
-          rtpCapabilities: params.rtpCapabilities,
-        });
-      }
+      transportOptions
     );
 
-    console.log({ transport });
+    await client.produce({
+      track: media.getVideoTracks().at(0)!,
+      transport,
+    });
+
+    isStreaming.current = true;
   };
 
   useEffect(() => {
-    connect();
+    stream();
   }, [media, streamerParams]);
 };
 

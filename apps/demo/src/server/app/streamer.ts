@@ -18,3 +18,10 @@ export function connectStreamer(params: {
 }) {
   return soupware.streamer.connect(params);
 }
+
+export function produce(params: {
+  mediaPermissionToken: string;
+  producerOptions: any;
+}) {
+  return soupware.streamer.produce(params);
+}

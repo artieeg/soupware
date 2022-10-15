@@ -41,7 +41,7 @@ export class StreamerImpl {
       appData: any;
     };
   }) {
-    return await this.client.post("/streamer/producer", params);
+    return (await this.client.post("/streamer/producer", params)).data.id;
   }
 
   async close(params: {
