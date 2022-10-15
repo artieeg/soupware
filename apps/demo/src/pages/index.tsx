@@ -30,7 +30,7 @@ const Home: NextPage = () => {
         <meta name="description" content="Soupware project demo" />
       </Head>
 
-      <AppLayout className="mx-auto  items-center justify-center bg-gray-1000 p-6">
+      <AppLayout className="mx-auto  items-center justify-center p-6">
         <motion.div
           className="space-y-[5rem]"
           animate={hidden ? "hidden" : "visible"}

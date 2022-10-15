@@ -6,7 +6,7 @@ export const AppLayout: React.FC<{
 }> = ({ children, className }) => {
   return (
     <main
-      className={`container flex min-h-screen min-w-full flex-col ${
+      className={`container flex  min-h-screen min-w-full flex-col bg-gray-1000 ${
         className ?? ""
       }`}
     >

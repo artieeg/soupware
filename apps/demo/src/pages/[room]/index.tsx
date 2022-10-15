@@ -1,14 +1,14 @@
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { NextPage } from "next";
-import { useStreamerParams } from "../../hooks/useStreamerParams";
-import { useEffect } from "react";
+import { AppLayout } from "../../layouts";
+import { useUserMedia } from "../../hooks";
 
 const Room: NextPage = () => {
   const router = useRouter();
   const room = router.query.room as string;
 
-  const params = useStreamerParams(room);
+  const userMedia = useUserMedia();
 
   return (
     <>
@@ -16,6 +16,24 @@ const Room: NextPage = () => {
         <title>soupdemo {room}</title>
         <meta name="description" content={`Soupdemo Room ${room}`} />
       </Head>
+
+      <AppLayout>
+        {userMedia.loading ? (
+          <div>loading</div>
+        ) : (
+          <video
+            className="h-[20rem] w-[20rem] rounded-full object-cover"
+            autoPlay
+            playsInline
+            muted
+            ref={(ref) => {
+              if (ref && userMedia.media) {
+                ref.srcObject = userMedia.media;
+              }
+            }}
+          />
+        )}
+      </AppLayout>
     </>
   );
 };
