@@ -1,14 +1,11 @@
 import { Device } from "mediasoup-client";
-import {
-  RtpCapabilities,
-  RtpParameters,
-} from "mediasoup-client/lib/RtpParameters";
+import { RtpCapabilities } from "mediasoup-client/lib/RtpParameters";
 
 export class SoupwareClient {
   private recvDevice: Device;
   private sendDevice: Device;
 
-  constructor() {
+  constructor(private mediaPermissionToken: string) {
     this.recvDevice = new Device();
     this.sendDevice = new Device();
   }
