@@ -14,6 +14,12 @@ type Signalers = {
       mediaPermissionToken: string;
     }) => Promise<{ id: string }>;
   };
+  consumer: {
+    connect: (params: {
+      dtlsParameters: DtlsParameters;
+      mediaPermissionToken: string;
+    }) => Promise<void>;
+  };
 };
 
 export class SoupwareClient {
@@ -26,6 +32,10 @@ export class SoupwareClient {
   ) {
     this.recvDevice = new Device();
     this.sendDevice = new Device();
+  }
+
+  get recvRtpCapabilities() {
+    return this.recvDevice.rtpCapabilities;
   }
 
   async produce({
@@ -61,6 +71,11 @@ export class SoupwareClient {
 
     transport.on("connect", async ({ dtlsParameters }, callback, errback) => {
       try {
+        console.log({
+          dtlsParameters,
+          mediaPermissionToken: this.mediaPermissionToken,
+          rtpCapabilities: this.sendDevice.rtpCapabilities,
+        });
         await this.signalers.streamer.connect({
           dtlsParameters,
           mediaPermissionToken: this.mediaPermissionToken,
@@ -78,29 +93,23 @@ export class SoupwareClient {
 
   async createRecvTransport(
     routerRtpParameters: RtpCapabilities,
-    transportOptions: any,
-    signal: (params: {
-      dtls: DtlsParameters;
-      mediaPermissionToken: string;
-    }) => Promise<void>
+    transportOptions: any
   ) {
     await this.recvDevice.load({ routerRtpCapabilities: routerRtpParameters });
     const transport = this.recvDevice.createRecvTransport(transportOptions);
 
-    return new Promise<Transport>(async (resolve, reject) => {
-      transport.on("connect", async ({ dtlsParameters }, callback, errback) => {
-        try {
-          await signal({
-            dtls: dtlsParameters,
-            mediaPermissionToken: this.mediaPermissionToken,
-          });
-          callback();
-          resolve(transport);
-        } catch (error) {
-          errback(error);
-          reject();
-        }
-      });
+    transport.on("connect", async ({ dtlsParameters }, callback, errback) => {
+      try {
+        await this.signalers.consumer.connect({
+          dtlsParameters,
+          mediaPermissionToken: this.mediaPermissionToken,
+        });
+        callback();
+      } catch (error: any) {
+        errback(error);
+      }
     });
+
+    return transport;
   }
 }

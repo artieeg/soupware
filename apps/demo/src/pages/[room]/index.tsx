@@ -22,7 +22,7 @@ const Room: NextPage = () => {
     <>
       <Head>
         <title>soupdemo {room}</title>
-        <meta name="description" content={`Soupdemo Room ${room}`} />
+        <meta name="description" content={`Soupdemo room ${room}`} />
       </Head>
 
       <AppLayout>

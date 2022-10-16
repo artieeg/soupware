@@ -16,6 +16,7 @@ export const mediaSoupConfig = {
         clockRate: 48000,
         channels: 2,
       },
+      /*
       {
         kind: 'video',
         mimeType: 'video/H264',
@@ -33,10 +34,17 @@ export const mediaSoupConfig = {
           'profile-level-id': '4d0032',
         },
       },
+      */
       {
         kind: 'video',
         mimeType: 'video/vp8',
         clockRate: 90000,
+        rtcpFeedback: [
+          { type: 'nack' },
+          { type: 'nack', parameter: 'pli' },
+          { type: 'ccm', parameter: 'fir' },
+          { type: 'goog-remb' },
+        ],
         parameters: {
           'x-google-start-bitrate': 1000,
         },
