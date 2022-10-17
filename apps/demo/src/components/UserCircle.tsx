@@ -8,7 +8,7 @@ export const UserCircle: React.FC<UserCircleProps> = ({ media }) => {
   if (media) {
     return (
       <video
-        className="h-[15rem] w-[15rem] rounded-full object-cover"
+        className="flex-1 overflow-hidden rounded-[2rem] bg-gray-1100 object-cover"
         autoPlay
         playsInline
         muted
@@ -20,6 +20,6 @@ export const UserCircle: React.FC<UserCircleProps> = ({ media }) => {
       />
     );
   } else {
-    return <div className="h-[15rem] w-[15rem] rounded-full bg-brand-0"></div>;
+    return <div className="flex-1 rounded-[2rem] bg-gray-1100"></div>;
   }
 };
