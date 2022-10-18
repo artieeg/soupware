@@ -5073,6 +5073,11 @@ jest@^27.2.5:
     import-local "^3.0.2"
     jest-cli "^27.5.1"
 
+jotai@^1.8.6:
+  version "1.8.6"
+  resolved "https://registry.yarnpkg.com/jotai/-/jotai-1.8.6.tgz#4112f619c0153db9fc04025b871ab02a6800cfe1"
+  integrity sha512-6JXNd2ewR6Ur0hGY0kRJebQ++p7lN/8kNdGNXv7XT11FDPxAtPN2XLM+m0w4bV22f1knQlG8ZpVLfY6BEGF+UQ==
+
 js-sdsl@^4.1.4:
   version "4.1.4"
   resolved "https://registry.yarnpkg.com/js-sdsl/-/js-sdsl-4.1.4.tgz#78793c90f80e8430b7d8dc94515b6c77d98a26a6"
