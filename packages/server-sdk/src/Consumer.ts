@@ -1,12 +1,16 @@
+import { UserParams } from "@soupware/defs";
 import { Axios } from "axios";
 
 export class Consumer {
   constructor(private client: Axios) {}
 
-  async create({ user, room }: { user: string; room: string }): Promise<{
-    transportConnectParams: { transportOptions: any; routerRtpParameters: any };
-    mediaPermissionToken: string;
-  }> {
+  async create({
+    user,
+    room,
+  }: {
+    user: string;
+    room: string;
+  }): Promise<UserParams> {
     return (await this.client.post("/viewer", { user, room })).data;
   }
 

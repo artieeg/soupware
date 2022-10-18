@@ -1,9 +1,9 @@
-import { SoupwareClient, StreamerParams, Producer } from "@soupware/client";
+import { SoupwareClient, UserParams, Producer } from "@soupware/client";
 import create from "zustand";
 import produce from "immer";
 
 interface StreamerStore {
-  params: StreamerParams | null;
+  params: UserParams | null;
   client: SoupwareClient | null;
   isStreaming: boolean;
   producers: Producer[];

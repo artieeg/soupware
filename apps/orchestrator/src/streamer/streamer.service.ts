@@ -2,7 +2,7 @@ import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 import { MediaPermission } from '@soupware/internals';
 import {
-  StreamerParams,
+  UserParams,
   TransportConnectParams,
   WebhookNewProducer,
 } from '@soupware/defs';
@@ -32,7 +32,7 @@ export class StreamerService implements OnApplicationBootstrap {
     room: string,
     permissions: { audio: boolean; video: boolean },
     oldPermissionToken?: string,
-  ): Promise<StreamerParams> {
+  ): Promise<UserParams> {
     const sendNodeId = await this.loadBalancerService.getBestNodeFor(
       room,
       'SEND',

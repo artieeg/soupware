@@ -79,11 +79,14 @@ export class SoupwareClient {
 
     transport.on("connect", async ({ dtlsParameters }, callback, errback) => {
       try {
+        console.log({ dtlsParameters });
         await this.signalers.consumer.connect({
           dtlsParameters,
           mediaPermissionToken: this.mediaPermissionToken,
         });
+        console.log("connnect");
         callback();
+        console.log("connnect finished");
       } catch (error: any) {
         errback(error);
       }

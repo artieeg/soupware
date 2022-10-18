@@ -12,6 +12,7 @@ import {
   useStreamerParams,
   useRoleStore,
   useStreamerStore,
+  useConsumerStore,
 } from "../store";
 import { SoupwareClient } from "@soupware/client";
 import { useSignalers } from "../hooks";
@@ -29,6 +30,11 @@ const Home: NextPage = () => {
 
     useRoleStore.setState({
       role: "streamer",
+    });
+
+    useConsumerStore.setState({
+      params: user.consumer,
+      client: new SoupwareClient(user.consumer.mediaPermissionToken, signalers),
     });
 
     useStreamerStore.setState({

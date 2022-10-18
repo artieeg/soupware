@@ -1,6 +1,6 @@
 import { mediaSoupConfig } from '@app/mediasoup.config';
 import { Injectable } from '@nestjs/common';
-import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
+import { TransportConnectParams } from '@soupware/defs';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { RecvRouterService } from '../recv-router';
 import { RoomService } from '../room/room.service';
@@ -25,7 +25,10 @@ export class RecvTransportService {
     return { status: 'ok' };
   }
 
-  async createRecvTransport(user: string, room_id: string) {
+  async createRecvTransport(
+    user: string,
+    room_id: string,
+  ): Promise<TransportConnectParams> {
     const router = this.recvRouterService.getNextRouter();
 
     const { listenIps, initialAvailableOutgoingBitrate } =

@@ -1,6 +1,6 @@
 import { createNewConsumer } from '@app/utils';
 import { Injectable } from '@nestjs/common';
-import { ConsumerParams } from '@soupware/internals';
+import { ConsumerParams } from '@soupware/defs';
 import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 import { InjectEventEmitter } from 'nest-emitter';
 import { RecvEventEmitter } from '../recv.events';

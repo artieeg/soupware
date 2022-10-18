@@ -1,38 +1,59 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { SoupwareClient } from "@soupware/client";
+import { useEffect } from "react";
+import { useConsumerStore } from "../store";
 import { trpc } from "../utils/trpc";
-import { useConsumerParams } from "./useConsumerParams";
 import { useRoomId } from "./useRoomId";
-import { useSoupwareClient } from "./useSoupwareClient";
+import { useSignalers } from "./useSignalers";
 
-export const useMediaConsumers = () => {
+function useViewerCreate() {
   const room = useRoomId();
-  const consumerParams = useConsumerParams();
-  const client = useSoupwareClient("recv");
+  const createViewerMutation = trpc.viewer.create.useMutation();
+
+  const signalers = useSignalers();
+
+  const create = async () => {
+    if (!room || useConsumerStore.getState().params) return;
+
+    const r = await createViewerMutation.mutateAsync({
+      room,
+    });
+
+    useConsumerStore.setState({
+      params: r,
+      client: new SoupwareClient(r.mediaPermissionToken, signalers),
+    });
+  };
+
+  useEffect(() => {
+    create();
+  }, [room]);
+}
+
+export function useMediaConsumers() {
+  useViewerCreate();
+
   const createConsumersMutation = trpc.viewer.consume.useMutation();
-
-  const tracks = useQuery<MediaStream[]>(["streams", room]);
-  const queryClient = useQueryClient();
-
-  const isConsuming = useRef(false);
+  const hasConnectedTransport = useConsumerStore(
+    (state) => state.hasConnectedTransport
+  );
+  const isConsuming = useConsumerStore((state) => state.isConsuming);
+  const streams = useConsumerStore((state) => state.streams);
+  const params = useConsumerStore((state) => state.params);
+  const client = useConsumerStore((state) => state.client);
+  const connectTransport = useConsumerStore((state) => state.connect);
 
   const consume = async () => {
-    console.log({ client, consumerParams });
-    if (!client || !consumerParams || isConsuming.current) return;
+    if (!client || !params || isConsuming) return;
 
     const transport = await client.createRecvTransport(
-      consumerParams.transportConnectParams.routerRtpParameters,
-      consumerParams.transportConnectParams.transportOptions
+      params.transportConnectParams.routerRtpParameters,
+      params.transportConnectParams.transportOptions
     );
-
-    console.log({ transport });
 
     const r = await createConsumersMutation.mutateAsync({
       rtpCapabilities: client.recvRtpCapabilities,
-      mediaPermissionToken: consumerParams.mediaPermissionToken,
+      mediaPermissionToken: params.mediaPermissionToken,
     });
-
-    console.log(r);
 
     const _c = await Promise.all(
       r.map(async ({ consumerParameters }) => {
@@ -41,15 +62,13 @@ export const useMediaConsumers = () => {
         ]);
       })
     );
-    console.log(_c);
 
-    queryClient.setQueryData(["streams", room], _c);
-    isConsuming.current = true;
+    useConsumerStore.setState({ streams: _c, transport, isConsuming: true });
   };
 
   useEffect(() => {
     consume();
-  }, [client, consumerParams]);
+  }, [hasConnectedTransport, client, params, isConsuming]);
 
-  return tracks.data;
-};
+  return streams;
+}

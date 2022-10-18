@@ -6,7 +6,7 @@ import {
   createNewConsumer,
 } from '@app/utils';
 import { Injectable } from '@nestjs/common';
-import { ConsumerParams } from '@soupware/internals';
+import { ConsumerParams } from '@soupware/defs';
 import { PipeTransport } from 'mediasoup/node/lib/PipeTransport';
 import { SrtpParameters } from 'mediasoup/node/lib/SrtpParameters';
 import { getConsumerParams } from '../consumer';

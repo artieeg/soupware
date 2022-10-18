@@ -5,15 +5,16 @@ import { useMediaStreaming, useUserMedia } from "../../hooks";
 import { UserCircle } from "../../components";
 import { useRoomId } from "../../hooks/useRoomId";
 import { useMemo } from "react";
+import { useMediaConsumers } from "../../hooks/useMediaConsumers";
 
 const Room: NextPage = () => {
   const room = useRoomId();
   const { media: userMedia } = useUserMedia();
 
   useMediaStreaming();
-  //const consumers = useMediaConsumers();
+  const streams = useMediaConsumers();
 
-  const media = [userMedia];
+  const media = [userMedia, ...streams];
 
   const mediaViews = useMemo(() => {
     //Array of pairs
