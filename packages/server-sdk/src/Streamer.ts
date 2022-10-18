@@ -1,5 +1,5 @@
 import { Axios } from "axios";
-import { CreateStreamerResponse } from "./types";
+import { CreateStreamerResponse } from "@soupware/client";
 
 export class StreamerImpl {
   constructor(private client: Axios) {}

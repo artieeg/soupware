@@ -4,7 +4,7 @@
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
-    "@soupware/shared": "1.0.0",
+    "@soupware/defs": "1.0.0",
     "axios": "^1.1.0",
     "mediasoup-client": "^3.6.57"
   }

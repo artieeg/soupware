@@ -1,10 +1,9 @@
 {
-  "name": "@soupware/client",
+  "name": "@soupware/defs",
   "version": "1.0.0",
   "main": "index.ts",
   "license": "MIT",
   "dependencies": {
-    "@soupware/defs": "1.0.0",
     "mediasoup-client": "^3.6.57"
   }
 }

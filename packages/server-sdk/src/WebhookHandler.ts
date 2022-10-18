@@ -1,4 +1,4 @@
-import { WebhookPayload } from "@soupware/shared";
+import { WebhookPayload } from "@soupware/defs";
 import * as crypto from "crypto";
 
 export class WebhookHandler {
