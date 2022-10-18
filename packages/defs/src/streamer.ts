@@ -3,7 +3,6 @@ import {
   IceCandidate,
   IceParameters,
   RtpCapabilities,
-  RtpParameters,
 } from "mediasoup-client/lib/types";
 
 export type TransportOptions = {
@@ -18,10 +17,10 @@ export type TransportConnectParams = {
   routerRtpParameters: RtpCapabilities;
 };
 
-export type CreateStreamerResponse = {
+export type StreamerParams = {
   transportConnectParams: {
     transportOptions: any;
-    routerRtpParameters: RtpParameters;
+    routerRtpParameters: RtpCapabilities;
   };
   mediaPermissionToken: string;
 };

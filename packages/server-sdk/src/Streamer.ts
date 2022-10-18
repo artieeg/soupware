@@ -1,5 +1,5 @@
 import { Axios } from "axios";
-import { CreateStreamerResponse } from "@soupware/client";
+import { StreamerParams } from "@soupware/client";
 
 export class StreamerImpl {
   constructor(private client: Axios) {}
@@ -15,7 +15,7 @@ export class StreamerImpl {
       audio: boolean;
       video: boolean;
     };
-  }): Promise<CreateStreamerResponse> {
+  }): Promise<StreamerParams> {
     return (
       await this.client.post("/streamer", {
         user,
