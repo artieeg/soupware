@@ -18,7 +18,7 @@ export class ReencoderService {
   constructor(private sendRouterService: SendRouterService) {}
 
   async reencode(producer: SoupwareProducer): Promise<SoupwareProducer> {
-    //return producer;
+    return producer;
 
     const router = this.sendRouterService.getRouter();
 

@@ -1,26 +1,7 @@
 import { Device } from "mediasoup-client";
 import { RtpCapabilities } from "mediasoup-client/lib/RtpParameters";
-import { DtlsParameters, Transport } from "mediasoup-client/lib/Transport";
-
-type Signalers = {
-  streamer: {
-    connect: (params: {
-      dtlsParameters: DtlsParameters;
-      mediaPermissionToken: string;
-      rtpCapabilities: RtpCapabilities;
-    }) => Promise<void>;
-    produce: (params: {
-      producerOptions: any;
-      mediaPermissionToken: string;
-    }) => Promise<{ id: string }>;
-  };
-  consumer: {
-    connect: (params: {
-      dtlsParameters: DtlsParameters;
-      mediaPermissionToken: string;
-    }) => Promise<void>;
-  };
-};
+import { Transport } from "mediasoup-client/lib/Transport";
+import { Signalers } from "./types";
 
 export class SoupwareClient {
   private recvDevice: Device;
@@ -57,9 +38,7 @@ export class SoupwareClient {
 
     const producer = await transport.produce({ track });
 
-    setInterval(async () => {
-      console.log(await producer.getStats());
-    }, 1000);
+    return producer;
   }
 
   async createSendTransport(

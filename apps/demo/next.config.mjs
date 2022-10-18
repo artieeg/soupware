@@ -12,7 +12,7 @@ import withTM from 'next-transpile-modules';
  * @constraint {{import('next').NextConfig}}
  */
 function defineNextConfig(config) {
-  return withTM(['@soupware/server', '@soupware/client'])(config);
+  return withTM(['@soupware/server', '@soupware/client', "@soupware/defs"])(config);
 }
 
 export default defineNextConfig({

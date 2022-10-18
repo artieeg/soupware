@@ -1,16 +1,4 @@
-import {
-  DtlsParameters,
-  IceCandidate,
-  IceParameters,
-  RtpCapabilities,
-} from "mediasoup-client/lib/types";
-
-export type TransportOptions = {
-  id: string;
-  iceParameters: IceParameters;
-  iceCandidates: IceCandidate[];
-  dtlsParameters: DtlsParameters;
-};
+import { RtpCapabilities, TransportOptions } from "mediasoup-client/lib/types";
 
 export type TransportConnectParams = {
   transportOptions: TransportOptions;
@@ -18,9 +6,6 @@ export type TransportConnectParams = {
 };
 
 export type StreamerParams = {
-  transportConnectParams: {
-    transportOptions: any;
-    routerRtpParameters: RtpCapabilities;
-  };
+  transportConnectParams: TransportConnectParams;
   mediaPermissionToken: string;
 };

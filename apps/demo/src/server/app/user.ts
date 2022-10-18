@@ -7,7 +7,7 @@ export async function createUser(room: string, role: Role) {
   const id = nanoid();
 
   // Regardless of role, users should be able to consume streams
-  const consumer = await createConsumer(room, id);
+  const consumer = await createConsumer(room);
 
   if (role === "streamer") {
     const streamer = await createStreamer(room, id);
@@ -16,4 +16,13 @@ export async function createUser(room: string, role: Role) {
   }
 
   return { consumer };
+}
+
+export async function createUserStreamer(room: string) {
+  const id = nanoid();
+
+  const consumer = await createConsumer(room);
+  const streamer = await createStreamer(room, id);
+
+  return { streamer, consumer };
 }

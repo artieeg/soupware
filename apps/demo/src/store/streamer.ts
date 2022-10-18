@@ -1,11 +1,40 @@
-import { SoupwareClient } from "@soupware/client";
-import { CreateStreamerResponse } from "@soupware/server";
-import { atom, useAtom } from "jotai";
+import { SoupwareClient, StreamerParams, Producer } from "@soupware/client";
+import create from "zustand";
+import produce from "immer";
 
-const mediaPermissionToken = atom<string | null>(null);
-const params = atom<CreateStreamerResponse | null>(null);
-const client = atom<SoupwareClient | null>(null);
+interface StreamerStore {
+  params: StreamerParams | null;
+  client: SoupwareClient | null;
+  isStreaming: boolean;
+  producers: Producer[];
+  stream(track: MediaStreamTrack): Promise<void>;
+}
 
-export const useStreamerToken = () => useAtom(mediaPermissionToken);
-export const useStreamerParams = () => useAtom(params);
-export const useStreamerClient = () => useAtom(client);
+export const useStreamerStore = create<StreamerStore>()((set, get) => ({
+  params: null,
+  client: null,
+  isStreaming: false,
+  producers: [],
+  async stream(track) {
+    const { isStreaming, params, client } = get();
+
+    if (isStreaming || !params || !client) return;
+
+    const transport = await client.createSendTransport(
+      params.transportConnectParams.routerRtpParameters,
+      params.transportConnectParams.transportOptions
+    );
+
+    const producer = await client.produce({
+      track,
+      transport,
+    });
+
+    set(
+      produce<StreamerStore>((state) => {
+        state.producers.push(producer);
+        state.isStreaming = true;
+      })
+    );
+  },
+}));

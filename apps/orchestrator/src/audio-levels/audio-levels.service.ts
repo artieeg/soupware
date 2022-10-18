@@ -1,7 +1,7 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AudioLevel } from '@soupware/internals';
-import { WebhookAudioLevels } from '@soupware/shared';
+import { WebhookAudioLevels } from '@soupware/defs';
 import Redis from 'ioredis';
 import { WebhookService } from 'src/webhook';
 

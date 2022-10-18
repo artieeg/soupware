@@ -6,24 +6,36 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { AppLayout } from "../layouts";
-import { useQueryClient } from "@tanstack/react-query";
+import {
+  useRole,
+  useStreamerToken,
+  useStreamerParams,
+  useRoleStore,
+  useStreamerStore,
+} from "../store";
+import { SoupwareClient } from "@soupware/client";
+import { useSignalers } from "../hooks";
 
 const Home: NextPage = () => {
   const router = useRouter();
   const createRoomMutation = trpc.room.create.useMutation();
 
-  const queryClient = useQueryClient();
   const [hidden, setHidden] = useState(false);
+  const signalers = useSignalers();
 
   const onCreateRoom = async () => {
     const { room, user } = await createRoomMutation.mutateAsync({});
     setHidden(true);
 
-    queryClient.setQueryData(
-      ["media-permission-token", "send"],
-      user.streamer?.mediaPermissionToken
-    );
-    queryClient.setQueryData(["streamer", room.id], user.streamer);
+    useRoleStore.setState({
+      role: "streamer",
+    });
+
+    useStreamerStore.setState({
+      params: user.streamer,
+      client: new SoupwareClient(user.streamer.mediaPermissionToken, signalers),
+    });
+
     router.push(`/${room.id}?role=streamer`);
   };
 

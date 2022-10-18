@@ -1,39 +1,15 @@
-import { useRef, useEffect } from "react";
-import { useRoomId } from "./useRoomId";
-import { useSoupwareClient } from "./useSoupwareClient";
-import { useStreamerParams } from "./useStreamerParams";
+import { useEffect } from "react";
+import { useStreamerStore } from "../store";
 import { useUserMedia } from "./useUserMedia";
 
-export const useMediaStreaming = () => {
-  const room = useRoomId();
-
+export function useMediaStreaming() {
   const { media } = useUserMedia();
-  const streamerParams = useStreamerParams(room);
-  const client = useSoupwareClient("send");
-
-  const isStreaming = useRef(false);
-
-  const stream = async () => {
-    if (!client || !streamerParams || !media || isStreaming.current) return;
-
-    const {
-      transportConnectParams: { routerRtpParameters, transportOptions },
-    } = streamerParams;
-
-    const transport = await client.createSendTransport(
-      routerRtpParameters,
-      transportOptions
-    );
-
-    await client.produce({
-      track: media.getVideoTracks().at(0)!,
-      transport,
-    });
-
-    isStreaming.current = true;
-  };
 
   useEffect(() => {
-    stream();
-  }, [media, streamerParams]);
-};
+    const track = media?.getVideoTracks()[0];
+
+    if (track) {
+      useStreamerStore.getState().stream(track);
+    }
+  }, [media]);
+}

@@ -36,6 +36,6 @@ export class SendTransportController {
     const transportConnectParams =
       await this.sendTransportService.createSendTransport(room, user);
 
-    return { transportConnectParams };
+    return transportConnectParams;
   }
 }

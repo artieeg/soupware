@@ -4,7 +4,6 @@ import { AppLayout } from "../../layouts";
 import { useMediaStreaming, useUserMedia } from "../../hooks";
 import { UserCircle } from "../../components";
 import { useRoomId } from "../../hooks/useRoomId";
-import { useMediaConsumers } from "../../hooks/useMediaConsumers";
 import { useMemo } from "react";
 
 const Room: NextPage = () => {
@@ -12,7 +11,7 @@ const Room: NextPage = () => {
   const { media: userMedia } = useUserMedia();
 
   useMediaStreaming();
-  const consumers = useMediaConsumers();
+  //const consumers = useMediaConsumers();
 
   const media = [userMedia];
 

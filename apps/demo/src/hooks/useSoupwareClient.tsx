@@ -3,11 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { trpc } from "../utils/trpc";
 import { useMediaPermissionToken } from "./useMediaPermissionToken";
 import { useRoomId } from "./useRoomId";
-import { useStreamerParams } from "./useStreamerParams";
 
 export const useSoupwareClient = (direction: "send" | "recv") => {
-  const room = useRoomId();
-
   const token = useMediaPermissionToken(direction);
 
   const connectViewerMutation = trpc.viewer.connect.useMutation();
