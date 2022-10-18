@@ -5,14 +5,14 @@ import { useMediaStreaming, useUserMedia } from "../../hooks";
 import { UserCircle } from "../../components";
 import { useRoomId } from "../../hooks/useRoomId";
 import { useMediaConsumers } from "../../hooks/useMediaConsumers";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 const Room: NextPage = () => {
   const room = useRoomId();
   const { media: userMedia } = useUserMedia();
 
-  //useMediaStreaming();
-  //const consumers = useMediaConsumers();
+  useMediaStreaming();
+  const consumers = useMediaConsumers();
 
   const media = [userMedia];
 
@@ -31,7 +31,12 @@ const Room: NextPage = () => {
     }, [] as MediaStream[][]);
 
     return pairs.map(([first, second]) => (
-      <div className="mr-[5rem] flex w-full space-x-[5rem] overflow-hidden rounded-[2rem]">
+      <div
+        key={first?.id}
+        className={`flex w-full ${
+          media.length === 2 ? "flex-[0.5]" : "flex-1"
+        } space-x-[5rem] overflow-hidden rounded-[2rem]`}
+      >
         {first && <UserCircle media={first} />}
         {second && <UserCircle media={second} />}
       </div>
@@ -48,13 +53,11 @@ const Room: NextPage = () => {
       <AppLayout>
         <div className="flex max-h-screen flex-1 flex-row p-[5rem]">
           <div
-            className={`flex flex-[0.75] overflow-hidden rounded-[2rem] ${
-              mediaViews.length > 1 ? "space-y-[5rem]" : "items-center"
+            className={`mr-[5rem] flex flex-[0.75] flex-col overflow-hidden rounded-[2rem] ${
+              mediaViews.length > 1 ? "space-y-[5rem]" : "justify-center"
             }`}
           >
-            <div className="mr-[5rem] flex w-full space-x-[5rem] overflow-hidden rounded-[2rem]">
-              <UserCircle media={userMedia} />
-            </div>
+            {mediaViews}
           </div>
 
           <div className="min-h-full flex-[0.25] rounded-[2rem] bg-gray-1100 p-[2rem]">

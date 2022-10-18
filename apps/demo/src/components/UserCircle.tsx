@@ -5,6 +5,12 @@ export interface UserCircleProps {
 }
 
 export const UserCircle: React.FC<UserCircleProps> = ({ media }) => {
+  /*
+  return (
+    <div className="flex-1 overflow-hidden rounded-[2rem] bg-green-300 object-cover"></div>
+  );
+   * */
+
   if (media) {
     return (
       <video
