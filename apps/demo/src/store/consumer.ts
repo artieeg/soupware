@@ -55,12 +55,10 @@ export const useConsumerStore = create<ConsumerStore>()((set, get) => ({
       params.map(async (p) => transport.consume(p))
     );
 
-    set(
-      produce<ConsumerStore>((state) => {
-        state.consumers.push(...consumers);
-        state.isConsuming = true;
-        state.streams = consumers.map((c) => new MediaStream([c.track]));
-      })
-    );
+    set({
+      consumers,
+      isConsuming: true,
+      streams: consumers.map((c) => new MediaStream([c.track])),
+    });
   },
 }));

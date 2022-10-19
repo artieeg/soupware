@@ -53,17 +53,9 @@ export function useMediaConsumers() {
       mediaPermissionToken: params.mediaPermissionToken,
     });
 
-    const transport = useConsumerStore.getState().transport!;
-
-    const _c = await Promise.all(
-      r.map(async ({ consumerParameters }) => {
-        return new MediaStream([
-          (await transport.consume(consumerParameters)).track,
-        ]);
-      })
-    );
-
-    useConsumerStore.setState({ streams: _c, transport, isConsuming: true });
+    await useConsumerStore
+      .getState()
+      .consume(r.map((r) => r.consumerParameters));
   };
 
   useEffect(() => {
