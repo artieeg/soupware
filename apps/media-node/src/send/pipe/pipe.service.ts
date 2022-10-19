@@ -18,7 +18,13 @@ import { SendEventEmitter } from '../send.events';
 
 @Injectable()
 export class SendPipeService {
-  private pipes: Map<string, PipeTransport>;
+  private pipes: Map<
+    string,
+    {
+      transport: PipeTransport;
+      producers: SoupwareProducer[];
+    }
+  >;
 
   constructor(
     @Inject('MEDIA_NODE') private client: ClientProxy,
@@ -36,9 +42,9 @@ export class SendPipeService {
     const consumers = (
       await Promise.all(
         pipedRecvNodeIds.map(async (recvNodeId) => {
-          const pipeTransport = await this.getPipeTo(recvNodeId);
+          const pipe = await this.getPipeTo(recvNodeId);
 
-          const consumer = await createPipeConsumer(pipeTransport, producer);
+          const consumer = await createPipeConsumer(pipe.transport, producer);
 
           return firstValueFrom(
             this.client.send(`soupware.pipe.recv.producer.${recvNodeId}`, {
@@ -63,9 +69,16 @@ export class SendPipeService {
   async pipeRoomProducers(room_id: string, targetRecvNodeId: string) {
     const room = this.roomService.get(room_id);
     const pipe = await this.getPipeTo(targetRecvNodeId);
-    const producers = this.getRoomProducers(room);
 
-    const pipeConsumers = await this.createPipeConsumers(pipe, producers);
+    //Get producers that aren't piped yet
+    const producers = this.getRoomProducers(room).filter((producer) => {
+      return !pipe.producers.includes(producer);
+    });
+
+    const pipeConsumers = await this.createPipeConsumers(
+      pipe.transport,
+      producers,
+    );
 
     await firstValueFrom(
       this.client.send(`soupware.pipe.recv.producers.${targetRecvNodeId}`, {
@@ -76,7 +89,7 @@ export class SendPipeService {
           kind: consumer.kind,
           rtpCapabilities: (consumer.appData.user as User).rtpCapabilities,
           rtpParameters: consumer.rtpParameters,
-          appData: { user: (consumer.appData.user as any).id },
+          appData: { user: consumer.appData.user },
         })) as PipeConsumerParams[],
       }),
     );
@@ -91,7 +104,9 @@ export class SendPipeService {
     producers: SoupwareProducer[],
   ): Promise<SoupwareConsumer[]> {
     return Promise.all(
-      producers.map((producer) => createPipeConsumer(pipe, producer)),
+      producers.map((producer) => {
+        return createPipeConsumer(pipe, producer);
+      }),
     );
   }
 
@@ -130,13 +145,17 @@ export class SendPipeService {
       srtpParameters: recvSrtpParameters,
     });
 
-    this.pipes.set(targetRecvNodeId, pipeTransport);
+    this.pipes.set(targetRecvNodeId, {
+      transport: pipeTransport,
+      producers: [],
+    });
+
     this.eventEmitter.emit('new-pipe', {
       transport: pipeTransport,
       targetRecvNodeId,
     });
 
-    return pipeTransport;
+    return this.pipes.get(targetRecvNodeId);
   }
 
   private async getPipeTransport() {

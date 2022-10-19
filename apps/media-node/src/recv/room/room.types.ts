@@ -7,6 +7,7 @@ import { Transport, Router, RtpCapabilities } from 'mediasoup/node/lib/types';
 
 export type Room = {
   id: string;
+  pipe_producers: SoupwareProducer[];
   producers: Map<
     string,
     {

@@ -127,7 +127,6 @@ export class PipeService {
     params: PipeConsumerParams,
   ) {
     const pipeTransport = this.pipes.get(originNodeId);
-
     const producer = await createPipeProducer(pipeTransport, params);
 
     return this.pipeToEgressRouters(room, producer);
