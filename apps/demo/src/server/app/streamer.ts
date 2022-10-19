@@ -1,6 +1,6 @@
 import { soupware } from "./soupware";
 
-export function createStreamer(room: string, user: string) {
+export function getStreamerParams(room: string, user: string) {
   return soupware.streamer.create({
     user,
     room,

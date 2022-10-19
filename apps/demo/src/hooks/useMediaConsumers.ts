@@ -1,6 +1,6 @@
 import { SoupwareClient } from "@soupware/client";
 import { useEffect } from "react";
-import { useConsumerStore } from "../store";
+import { useConsumerStore, useUserStore } from "../store";
 import { trpc } from "../utils/trpc";
 import { useRoomId } from "./useRoomId";
 import { useSignalers } from "./useSignalers";
@@ -14,13 +14,17 @@ function useViewerCreate() {
   const create = async () => {
     if (!room || useConsumerStore.getState().params) return;
 
-    const r = await createViewerMutation.mutateAsync({
+    const { user, consumer } = await createViewerMutation.mutateAsync({
       room,
     });
 
+    useUserStore.setState({
+      user,
+    });
+
     useConsumerStore.setState({
-      params: r,
-      client: new SoupwareClient(r.mediaPermissionToken, signalers),
+      params: consumer,
+      client: new SoupwareClient(consumer.mediaPermissionToken, signalers),
     });
   };
 

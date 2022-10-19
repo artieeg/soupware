@@ -1,28 +1,36 @@
-import { nanoid } from "nanoid";
-import { Role } from "../types";
-import { createConsumer } from "./consumer";
-import { createStreamer } from "./streamer";
+import { generateSlug } from "random-word-slugs";
+import { Role } from "../../types";
+import { getConsumerParams } from "./consumer";
+import { getStreamerParams } from "./streamer";
 
 export async function createUser(room: string, role: Role) {
-  const id = nanoid();
+  const id = generateSlug();
 
-  // Regardless of role, users should be able to consume streams
-  const consumer = await createConsumer(room);
+  const user = {
+    id,
+    room,
+    role,
+  };
 
-  if (role === "streamer") {
-    const streamer = await createStreamer(room, id);
-
-    return { consumer, streamer };
-  }
-
-  return { consumer };
+  return user;
 }
 
 export async function createUserStreamer(room: string) {
-  const id = nanoid();
+  const user = await createUser(room, "streamer");
 
-  const consumer = await createConsumer(room);
-  const streamer = await createStreamer(room, id);
+  const consumer = await getConsumerParams(room, user.id);
+  const streamer = await getStreamerParams(room, user.id);
 
-  return { streamer, consumer };
+  return { user, streamer, consumer };
+}
+
+export async function createUserViewer(room: string) {
+  const user = await createUser(room, "viewer");
+
+  const consumer = await getConsumerParams(room, user.id);
+
+  return {
+    user,
+    consumer,
+  };
 }

@@ -1,6 +1,6 @@
 import { router, publicProcedure } from "../trpc";
 import { z } from "zod";
-import { connectConsumer, consume, createConsumer } from "../../app/consumer";
+import { connectConsumer, consume, createUserViewer } from "../../app";
 
 export const consumerRouter = router({
   create: publicProcedure
@@ -9,9 +9,10 @@ export const consumerRouter = router({
         room: z.string(),
       })
     )
-    .mutation(async ({ input }) => {
-      return await createConsumer(input.room);
+    .mutation(async ({ input: { room } }) => {
+      return await createUserViewer(room);
     }),
+
   connect: publicProcedure
     .input(
       z.object({
@@ -25,6 +26,7 @@ export const consumerRouter = router({
         mediaPermissionToken: input.mediaPermissionToken,
       });
     }),
+
   consume: publicProcedure
     .input(
       z.object({

@@ -1,9 +1,6 @@
-import { generateSlug } from "random-word-slugs";
 import { soupware } from "./soupware";
 
-export function createConsumer(room: string) {
-  const user = generateSlug();
-
+export function getConsumerParams(room: string, user: string) {
   return soupware.consumer.create({
     user,
     room,
