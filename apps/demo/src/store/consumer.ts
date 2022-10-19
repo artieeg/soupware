@@ -5,7 +5,6 @@ import {
   Transport,
   UserParams,
 } from "@soupware/client";
-import produce from "immer";
 import create from "zustand";
 
 interface ConsumerStore {

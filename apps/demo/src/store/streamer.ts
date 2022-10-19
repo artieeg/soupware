@@ -1,6 +1,5 @@
 import { SoupwareClient, UserParams, Producer } from "@soupware/client";
 import create from "zustand";
-import produce from "immer";
 
 interface StreamerStore {
   params: UserParams | null;
@@ -30,11 +29,9 @@ export const useStreamerStore = create<StreamerStore>()((set, get) => ({
       transport,
     });
 
-    set(
-      produce<StreamerStore>((state) => {
-        state.producers.push(producer);
-        state.isStreaming = true;
-      })
-    );
+    set({
+      producers: [...get().producers, producer],
+      isStreaming: true,
+    });
   },
 }));
