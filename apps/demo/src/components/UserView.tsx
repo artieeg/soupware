@@ -1,16 +1,10 @@
 import React from "react";
 
-export interface UserCircleProps {
+export interface UserViewProps {
   media?: MediaStream;
 }
 
-export const UserCircle: React.FC<UserCircleProps> = ({ media }) => {
-  /*
-  return (
-    <div className="flex-1 overflow-hidden rounded-[2rem] bg-green-300 object-cover"></div>
-  );
-   * */
-
+export const UserView: React.FC<UserViewProps> = ({ media }) => {
   if (media) {
     return (
       <video

@@ -2,7 +2,7 @@ import Head from "next/head";
 import { NextPage } from "next";
 import { AppLayout } from "../../layouts";
 import { useMediaStreaming, useUserMedia } from "../../hooks";
-import { UserCircle } from "../../components";
+import { UserView } from "../../components";
 import { useRoomId } from "../../hooks/useRoomId";
 import { useMemo } from "react";
 import { useMediaConsumers } from "../../hooks/useMediaConsumers";
@@ -37,8 +37,8 @@ const Room: NextPage = () => {
           media.length === 2 ? "flex-[0.5]" : "flex-1"
         } space-x-[5rem] overflow-hidden rounded-[2rem]`}
       >
-        {first && <UserCircle media={first} />}
-        {second && <UserCircle media={second} />}
+        {first && <UserView media={first} />}
+        {second && <UserView media={second} />}
       </div>
     ));
   }, [media]);
