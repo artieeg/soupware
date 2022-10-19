@@ -18,8 +18,12 @@ export function useUserMedia() {
     }
   );
 
-  return {
-    media: userMedia.data,
-    loading: userMedia.isLoading,
-  };
+  if (router.query.role === "streamer") {
+    return {
+      media: userMedia.data,
+      loading: userMedia.isLoading,
+    };
+  } else {
+    return { media: null, isLoading: false };
+  }
 }

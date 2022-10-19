@@ -40,20 +40,20 @@ export function useMediaConsumers() {
   const streams = useConsumerStore((state) => state.streams);
   const params = useConsumerStore((state) => state.params);
   const client = useConsumerStore((state) => state.client);
-  const connectTransport = useConsumerStore((state) => state.connect);
 
   const consume = async () => {
     if (!client || !params || isConsuming) return;
 
-    const transport = await client.createRecvTransport(
-      params.transportConnectParams.routerRtpParameters,
-      params.transportConnectParams.transportOptions
-    );
+    if (!hasConnectedTransport) {
+      return useConsumerStore.getState().connect();
+    }
 
     const r = await createConsumersMutation.mutateAsync({
       rtpCapabilities: client.recvRtpCapabilities,
       mediaPermissionToken: params.mediaPermissionToken,
     });
+
+    const transport = useConsumerStore.getState().transport!;
 
     const _c = await Promise.all(
       r.map(async ({ consumerParameters }) => {

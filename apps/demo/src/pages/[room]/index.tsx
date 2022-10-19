@@ -14,7 +14,7 @@ const Room: NextPage = () => {
   useMediaStreaming();
   const streams = useMediaConsumers();
 
-  const media = [userMedia, ...streams];
+  const media = userMedia ? [userMedia, ...streams] : streams;
 
   const mediaViews = useMemo(() => {
     //Array of pairs

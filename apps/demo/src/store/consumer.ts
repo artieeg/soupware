@@ -40,12 +40,10 @@ export const useConsumerStore = create<ConsumerStore>()((set, get) => ({
       params.transportConnectParams.transportOptions
     );
 
-    set(
-      produce<ConsumerStore>((state) => {
-        state.transport = transport;
-        state.hasConnectedTransport = true;
-      })
-    );
+    set({
+      transport,
+      hasConnectedTransport: true,
+    });
   },
 
   async consume(params) {
