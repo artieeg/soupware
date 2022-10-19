@@ -23,5 +23,7 @@ export class PiperService {
     });
 
     await Promise.all(promises);
+
+    await this.roomService.addRoomPipe(room, targetRecvNodeId);
   }
 }
