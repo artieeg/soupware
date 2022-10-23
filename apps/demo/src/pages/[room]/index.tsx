@@ -1,10 +1,14 @@
 import Head from "next/head";
 import { NextPage } from "next";
 import { AppLayout } from "../../layouts";
-import { useMediaStreaming, useUserMedia } from "../../hooks";
+import {
+  useMediaStreaming,
+  useRoomParticipants,
+  useUserMedia,
+} from "../../hooks";
 import { UserView } from "../../components";
 import { useRoomId } from "../../hooks/useRoomId";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useMediaConsumers } from "../../hooks/useMediaConsumers";
 
 const Room: NextPage = () => {
@@ -13,6 +17,12 @@ const Room: NextPage = () => {
 
   useMediaStreaming();
   const streams = useMediaConsumers();
+
+  const users = useRoomParticipants();
+
+  useEffect(() => {
+    console.log({ users });
+  }, [users]);
 
   const media = userMedia ? [userMedia, ...streams] : streams;
 

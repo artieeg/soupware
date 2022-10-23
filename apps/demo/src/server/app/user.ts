@@ -1,18 +1,29 @@
 import { generateSlug } from "random-word-slugs";
-import { Role } from "../../types";
+import { Role, User } from "../../types";
 import { getConsumerParams } from "./consumer";
+import { ee } from "./ee";
 import { getStreamerParams } from "./streamer";
+
+//TODO: replace with redis
+const users = new Map<string, User>();
 
 export async function createUser(room: string, role: Role) {
   const id = generateSlug();
 
-  const user = {
+  const user: User = {
     id,
     room,
     role,
   };
 
+  users.set(room, user);
+  ee.emit("user", user);
+
   return user;
+}
+
+export async function getUsersInRoom(room: string) {
+  return users.get(room);
 }
 
 export async function createUserStreamer(room: string) {

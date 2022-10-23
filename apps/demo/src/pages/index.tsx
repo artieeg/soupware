@@ -6,14 +6,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { AppLayout } from "../layouts";
-import {
-  useRole,
-  useStreamerToken,
-  useStreamerParams,
-  useRoleStore,
-  useStreamerStore,
-  useConsumerStore,
-} from "../store";
+import { useRoleStore, useStreamerStore, useConsumerStore } from "../store";
 import { SoupwareClient } from "@soupware/client";
 import { useSignalers } from "../hooks";
 
