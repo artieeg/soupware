@@ -18,6 +18,8 @@ export class ReencoderService {
   constructor(private sendRouterService: SendRouterService) {}
 
   async reencode(producer: SoupwareProducer): Promise<SoupwareProducer> {
+    return producer;
+
     const router = this.sendRouterService.getRouter();
 
     //Port on GStreamer to send to
@@ -137,7 +139,7 @@ export class ReencoderService {
         '! h264parse',
         '! queue',
         '! h264parse',
-        '! rtph264pay pt=${codec.payloadType} ssrc=${ssrc}',
+        `! rtph264pay pt=${codec.payloadType} ssrc=${ssrc}`,
       ];
     }
   }

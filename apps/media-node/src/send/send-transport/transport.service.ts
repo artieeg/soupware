@@ -2,7 +2,7 @@ import { mediaSoupConfig } from '@app/mediasoup.config';
 import { Injectable } from '@nestjs/common';
 import { DtlsParameters } from 'mediasoup/node/lib/WebRtcTransport';
 import { SendRouterService } from '../send-router';
-import { ConnectTransportOptions } from './types';
+import { TransportConnectParams } from '@soupware/defs';
 import { RoomService } from '../room';
 import { RtpCapabilities } from 'mediasoup/node/lib/RtpParameters';
 
@@ -36,7 +36,7 @@ export class SendTransportService {
   async createSendTransport(
     room: string,
     user: string,
-  ): Promise<ConnectTransportOptions> {
+  ): Promise<TransportConnectParams> {
     const router = this.sendRouterService.getRouter();
 
     const { listenIps, initialAvailableOutgoingBitrate } =

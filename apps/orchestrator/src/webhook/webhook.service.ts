@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as crypto from 'crypto';
 import axios from 'axios';
-import { WebhookPayload, WebhookEvent } from '@soupware/shared';
+import { WebhookPayload, WebhookEvent } from '@soupware/defs';
 
 @Injectable()
 export class WebhookService {

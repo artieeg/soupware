@@ -1,5 +1,5 @@
 import { SoupwareConsumer } from '@app/types';
-import { ConsumerParams } from '@soupware/internals';
+import { ConsumerParams } from '@soupware/defs';
 
 export function getConsumerParams(consumer: SoupwareConsumer): ConsumerParams {
   return {

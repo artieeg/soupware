@@ -1,8 +1,9 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AudioLevel } from '@soupware/internals';
+import { WebhookAudioLevels } from '@soupware/defs';
 import Redis from 'ioredis';
-import { WebhookAudioLevels, WebhookService } from 'src/webhook';
+import { WebhookService } from 'src/webhook';
 
 const PREFIX_SPOKE_RECENTLY = 'SPOKE_RECENTLY_';
 

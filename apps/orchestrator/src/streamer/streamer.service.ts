@@ -1,12 +1,17 @@
 import { Inject, Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
-import { ProducerParams, MediaPermission } from '@soupware/internals';
+import { MediaPermission } from '@soupware/internals';
+import {
+  UserParams,
+  TransportConnectParams,
+  WebhookNewProducer,
+} from '@soupware/defs';
 import { ProducerOptions } from 'mediasoup/node/lib/Producer';
 import { firstValueFrom } from 'rxjs';
 import { LoadBalancerService } from 'src/load-balancer';
 import { PermissionTokenService } from 'src/permission-token';
 import { RoomService } from 'src/room/room.service';
-import { WebhookNewProducer, WebhookService } from 'src/webhook';
+import { WebhookService } from 'src/webhook';
 
 @Injectable()
 export class StreamerService implements OnApplicationBootstrap {
@@ -27,13 +32,13 @@ export class StreamerService implements OnApplicationBootstrap {
     room: string,
     permissions: { audio: boolean; video: boolean },
     oldPermissionToken?: string,
-  ) {
+  ): Promise<UserParams> {
     const sendNodeId = await this.loadBalancerService.getBestNodeFor(
       room,
       'SEND',
     );
 
-    const response = await firstValueFrom(
+    const response: TransportConnectParams = await firstValueFrom(
       this.client.send(`soupware.transport.send.create.${sendNodeId}`, {
         user: streamer,
         room,
@@ -71,7 +76,7 @@ export class StreamerService implements OnApplicationBootstrap {
       mediaPermissionToken = createNewToken();
     }
 
-    return { ...response, mediaPermissionToken };
+    return { transportConnectParams: response, mediaPermissionToken };
   }
 
   async updatePermissions(

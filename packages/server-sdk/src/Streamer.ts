@@ -1,11 +1,8 @@
 import { Axios } from "axios";
+import { UserParams } from "@soupware/client";
 
 export class StreamerImpl {
-  client: Axios;
-
-  constructor(client: Axios) {
-    this.client = client;
-  }
+  constructor(private client: Axios) {}
 
   async create({
     user,
@@ -18,12 +15,14 @@ export class StreamerImpl {
       audio: boolean;
       video: boolean;
     };
-  }) {
-    return await this.client.post("/streamer", {
-      user,
-      room,
-      permissions,
-    });
+  }): Promise<UserParams> {
+    return (
+      await this.client.post("/streamer", {
+        user,
+        room,
+        permissions,
+      })
+    ).data;
   }
 
   async connect(params: {
@@ -42,7 +41,7 @@ export class StreamerImpl {
       appData: any;
     };
   }) {
-    return await this.client.post("/streamer/producer", params);
+    return (await this.client.post("/streamer/producer", params)).data.id;
   }
 
   async close(params: {
