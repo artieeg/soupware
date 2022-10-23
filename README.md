@@ -22,6 +22,6 @@ Minimalistic, scalable, and extensible WebRTC infrastructure, running mediasoup 
 
 
 ## Nice to have
-- [x]  Server-side reencoders
+- [ ]  Server-side reencoders
 - [ ]  MCU
 - [ ]  Region support
